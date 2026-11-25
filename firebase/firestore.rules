@@ -1,0 +1,49 @@
+rules_version = '2';
+// Reglas de seguridad de la app Colección 30C.
+// Se pegan en Firebase → Firestore Database → pestaña «Reglas» → «Publicar».
+//
+// Quién puede hacer qué:
+//  - Cada persona solo puede leer y cambiar SU colección (colecciones/<su-cuenta>).
+//  - El dueño elige sus ayudantes por correo («ayudantes»). Un ayudante con el correo
+//    confirmado puede LEER esa colección y escribir SOLO su propia hoja de marcas
+//    (colecciones/<dueño>/ayudas/<su-cuenta>). No puede tocar la colección del dueño.
+//  - Todo lo demás está cerrado.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function myEmail() { return request.auth.token.email.lower(); }
+    function verified() { return request.auth.token.email_verified == true; }
+
+    match /colecciones/{ownerId} {
+      function isOwner() { return signedIn() && request.auth.uid == ownerId; }
+      function isHelper(d) { return signedIn() && verified() && d.ayudantes is list && myEmail() in d.ayudantes; }
+      function okCollection(d) {
+        return d.keys().hasOnly(['data', 'nombre', 'ayudantes', 'actualizado'])
+          && (!('data' in d) || (d.data is string && d.data.size() < 200000))
+          && (!('nombre' in d) || (d.nombre is string && d.nombre.size() <= 40))
+          && (!('ayudantes' in d) || (d.ayudantes is list && d.ayudantes.size() <= 10));
+      }
+
+      allow get: if isOwner() || isHelper(resource.data);
+      allow list: if false;
+      allow create, update: if isOwner() && okCollection(request.resource.data);
+      allow delete: if isOwner();
+
+      match /ayudas/{helperId} {
+        function parentDoc() { return get(/databases/$(database)/documents/colecciones/$(ownerId)).data; }
+        function isThisHelper() { return signedIn() && request.auth.uid == helperId; }
+        function okMarks(d) {
+          return d.keys().hasOnly(['data', 'email', 'nombre', 'actualizado'])
+            && d.data is string && d.data.size() < 50000
+            && d.email == myEmail()
+            && (!('nombre' in d) || (d.nombre is string && d.nombre.size() <= 40));
+        }
+
+        allow read: if isOwner() || isThisHelper();
+        allow create, update: if isThisHelper() && verified() && myEmail() in parentDoc().ayudantes && okMarks(request.resource.data);
+        allow delete: if isOwner() || isThisHelper();
+      }
+    }
+  }
+}

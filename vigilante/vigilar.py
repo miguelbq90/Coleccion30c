@@ -10,6 +10,8 @@ Qué comprueba:
   3. Que la app funciona de verdad: la abre en un navegador, mira que salen las 191 cartas,
      los precios y que sigue funcionando sin internet.
   4. Que las fotos de las cartas cargan (eso depende de otro servidor: solo avisa).
+  5. Que Firebase (cuentas y base de datos) funciona y que la base de datos está CERRADA
+     a quien no tiene permiso (si alguien pudiera leerla sin cuenta, lo avisa como peligro).
 
 Si algo falla, primero intenta arreglarlo solo (volver a publicar la web o relanzar el robot
 de precios). Si no lo consigue, abre un aviso («issue») en GitHub mencionando al dueño, y
@@ -19,6 +21,7 @@ import datetime
 import json
 import os
 import pathlib
+import re
 import subprocess
 import sys
 import time
@@ -208,6 +211,50 @@ def revisar_fotos():
     avisos.append("Las fotos de las cartas no cargan desde su servidor. No depende de tu app: mientras tanto se ven con el diseño de respaldo.")
 
 
+# ---------- 5. ¿Firebase funciona y está cerrado a desconocidos? ----------
+def revisar_firebase():
+    m = re.search(r"const FBCFG=\{apiKey:'([^']*)',projectId:'([^']*)'\}", (RAIZ / "index.html").read_text(encoding="utf-8"))
+    if not m or not m.group(1):
+        return  # la app aún no usa Firebase
+    clave, proyecto = m.group(1), m.group(2)
+    # a) La clave y el acceso con correo funcionan: un intento con una cuenta que no existe debe responder «datos incorrectos»
+    try:
+        req = urllib.request.Request(
+            f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={clave}",
+            data=json.dumps({"email": "vigilante@example.invalid", "password": "no-existe-123", "returnSecureToken": True}).encode(),
+            headers={"Content-Type": "application/json"}, method="POST")
+        try:
+            urllib.request.urlopen(req, timeout=20)
+            msg = "OK"
+        except urllib.error.HTTPError as e:
+            msg = (json.loads(e.read() or b"{}").get("error") or {}).get("message", "")
+    except Exception as e:
+        avisos.append(f"No he podido comprobar Firebase ({str(e)[:120]}).")
+        return
+    if "API key" in msg or "API_KEY" in msg:
+        problemas.append("La clave de Firebase que lleva la app no es válida.")
+        return
+    if msg.startswith("OPERATION_NOT_ALLOWED"):
+        problemas.append("En Firebase está desactivado el acceso con correo y contraseña.")
+        return
+    # b) La base de datos existe y NO deja leer a quien no tiene cuenta
+    try:
+        urllib.request.urlopen(f"https://firestore.googleapis.com/v1/projects/{proyecto}/databases/(default)/documents/colecciones/vigilante", timeout=20)
+        problemas.append("¡Peligro! La base de datos deja leer sin cuenta: revisa las reglas de seguridad.")
+    except urllib.error.HTTPError as e:
+        cuerpo = e.read().decode("utf-8", "replace")
+        if e.code in (401, 403):
+            bien.append("Firebase funciona y la base de datos está cerrada a quien no tiene permiso.")
+        elif e.code == 404 and "database" in cuerpo and "does not exist" in cuerpo:
+            problemas.append("Falta crear la base de datos Firestore en Firebase.")
+        elif e.code == 404:
+            problemas.append("¡Peligro! La base de datos deja consultar sin cuenta: revisa las reglas de seguridad.")
+        else:
+            avisos.append(f"Firestore respondió {e.code} al comprobarlo.")
+    except Exception as e:
+        avisos.append(f"No he podido comprobar la base de datos ({str(e)[:120]}).")
+
+
 # ---------- Aviso en GitHub ----------
 def avisar():
     s, lista = github("GET", f"/repos/{REPO}/issues?state=open&per_page=50")
@@ -241,7 +288,7 @@ def resumen():
 
 
 if __name__ == "__main__":
-    for paso in (revisar_web, revisar_precios, revisar_app, revisar_fotos):
+    for paso in (revisar_web, revisar_precios, revisar_app, revisar_fotos, revisar_firebase):
         try:
             paso()
         except Exception as e:
