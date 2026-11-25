@@ -186,13 +186,55 @@ a.btn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
 .src{margin:28px 0 0;font-size:14px;color:var(--mute)}
 .upd{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;padding:8px max(5vw,16px);background:var(--acc);color:var(--acc-ink);font-weight:600}
 .upd button{min-height:40px;padding:0 16px;border-radius:10px;border:0;background:var(--acc-ink);color:var(--acc);font-weight:700}
-.toast{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom,0px));transform:translate(-50%,160%);z-index:10;display:flex;align-items:center;gap:12px;width:max-content;max-width:calc(100% - 32px);padding:6px 6px 6px 16px;border-radius:14px;background:var(--ink);color:var(--bg);box-shadow:0 6px 20px rgba(0,0,0,.25);transition:transform .25s}
+.toast{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom,0px));transform:translate(-50%,160%);z-index:16;display:flex;align-items:center;gap:12px;width:max-content;max-width:calc(100% - 32px);padding:6px 6px 6px 16px;border-radius:14px;background:var(--ink);color:var(--bg);box-shadow:0 6px 20px rgba(0,0,0,.25);transition:transform .25s}
 .toast.on{transform:translate(-50%,0)}
 .toast span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .toast button{flex:none;min-height:40px;padding:0 12px;border:0;border-radius:10px;background:transparent;color:var(--acc);font-weight:700}
 [data-tema=holo] .toast button,[data-tema=azul] .toast button{color:#ffd23f}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:12;background:var(--bg);border-top:1px solid var(--line);box-shadow:0 -8px 30px rgba(0,0,0,.2);padding:16px max(5vw,16px) max(16px,env(safe-area-inset-bottom,0px))}
 .sheet textarea{min-height:140px}
+/* Debajo de cada carta: su precio (toca para ver la ficha) y, si la tienes, cuántas (×2) */
+.cap{display:flex;align-items:center;justify-content:space-between;gap:4px;margin-top:4px;min-height:30px}
+.pr{min-height:30px;padding:0 4px 0 2px;border:0;border-radius:8px;background:transparent;color:var(--ink);display:inline-flex;align-items:center;gap:3px;font:700 14px/1 'DM Sans',system-ui,sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pr:hover{background:var(--slot)}
+.pr i{font-style:normal;font-size:10px}
+.pr .up,.fpx .up{color:var(--upb)}.pr .dn,.fpx .dn{color:var(--dnb)}
+.qt{flex:none;margin-left:auto;min-width:38px;height:30px;padding:0 9px;border:1.5px solid var(--line);border-radius:99px;background:transparent;color:var(--ink);font:800 14px/1 'DM Sans',system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.qt.x{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.pw:not(:has(.p.own)) .qt{display:none}
+.nums .cap,.nopr .pr{display:none}
+/* Resumen de dinero en la cabecera */
+.din{display:flex;flex-wrap:wrap;gap:10px 26px;margin:14px 0 0;max-width:560px}
+.din .k{display:block;font-size:13px;opacity:.85}
+.din b{display:block;font-family:var(--disp),system-ui,sans-serif;font-weight:var(--dispw);font-size:24px;line-height:1.15;font-variant-numeric:tabular-nums;white-space:nowrap}
+.din .ch{display:block;font-size:13px;font-weight:700}
+.din .ch.up{color:var(--up)}.din .ch.dn{color:var(--dn)}
+.din .nt{flex-basis:100%;margin:0;font-size:13px;opacity:.85}
+.lk{min-height:24px;padding:0;border:0;background:none;color:inherit;font:inherit;text-decoration:underline;text-underline-offset:3px}
+:root,[data-tema=noche]{--up:#5dff9e;--dn:#ff8f8f;--upb:#5dff9e;--dnb:#ff8f8f}
+[data-tema=holo]{--up:#0d7a40;--dn:#b3261e;--upb:#0d7a40;--dnb:#b3261e}
+[data-tema=azul]{--up:#a6ffc6;--dn:#ffc2c2;--upb:#0d7a40;--dnb:#b3261e}
+/* Ficha de una carta: precio, cantidad y enlace a Cardmarket en español */
+.velo{position:fixed;inset:0;z-index:13;background:rgba(0,0,0,.5)}
+.ficha{z-index:14;max-height:88vh;overflow:auto;border-radius:18px 18px 0 0;padding-top:20px}
+.fwrap{display:flex;gap:18px;align-items:flex-start;max-width:680px;margin:0 auto}
+.fimg{flex:none;width:min(150px,32vw);aspect-ratio:63/88;border-radius:6%/4.3%;overflow:hidden;position:relative;background:var(--slot);box-shadow:var(--glow)}
+.fimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fimg.miss img{filter:grayscale(1);opacity:.55}
+.finfo{flex:1 1 0}
+.finfo h2{font-size:20px;line-height:1.2;margin:0 0 4px}
+.fst{margin:0 0 12px;color:var(--mute)}
+.fst b{color:var(--ink)}
+.fl{margin:0;font-weight:600}
+.stp{display:flex;align-items:center;gap:8px;margin:6px 0 14px}
+.stp button{width:48px;height:48px;padding:0;border-radius:12px;border:1.5px solid var(--line);background:transparent;font-size:26px;font-weight:700;line-height:1}
+.stp button:disabled{opacity:.35;cursor:default}
+.stp output{min-width:54px;text-align:center;font-family:var(--disp),system-ui,sans-serif;font-weight:var(--dispw);font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
+.fpx{margin:0;font-size:26px;font-weight:800;font-variant-numeric:tabular-nums}
+.fpx small{font-size:14px;font-weight:700;margin-left:6px}
+.fdet{margin:2px 0 12px;color:var(--mute);font-size:14px}
+.ficha .lrow{margin-top:4px}
+@media(max-width:600px){.fwrap{gap:14px}.fimg{width:31vw}.finfo h2{font-size:18px}.ficha .lrow .btn{flex:1 1 100%;justify-content:center}}
 @media(max-width:860px){.syncbox{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:600px){
 .cover.band{padding-block:20px}
@@ -232,6 +274,11 @@ a.btn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
       <div class="big"><span id="have">0</span><small> / <span id="goal">191</span></small></div>
       <div class="bar" aria-hidden="true"><i id="barfill"></i><i id="bartr" class="tr"></i></div>
       <p class="left" id="left">Te faltan 191</p>
+      <div class="din" id="din" hidden>
+        <div><span class="k">Tu colección vale</span><b id="vale">—</b><span class="ch" id="valeCh"></span></div>
+        <div><span class="k" id="costaK">Te falta por comprar</span><b id="costa">—</b></div>
+        <p class="nt"><span id="dinNota"></span> · <button type="button" class="lk" id="prInfo">¿De dónde sale?</button></p>
+      </div>
     </div>
     <div class="acts">
       <button class="btn solid" id="openLote" aria-expanded="false" aria-controls="lote">Añadir varias de golpe</button>
@@ -255,7 +302,7 @@ a.btn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
 <section class="lote band" id="lote" hidden>
   <div class="wrap">
     <h2>Añadir varias de golpe</h2>
-    <p>Escribe los números separados por comas o espacios. Rangos con guion (<code>1-22</code>), <code>5/30</code> para los Pikachu del subset, <code>R</code>, <code>G</code> o <code>B</code> para los Mew RGB y el número completo de la Clásica (<code>58/102</code>). «Marcar en camino» sirve para las que ya has comprado y aún no te han llegado.</p>
+    <p>Escribe los números separados por comas o espacios. Rangos con guion (<code>1-22</code>), <code>5/30</code> para los Pikachu del subset, <code>R</code>, <code>G</code> o <code>B</code> para los Mew RGB y el número completo de la Clásica (<code>58/102</code>). «Marcar en camino» sirve para las que ya has comprado y aún no te han llegado. Si tienes repetidas, añade <code>x</code> y la cantidad: <code>54x2</code>.</p>
     <label class="vh" for="loteTxt">Números de las cartas</label>
     <textarea id="loteTxt" placeholder="Ej.: 1-22, 53, 54, 5/30, 129, R, 58/102"></textarea>
     <div class="lrow">
@@ -317,6 +364,16 @@ a.btn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
         <button class="btn" id="checkUpd">Buscar actualizaciones</button>
         <p class="msg" id="updMsg" role="status" style="margin-top:10px"></p>
       </div>
+      <div id="precios">
+        <h2>Precios</h2>
+        <p>Cada carta lleva el precio de referencia de Cardmarket (su «tendencia»). Es una media de todos los idiomas: en español puede salir algo más caro o más barato.</p>
+        <p>Para ver lo que cuesta en español, toca el carrito o el precio de la carta: Cardmarket se abre con solo las ofertas en español.</p>
+        <p>Los precios se actualizan solos cada día y se guardan en el aparato para verlos sin conexión. ▲ sube y ▼ baja: compara la última semana con el último mes (solo en cartas de 1 € o más).</p>
+        <p id="prFecha"></p>
+        <button class="btn" id="prBtn">Actualizar precios</button>
+        <p class="msg" id="prMsg" role="status" style="margin-top:10px"></p>
+        <label class="ck2"><input type="checkbox" id="prShow" checked> Mostrar el precio en cada carta</label>
+      </div>
       <div>
         <h2>Estilo</h2>
         <p>Elige cómo se ve la app en este aparato.</p>
@@ -333,7 +390,7 @@ a.btn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
       </div>
       <div>
         <h2>Copia de seguridad</h2>
-        <p>Copia tu colección como lista de números. Si algún día la pegas en «Añadir varias de golpe», vuelve tal cual.</p>
+        <p>Copia tu colección como lista de números (con las repetidas). Si algún día la pegas en «Añadir varias de golpe», vuelve tal cual.</p>
         <button class="btn" id="copyMine">Copiar mis cartas</button>
       </div>
       <div>
@@ -342,11 +399,14 @@ a.btn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
         <button class="btn danger" id="reset">Borrar todas las marcas</button>
       </div>
     </div>
-    <p class="src">Lista de cartas: WikiDex y Pokellector. Imágenes de las cartas: base de datos pública Pokémon TCG API; se guardan en el aparato al verlas para tenerlas sin conexión. App personal y no oficial. RI = Rara Ilustración, RIE = Rara Ilustración Especial, RF = Rara Futurista. La Colección Clásica lleva el número de la carta original.</p>
+    <p class="src">Lista de cartas: WikiDex y Pokellector. Imágenes de las cartas: base de datos pública Pokémon TCG API; se guardan en el aparato al verlas para tenerlas sin conexión. Precios: guía de precios pública que Cardmarket publica cada día (números de producto de TCGdex). App personal y no oficial. RI = Rara Ilustración, RIE = Rara Ilustración Especial, RF = Rara Futurista. La Colección Clásica lleva el número de la carta original.</p>
   </div>
 </footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"><span id="toastTxt"></span><button id="toastUndo">Deshacer</button></div>
+
+<div class="velo" id="velo" hidden></div>
+<div class="sheet ficha" id="ficha" hidden role="dialog" aria-modal="true" aria-labelledby="fT"></div>
 
 <div class="sheet" id="sheet" hidden>
   <div class="wrap">
@@ -396,10 +456,11 @@ const CMCL={'c58/102':'Pikachu-30CBS-58','c4/102':'Charizard-30CBS-4','c149/147'
   });
   // Excepción comprobada: el Mew 065 no lleva V y los Mew RGB llevan V1.
   BY['065'].v=0;['R','G','B'].forEach(l=>BY[l].v=1);
+  // language=4 es el filtro de Cardmarket para ver solo las ofertas de cartas en español.
   CARDS.forEach(c=>{
-    if(c.sec==='cls'){c.cm=CMCL[c.id]?CM+'Singles/30th-Celebration/'+CMCL[c.id]:CM+'Search?searchString='+encodeURIComponent(c.en||c.name);return}
+    if(c.sec==='cls'){c.cm=CMCL[c.id]?CM+'Singles/30th-Celebration/'+CMCL[c.id]+'?language=4':CM+'Search?searchString='+encodeURIComponent(c.en||c.name)+'&language=4';return}
     const code=c.sec==='rgb'?c.id+'RGB':c.id;
-    c.cm=CM+'Singles/30th-Celebration/'+slug(c.en||c.name)+(c.v?'-V'+c.v:'')+'-30C'+code;
+    c.cm=CM+'Singles/30th-Celebration/'+slug(c.en||c.name)+(c.v?'-V'+c.v:'')+'-30C'+code+'?language=4';
   });
 }
 
@@ -411,13 +472,19 @@ const LS='c30-estado',LSC='c30-sync',LSM='c30-modo',LST='c30-tema';
 // Estado de cada carta: 0 = me falta, 1 = la tengo, 2 = en camino (comprada, sin llegar)
 function derive(){const ks=Object.keys(st.cards).filter(id=>BY[id]);owned=new Set(ks.filter(id=>st.cards[id].o===1));transit=new Set(ks.filter(id=>st.cards[id].o===2));goalSecs=new Set(st.goal.list)}
 const stOf=id=>{const e=st.cards[id];return e?e.o:0};
+// Repetidas: q = cuántas tienes de esa carta (solo se guarda si son 2 o más).
+const qOf=id=>{const e=st.cards[id];return e&&e.o===1?(e.q||1):0};
 function setState(id,v,t){if(stOf(id)===v)return false;st.cards[id]={o:v,t};return true}
+function setQty(id,n,t){if(stOf(id)!==1)return false;n=Math.max(1,Math.min(99,n|0));if(qOf(id)===n)return false;st.cards[id]=n>1?{o:1,t,q:n}:{o:1,t};return true}
 function mark(id,on,t){return setState(id,on?1:0,t)}
 function setAll(own,tr){const t=Date.now();CARDS.forEach(c=>setState(c.id,own.has(c.id)?1:tr.has(c.id)?2:0,t));derive()}
+// Foto del estado para «Deshacer»: número = cuántas tienes, -1 = en camino.
+function snap(){const s={};CARDS.forEach(c=>{const e=st.cards[c.id];if(e&&e.o)s[c.id]=e.o===1?(e.q||1):-1});return s}
+function restore(s){const t=Date.now();CARDS.forEach(c=>{const x=s[c.id]||0,o=x>0?1:x<0?2:0;if(stOf(c.id)!==o)setState(c.id,o,t);if(o===1)setQty(c.id,x,t)});derive()}
 function clean(s){
   const out={v:2,cards:{},goal:null};
   if(!s||typeof s!=='object'||!s.cards||typeof s.cards!=='object')return null;
-  for(const id of Object.keys(s.cards)){const e=s.cards[id];if(BY[id]&&e&&(e.o===0||e.o===1||e.o===2)&&typeof e.t==='number')out.cards[id]={o:e.o,t:e.t}}
+  for(const id of Object.keys(s.cards)){const e=s.cards[id];if(BY[id]&&e&&(e.o===0||e.o===1||e.o===2)&&typeof e.t==='number'){out.cards[id]={o:e.o,t:e.t};if(e.o===1&&Number.isInteger(e.q)&&e.q>1&&e.q<100)out.cards[id].q=e.q}}
   const g=s.goal;
   if(g&&Array.isArray(g.list)&&typeof g.t==='number'){const list=g.list.filter(k=>SECS.some(x=>x.k===k));if(list.length)out.goal={list,t:g.t}}
   return out}
@@ -426,24 +493,48 @@ function merge(remote){
   for(const id of Object.keys(r.cards)){const l=st.cards[id];if(!l||r.cards[id].t>l.t){st.cards[id]=r.cards[id];ch=true}}
   if(r.goal&&r.goal.t>st.goal.t){st.goal=r.goal;ch=true}
   if(ch)derive();return ch}
-const ser=s=>{const c={};Object.keys(s.cards).sort().forEach(k=>c[k]={o:s.cards[k].o,t:s.cards[k].t});return JSON.stringify({v:2,cards:c,goal:s.goal?{list:s.goal.list,t:s.goal.t}:null})};
+const ser=s=>{const c={};Object.keys(s.cards).sort().forEach(k=>{const e=s.cards[k];c[k]=e.q>1?{o:e.o,t:e.t,q:e.q}:{o:e.o,t:e.t}});return JSON.stringify({v:2,cards:c,goal:s.goal?{list:s.goal.list,t:s.goal.t}:null})};
 function saveLocal(){try{localStorage.setItem(LS,ser(st))}catch(e){}}
 try{merge(JSON.parse(localStorage.getItem(LS)||'null'))}catch(e){}
 derive();
 
+// ---- Precios: precios.json lo actualiza cada día un robot en GitHub con la guía pública de Cardmarket ----
+// Se guardan en el aparato para verlos sin conexión. t = tendencia (el precio de referencia), a7/a30 = media de 7/30 días.
+const LSP='c30-precios',LSPV='c30-verprecios';
+let PR=null,PRI={};
+const okPR=j=>j&&typeof j==='object'&&j.p&&typeof j.p==='object'&&typeof j.creado==='string';
+function prepPR(){PRI={};if(PR&&Array.isArray(PR.ids))PR.ids.forEach((id,i)=>PRI[id]=i)}
+try{const j=JSON.parse(localStorage.getItem(LSP)||'null');if(okPR(j)){PR=j;prepPR()}}catch(e){}
+const num=v=>typeof v==='number'&&isFinite(v)&&v>0;
+const prOf=id=>{const e=PR&&PR.p[id];if(!e)return null;for(const k of ['t','a7','a30','a','l'])if(num(e[k]))return e[k];return null};
+// Flecha: si la media de la última semana está un 10 % por encima (o por debajo) de la del último mes. En cartas de menos de 1 € no se pone: son céntimos.
+const trendOf=id=>{const e=PR&&PR.p[id];if(!e||!num(e.a7)||!num(e.a30)||Math.max(e.a7,e.a30)<1)return 0;const r=e.a7/e.a30-1;return r>=.1?1:r<=-.1?-1:0};
+const eur=(v,short)=>{if(v==null)return '—';const d=v>=1000||(short&&v>=100)?0:2;return v.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d})+'\u00a0€'};
+const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const diaTxt=s=>{const m=String(s).match(/^(\d{4})-(\d{2})-(\d{2})/);return m?(+m[3])+' '+MES[+m[2]-1]:''};
+const diasDesde=s=>{const m=String(s).match(/^(\d{4})-(\d{2})-(\d{2})/);if(!m)return 0;const n=new Date();return Math.round((Date.UTC(n.getFullYear(),n.getMonth(),n.getDate())-Date.UTC(+m[1],+m[2]-1,+m[3]))/864e5)};
+const arrow=(tr,txt)=>tr?`<i class="${tr>0?'up':'dn'}" aria-hidden="true">${tr>0?'▲':'▼'}</i>${txt?`<span class="vh">${tr>0?' (subiendo)':' (bajando)'}</span>`:''}`:'';
+let showPr=true;try{showPr=localStorage.getItem(LSPV)!=='0'}catch(e){}
+
+// Lee una lista como «1-22, 54x2, R, 58/102». «x2» al final = tienes 2 de esa carta.
 function parse(txt){
-  const ids=new Set(),bad=[];
-  for(const raw of txt.split(/[\s,;]+/)){
-    const t=raw.trim().replace(/[–—]/g,'-');if(!t)continue;let m;
-    if(m=t.match(/^(\d{1,3})-(\d{1,3})$/)){let a=+m[1],b=+m[2];if(a>b)[a,b]=[b,a];if(a<1||b>158){bad.push(raw);continue}for(let i=a;i<=b;i++)ids.add(pad(i));continue}
-    if(m=t.match(/^([rgb])(\/rgb)?$/i)){ids.add(m[1].toUpperCase());continue}
-    if(m=t.match(/^(\d{1,3})$/)){const v=+m[1];if(v>=1&&v<=158){ids.add(pad(v));continue}bad.push(raw);continue}
+  const ids=new Set(),bad=[],qty={};
+  const one=t=>{let m;
+    if(m=t.match(/^(\d{1,3})-(\d{1,3})$/)){let a=+m[1],b=+m[2];if(a>b)[a,b]=[b,a];if(a<1||b>158)return null;const r=[];for(let i=a;i<=b;i++)r.push(pad(i));return r}
+    if(m=t.match(/^([rgb])(\/rgb)?$/i))return [m[1].toUpperCase()];
+    if(m=t.match(/^(\d{1,3})$/)){const v=+m[1];return v>=1&&v<=158?[pad(v)]:null}
     if(m=t.match(/^(\d{1,3})\/(\d{1,3})$/)){const a=+m[1],b=+m[2];
-      if(b===128&&a>=1&&a<=158){ids.add(pad(a));continue}
-      if(b===30&&a>=1&&a<=30){ids.add(pad(22+a));continue}
-      if(BY['c'+a+'/'+b]){ids.add('c'+a+'/'+b);continue}}
-    bad.push(raw)}
-  return {ids:[...ids],bad}}
+      if(b===128&&a>=1&&a<=158)return [pad(a)];
+      if(b===30&&a>=1&&a<=30)return [pad(22+a)];
+      if(BY['c'+a+'/'+b])return ['c'+a+'/'+b]}
+    return null};
+  for(const raw of txt.split(/[\s,;]+/)){
+    let t=raw.trim().replace(/[–—]/g,'-');if(!t)continue;let n=0;
+    const mq=t.match(/^(.+?)[x×*](\d{1,2})$/i);if(mq){t=mq[1];n=+mq[2]}
+    const got=one(t);
+    if(!got||(mq&&n<1)){bad.push(raw);continue}
+    got.forEach(id=>{ids.add(id);if(n)qty[id]=n})}
+  return {ids:[...ids],bad,qty}}
 function compress(list){
   const nums=list.filter(id=>/^\d{3}$/.test(id)).map(Number).sort((a,b)=>a-b),out=[];
   for(let i=0;i<nums.length;){let j=i;while(j+1<nums.length&&nums[j+1]===nums[j]+1)j++;out.push(j>i?nums[i]+'-'+nums[j]:String(nums[i]));i=j+1}
@@ -459,8 +550,8 @@ function match(c,f){
 
 const grid=$('#grid'),hitEl=$('#hit'),fanEl=$('#fan');
 // Las imágenes: si cargan, se ocultan los textos de respaldo; si fallan (sin conexión), se quitan y queda el texto.
-const onImg=e=>{const t=e.target;if(t.tagName!=='IMG')return;const box=t.closest('.p,.fc,.big1');if(e.type==='load'){if(box)box.classList.add('ok')}else{t.remove()}};
-[grid,fanEl,hitEl].forEach(el=>{el.addEventListener('load',onImg,true);el.addEventListener('error',onImg,true)});
+const onImg=e=>{const t=e.target;if(t.tagName!=='IMG')return;const box=t.closest('.p,.fc,.big1,.fimg');if(e.type==='load'){if(box)box.classList.add('ok')}else{t.remove()}};
+[grid,fanEl,hitEl,document.getElementById('ficha')].forEach(el=>{el.addEventListener('load',onImg,true);el.addEventListener('error',onImg,true)});
 function visible(c,f){
   if(sec!=='all'&&c.sec!==sec)return false;
   if(view==='faltan'&&stOf(c.id)!==0)return false;
@@ -469,8 +560,12 @@ function visible(c,f){
   return !f||match(c,f)}
 const nums=()=>grid.classList.contains('nums');
 const stTxt=v=>v===1?'la tienes':v===2?'en camino':'te falta';
+const qtLabel=c=>{const n=qOf(c.id)||1;return `Tienes ${n} de ${c.num} ${c.name}. Cambiar cantidad`};
+const prLabel=c=>{const p=prOf(c.id);return `${c.num} ${c.name}: ${p==null?'sin precio':'unos '+eur(p)}. Ver precio y Cardmarket`};
+function extras(c){const p=prOf(c.id),n=qOf(c.id)||1;
+  return `<div class="cap">${p==null?'':`<button class="pr" type="button" data-pr="${esc(c.id)}" aria-label="${esc(prLabel(c))}">${eur(p,1)}${arrow(trendOf(c.id))}</button>`}<button class="qt${n>1?' x':''}" type="button" data-qt="${esc(c.id)}" aria-label="${esc(qtLabel(c))}">×${n}</button></div>`}
 function pk(c){const v=stOf(c.id),o=v===1;
-  return `<div class="pw"><button class="p${o?' own':''}${v===2?' trn':''}${c.sec==='cls'?' cl':''}" data-id="${esc(c.id)}" aria-pressed="${o}" aria-label="${esc(c.num+' '+c.name+', '+stTxt(v))}"><span class="fb"><b>${esc(c.num)}</b><i lang="es">${esc(c.name)}</i>${c.tag?`<em>${esc(c.tag)}</em>`:''}</span>${nums()?'':`<img src="${esc(src(c))}" alt="" loading="lazy" decoding="async">`}<span class="rb">En camino</span><span class="nb">${esc(c.num)}</span><svg class="ck" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg></button><a class="cm" href="${esc(c.cm)}" target="_blank" rel="noopener" aria-label="${esc('Ver '+c.num+' '+c.name+' en Cardmarket')}" title="Ver en Cardmarket"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.2l2.1 10.2a1.6 1.6 0 0 0 1.6 1.3h8.3a1.6 1.6 0 0 0 1.6-1.2L20.5 8H6.4"/><circle cx="9.5" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg></a><button class="tk" type="button" data-tk="${esc(c.id)}" aria-pressed="${v===2}" aria-label="${esc((v===2?'Quitar de en camino ':'Marcar en camino ')+c.num+' '+c.name)}" title="${v===2?'Quitar de en camino':'La he comprado: en camino'}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 6.5h11v9h-11z"/><path d="M13.5 9.5h4l3 3.2v2.8h-7z"/><circle cx="7" cy="17.5" r="1.9"/><circle cx="17" cy="17.5" r="1.9"/></svg></button></div>`}
+  return `<div class="pw"><button class="p${o?' own':''}${v===2?' trn':''}${c.sec==='cls'?' cl':''}" data-id="${esc(c.id)}" aria-pressed="${o}" aria-label="${esc(c.num+' '+c.name+', '+stTxt(v))}"><span class="fb"><b>${esc(c.num)}</b><i lang="es">${esc(c.name)}</i>${c.tag?`<em>${esc(c.tag)}</em>`:''}</span>${nums()?'':`<img src="${esc(src(c))}" alt="" loading="lazy" decoding="async">`}<span class="rb">En camino</span><span class="nb">${esc(c.num)}</span><svg class="ck" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg></button><a class="cm" href="${esc(c.cm)}" target="_blank" rel="noopener" aria-label="${esc('Ver '+c.num+' '+c.name+' en Cardmarket')}" title="Ver en Cardmarket"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.2l2.1 10.2a1.6 1.6 0 0 0 1.6 1.3h8.3a1.6 1.6 0 0 0 1.6-1.2L20.5 8H6.4"/><circle cx="9.5" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg></a><button class="tk" type="button" data-tk="${esc(c.id)}" aria-pressed="${v===2}" aria-label="${esc((v===2?'Quitar de en camino ':'Marcar en camino ')+c.num+' '+c.name)}" title="${v===2?'Quitar de en camino':'La he comprado: en camino'}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 6.5h11v9h-11z"/><path d="M13.5 9.5h4l3 3.2v2.8h-7z"/><circle cx="7" cy="17.5" r="1.9"/><circle cx="17" cy="17.5" r="1.9"/></svg></button>${extras(c)}</div>`}
 function render(){
   document.querySelectorAll('[data-g]').forEach(i=>i.checked=goalSecs.has(i.dataset.g));
   const f=fold(q.trim());let html='',hits=[];
@@ -481,10 +576,10 @@ function render(){
     hits=hits.concat(list);
     html+=`<section class="sect"><div class="sh"><h2>${s.t} <span>${s.r}</span></h2><span class="cnt" data-c="${s.k}"></span><div class="mini" aria-hidden="true"><i data-m="${s.k}"></i></div></div>${list.length?`<div class="pk">${list.map(pk).join('')}</div>`:`<p class="empty">${view==='faltan'?'No te falta ninguna de esta sección.':view==='camino'?'No tienes ninguna de esta sección en camino.':'Todavía no tienes ninguna de esta sección.'}</p>`}</section>`}
   if(!hits.length&&!html)html=`<p class="empty">${f?'Ninguna carta coincide con «'+esc(q.trim())+'».':view==='faltan'?'No te falta ninguna por comprar.':view==='camino'?'No tienes ninguna carta en camino.':'Todavía no has marcado ninguna carta.'}</p>`;
-  grid.innerHTML=html;
+  grid.classList.toggle('nopr',!showPr);grid.innerHTML=html;
   if(f&&hits.length){
     if(hits.length===1){const c=hits[0],v=stOf(c.id),o=v===1;
-      hitEl.innerHTML=`<div class="one${o?'':' miss'}"><div class="big1">${nums()?'':`<img src="${esc(src(c,'large'))}" alt="${esc(c.name)}">`}</div><div><p><b>${esc(c.num)}</b> ${esc(c.name)}${c.tag?' · '+esc(c.tag):''}</p><p>${o?'La tienes':v===2?'En camino':'<span class="no">Te falta</span>'}</p><div class="lrow" style="margin-top:0"><button class="btn solid" data-one="${esc(c.id)}">${o?'Quitar de las que tengo':v===2?'Ha llegado: la tengo':'Marcar que la tengo'}</button>${o?'':`<button class="btn" data-tko="${esc(c.id)}">${v===2?'Quitar de en camino':'Marcar en camino'}</button>`}${v===0?`<a class="btn" href="${esc(c.cm)}" target="_blank" rel="noopener">Ver en Cardmarket</a>`:''}</div></div></div>`}
+      hitEl.innerHTML=`<div class="one${o?'':' miss'}"><div class="big1">${nums()?'':`<img src="${esc(src(c,'large'))}" alt="${esc(c.name)}">`}</div><div><p><b>${esc(c.num)}</b> ${esc(c.name)}${c.tag?' · '+esc(c.tag):''}</p><p>${o?'La tienes'+(qOf(c.id)>1?` (×${qOf(c.id)})`:''):v===2?'En camino':'<span class="no">Te falta</span>'}${prOf(c.id)!=null?` · unos <b>${eur(prOf(c.id))}</b> ${arrow(trendOf(c.id),1)}`:''}</p><div class="lrow" style="margin-top:0"><button class="btn solid" data-one="${esc(c.id)}">${o?'Quitar de las que tengo':v===2?'Ha llegado: la tengo':'Marcar que la tengo'}</button>${o?'':`<button class="btn" data-tko="${esc(c.id)}">${v===2?'Quitar de en camino':'Marcar en camino'}</button>`}<button class="btn" data-fi="${esc(c.id)}">${o?'Cuántas tengo y precio':'Ver precio'}</button>${v===0?`<a class="btn" href="${esc(c.cm)}" target="_blank" rel="noopener">Cardmarket en español</a>`:''}</div></div></div>`}
     else{const miss=hits.filter(c=>stOf(c.id)===0),tr=hits.filter(c=>stOf(c.id)===2);hitEl.innerHTML=`${hits.length} cartas coinciden · ${miss.length?`<span class="no">te faltan ${miss.length}</span>`:'no te falta ninguna'}${tr.length?` · ${tr.length} en camino`:''}`}
     hitEl.hidden=false}else{hitEl.hidden=true;hitEl.innerHTML=''}
   counts()}
@@ -531,18 +626,45 @@ function counts(){
   $('#have').textContent=h;$('#goal').textContent=t;
   $('#barfill').style.width=(t?h/t*100:0)+'%';
   $('#bartr').style.width=(t?tr/t*100:0)+'%';
-  $('#left').textContent=t-h?`Te faltan ${t-h}${tr?` (${tr} en camino)`:''} · ${Math.floor(h/t*100)} % completada`:'¡Completa! No te falta ninguna';
+  let rep=0;owned.forEach(id=>rep+=qOf(id)-1);
+  $('#left').textContent=(t-h?`Te faltan ${t-h}${tr?` (${tr} en camino)`:''} · ${Math.floor(h/t*100)} % completada`:'¡Completa! No te falta ninguna')+(rep?` · ${rep} repetida${rep>1?'s':''}`:'');
   $('#ch-all').textContent=h+'/'+t;
   SECS.forEach(s=>{const p=per[s.k];$('#ch-'+s.k).textContent=p.h+'/'+p.t;
     document.querySelectorAll(`[data-c="${s.k}"]`).forEach(e=>e.textContent=`${p.h} de ${p.t}${p.tr?` · ${p.tr} en camino`:''}`);
     document.querySelectorAll(`[data-m="${s.k}"]`).forEach(e=>e.style.width=(p.h/p.t*100)+'%')});
   $('#undo').disabled=!hist.length;
+  money();
   renderFan()}
+// Cuánto vale lo que tienes (contando repetidas) y cuánto costaría lo que te falta (sin contar lo que está en camino).
+function money(){
+  const din=$('#din');
+  if(!PR){din.hidden=true;$('#prFecha').textContent='Aún no se han descargado los precios.';return}
+  let vale=0,falta=0,nf=0,sin=0,trn=0;
+  CARDS.forEach(c=>{const v=stOf(c.id),p=prOf(c.id);
+    if(v===1){if(p==null)sin++;else vale+=p*qOf(c.id)}
+    else if(goalSecs.has(c.sec)){if(v===2){trn++;return}nf++;if(p==null)sin++;else falta+=p}});
+  $('#vale').textContent=owned.size?'≈ '+eur(vale):'0 €';
+  $('#costa').textContent=nf?'≈ '+eur(falta):'Nada 🎉';
+  $('#costaK').textContent=trn?`Te falta por comprar (sin las ${trn} en camino)`:'Te falta por comprar';
+  // Evolución: lo que valían tus cartas de hoy hace unos días (historial diario del robot).
+  const ch=$('#valeCh');ch.textContent='';ch.className='ch';
+  if(owned.size&&Array.isArray(PR.h)&&PR.h.length>1){
+    const last=PR.h[PR.h.length-1],lim=diasDesde(last.d)+7;let old=null;
+    for(const e of PR.h){if(e===last)break;if(diasDesde(e.d)<=lim)old=old||e}
+    if(!old)old=PR.h[PR.h.length-2];
+    // solo se comparan las cartas que tenían precio entonces y ahora
+    let antes=0,ahora=0,n=0;owned.forEach(id=>{const i=PRI[id],x=old.t&&i!=null?old.t[i]:null,p=prOf(id);if(num(x)&&p!=null){antes+=x*qOf(id);ahora+=p*qOf(id);n++}});
+    const dif=ahora-antes;
+    if(n&&Math.abs(dif)>=.01){ch.textContent=`${dif>0?'▲ +':'▼ −'}${eur(Math.abs(dif))} desde el ${diaTxt(old.d)}`;ch.classList.add(dif>0?'up':'dn')}}
+  const d=diasDesde(PR.creado);
+  $('#dinNota').textContent=`Precio de referencia de Cardmarket del ${diaTxt(PR.creado)}${d>2?` (hace ${d} días)`:''}, media de todos los idiomas${sin?` · ${sin} carta${sin>1?'s':''} sin precio`:''}`;
+  $('#prFecha').textContent=`Precios del ${diaTxt(PR.creado)} · ${PR.cartas||Object.keys(PR.p).length} cartas con precio.`;
+  din.hidden=false}
 
 const toastEl=$('#toast');let tt=null;
 function toast(txt,undo){$('#toastTxt').textContent=txt;$('#toastUndo').hidden=!undo;toastEl.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>toastEl.classList.remove('on'),4500)}
-function remember(){hist.push({o:[...owned],tr:[...transit]});if(hist.length>40)hist.shift()}
-function undo(){if(!hist.length)return;const h=hist.pop();setAll(new Set(h.o),new Set(h.tr));render();queue();toast('Deshecho')}
+function remember(){hist.push(snap());if(hist.length>40)hist.shift()}
+function undo(){if(!hist.length)return;restore(hist.pop());render();if(fId)paintFicha();queue();toast('Deshecho')}
 
 // ---- Sincronización con una nota secreta (gist) de GitHub ----
 const GH='https://api.github.com',FILE='coleccion30c.json';
@@ -613,6 +735,7 @@ function paint(c){
   const b=grid.querySelector(`.p[data-id="${CSS.escape(c.id)}"]`);if(!b)return null;const v=stOf(c.id);
   b.classList.toggle('own',v===1);b.classList.toggle('trn',v===2);b.setAttribute('aria-pressed',v===1);b.setAttribute('aria-label',c.num+' '+c.name+', '+stTxt(v));
   const k=b.parentElement.querySelector('.tk');if(k){k.setAttribute('aria-pressed',v===2);k.setAttribute('aria-label',(v===2?'Quitar de en camino ':'Marcar en camino ')+c.num+' '+c.name)}
+  const qb=b.parentElement.querySelector('.qt');if(qb){const n=qOf(c.id)||1;qb.textContent='×'+n;qb.classList.toggle('x',n>1);qb.setAttribute('aria-label',qtLabel(c))}
   return b}
 // Tocar la carta: si te falta o está en camino, pasa a «la tengo»; si ya la tienes, se quita.
 function toggle(c){
@@ -620,6 +743,7 @@ function toggle(c){
   const was=stOf(c.id),on=was!==1;mark(c.id,on,Date.now());derive();
   const b=paint(c);if(b){b.classList.remove('pop');if(on){void b.offsetWidth;b.classList.add('pop')}}
   if(q.trim())render();else counts();
+  if(fId)paintFicha();
   queue();
   toast(`${c.num} ${c.name}: ${on?(was===2?'ha llegado, ya la tienes':'la tienes'):'quitada'}`,true)}
 // Botón del camión: la has comprado y está en camino (o lo deshaces).
@@ -628,12 +752,46 @@ function toggleTransit(c){
   remember();
   const on=stOf(c.id)!==2;setState(c.id,on?2:0,Date.now());derive();paint(c);
   if(q.trim())render();else counts();
+  if(fId)paintFicha();
   queue();
   toast(`${c.num} ${c.name}: ${on?'en camino':'ya no está en camino'}`,true)}
+// Cambiar cuántas tienes de una carta (repetidas)
+function changeQty(c,d){
+  const n=qOf(c.id);if(!n)return;
+  remember();
+  if(!setQty(c.id,n+d,Date.now())){hist.pop();return}
+  derive();paint(c);if(q.trim())render();else counts();
+  if(fId)paintFicha();
+  queue();
+  const m=qOf(c.id);toast(`${c.num} ${c.name}: tienes ${m}${m>1?` (${m-1} repetida${m>2?'s':''})`:''}`,true)}
+// ---- Ficha de una carta: foto, cuántas tienes, precio y Cardmarket en español ----
+const velo=$('#velo'),ficha=$('#ficha');let fId=null,fBack=null;
+function paintFicha(){
+  const c=BY[fId];if(!c)return;const v=stOf(c.id),o=v===1,n=qOf(c.id),p=prOf(c.id),e=PR&&PR.p[c.id],tr=trendOf(c.id);
+  const det=[];if(e){if(num(e.a7))det.push('Media de la última semana: '+eur(e.a7));if(num(e.a30))det.push('Media del último mes: '+eur(e.a30))}
+  ficha.innerHTML=`<div class="fwrap"><div class="fimg${o?'':' miss'}"><img src="${esc(src(c,'large'))}" alt=""></div><div class="finfo">
+  <h2 id="fT">${esc(c.num)} ${esc(c.name)}</h2>
+  <p class="fst">${c.sec==='cls'?'Colección Clásica':'Celebración 30.º Aniversario'}${c.tag?' · '+esc(c.tag):''} · <b>${o?'La tienes':v===2?'En camino':'Te falta'}</b></p>
+  ${o?`<p class="fl" id="fQl">¿Cuántas tienes?</p><div class="stp" role="group" aria-labelledby="fQl"><button type="button" data-fq="-1" aria-label="Una menos"${n<=1?' disabled':''}>−</button><output aria-live="polite">${n}</output><button type="button" data-fq="1" aria-label="Una más"${n>=99?' disabled':''}>+</button></div>`:''}
+  ${p!=null?`<p class="fpx">${eur(p)}${tr?`<small class="${tr>0?'up':'dn'}">${tr>0?'▲ subiendo':'▼ bajando'}</small>`:''}</p><p class="fdet">Precio de referencia de Cardmarket, media de todos los idiomas${PR?' · '+diaTxt(PR.creado):''}${det.length?'<br>'+det.join('<br>'):''}${o&&n>1?`<br><b>Tus ${n} copias valen unos ${eur(p*n)}</b>`:''}</p>`:`<p class="fdet">${PR?'Esta carta aún no tiene precio en Cardmarket.':'Los precios se descargan la primera vez que abres la app con internet.'}</p>`}
+  <div class="lrow"><a class="btn solid" href="${esc(c.cm)}" target="_blank" rel="noopener">Ver ofertas en español</a>${o?'':`<button class="btn" type="button" data-fone>${v===2?'Ha llegado: la tengo':'Marcar que la tengo'}</button><button class="btn" type="button" data-ftk>${v===2?'Quitar de en camino':'Marcar en camino'}</button>`}<button class="btn" type="button" data-fx>Cerrar</button></div>
+  </div></div>`}
+function openFicha(c){fId=c.id;fBack=document.activeElement;paintFicha();velo.hidden=false;ficha.hidden=false;const x=ficha.querySelector('[data-fx]');if(x)x.focus({preventScroll:true})}
+function closeFicha(){if(!fId)return;ficha.hidden=true;velo.hidden=true;fId=null;ficha.innerHTML='';if(fBack&&document.contains(fBack))fBack.focus({preventScroll:true})}
+velo.addEventListener('click',closeFicha);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&fId)closeFicha()});
+ficha.addEventListener('click',e=>{
+  const c=BY[fId];if(!c)return;
+  if(e.target.closest('[data-fx]')){closeFicha();return}
+  const qb=e.target.closest('[data-fq]');if(qb){changeQty(c,+qb.dataset.fq);return}
+  if(e.target.closest('[data-fone]')){toggle(c);return}
+  if(e.target.closest('[data-ftk]')){toggleTransit(c);return}});
 grid.addEventListener('click',e=>{
+  const pf=e.target.closest('[data-pr],[data-qt]');if(pf){const c=BY[pf.dataset.pr||pf.dataset.qt];if(c)openFicha(c);return}
   const k=e.target.closest('.tk');if(k){const c=BY[k.dataset.tk];if(c)toggleTransit(c);return}
   const b=e.target.closest('.p');if(!b)return;const c=BY[b.dataset.id];if(c)toggle(c)});
 hitEl.addEventListener('click',e=>{
+  const fi=e.target.closest('[data-fi]');if(fi){const c=BY[fi.dataset.fi];if(c)openFicha(c);return}
   const t=e.target.closest('[data-tko]');if(t){const c=BY[t.dataset.tko];if(c)toggleTransit(c);return}
   const b=e.target.closest('[data-one]');if(!b)return;const c=BY[b.dataset.one];if(c)toggle(c)});
 $('#toastUndo').addEventListener('click',undo);
@@ -659,11 +817,11 @@ const loteEl=$('#lote'),openBtn=$('#openLote');
 openBtn.addEventListener('click',()=>{const o=loteEl.hidden;loteEl.hidden=!o;openBtn.setAttribute('aria-expanded',o);if(o)$('#loteTxt').focus()});
 // modo: 'add' = las tengo · 'tr' = en camino · 'del' = quitar de las que tengo
 function lote(mode){
-  const {ids,bad}=parse($('#loteTxt').value);const msg=$('#loteMsg');
+  const {ids,bad,qty}=parse($('#loteTxt').value);const msg=$('#loteMsg');
   if(!ids.length){msg.innerHTML=bad.length?'No he reconocido ningún número: '+esc(bad.join(', ')):'Escribe algún número primero.';return}
   remember();let n=0;const t=Date.now();
   ids.forEach(id=>{
-    if(mode==='add'){if(setState(id,1,t))n++}
+    if(mode==='add'){const a=setState(id,1,t),b=qty[id]?setQty(id,qty[id],t):false;if(a||b)n++}
     else if(mode==='tr'){if(stOf(id)!==1&&setState(id,2,t))n++}
     else if(stOf(id)===1&&setState(id,0,t))n++});
   derive();render();queue();
@@ -684,11 +842,13 @@ $('#copyMiss').addEventListener('click',()=>{
   const pool=CARDS.filter(c=>sec==='all'?goalSecs.has(c.sec):c.sec===sec),miss=pool.filter(c=>stOf(c.id)===0),trn=pool.filter(c=>stOf(c.id)===2).length;
   if(!miss.length){toast('No te falta ninguna',false);return}
   const where=sec==='all'?'':' ('+SECS.find(s=>s.k===sec).s+')';
-  const lines=miss.map(c=>(c.sec==='cls'?'Clásica ':'')+c.num+' '+c.name+(c.tag.endsWith('/30')?' '+c.tag:'')+(c.en&&c.en!==c.name?' ['+c.en+']':'')+'\n   '+c.cm);
-  copy(`Me faltan ${miss.length} cartas de Celebración 30.º Aniversario${where}${trn?` (sin contar ${trn} que ya están en camino)`:''}:\n`+lines.join('\n'),`Copiadas ${miss.length} cartas que te faltan`)});
+  let tot=0;miss.forEach(c=>{const p=prOf(c.id);if(p!=null)tot+=p});
+  const lines=miss.map(c=>{const p=prOf(c.id);return (c.sec==='cls'?'Clásica ':'')+c.num+' '+c.name+(c.tag.endsWith('/30')?' '+c.tag:'')+(c.en&&c.en!==c.name?' ['+c.en+']':'')+(p!=null?' · unos '+eur(p):'')+'\n   '+c.cm});
+  copy(`Me faltan ${miss.length} cartas de Celebración 30.º Aniversario${where}${trn?` (sin contar ${trn} que ya están en camino)`:''}${PR?`. Total aproximado: ${eur(tot)} (precio de referencia de Cardmarket del ${diaTxt(PR.creado)}, todos los idiomas)`:''}:\n`+lines.join('\n'),`Copiadas ${miss.length} cartas que te faltan`)});
 $('#copyMine').addEventListener('click',()=>{
   if(!owned.size){toast('Aún no has marcado ninguna',false);return}
-  copy(compress([...owned].sort((a,b)=>BY[a].i-BY[b].i)),`Copiadas tus ${owned.size} cartas`)});
+  const mine=[...owned].sort((a,b)=>BY[a].i-BY[b].i),dup=mine.filter(id=>qOf(id)>1);
+  copy(compress(mine)+(dup.length?', '+dup.map(id=>(/^\d{3}$/.test(id)?String(+id):BY[id].num)+'x'+qOf(id)).join(', '):''),`Copiadas tus ${owned.size} cartas`)});
 const resetBtn=$('#reset');let armed=null;
 resetBtn.addEventListener('click',()=>{
   if(!armed){resetBtn.textContent='¿Seguro? Toca otra vez';armed=setTimeout(()=>{armed=null;resetBtn.textContent='Borrar todas las marcas'},4000);return}
@@ -700,7 +860,7 @@ document.querySelectorAll('[data-g]').forEach(i=>i.addEventListener('change',()=
   i.checked?goalSecs.add(i.dataset.g):goalSecs.delete(i.dataset.g);
   st.goal={list:SECS.map(s=>s.k).filter(k=>goalSecs.has(k)),t:Date.now()};counts();queue()}));
 // ---- Actualizaciones: compara esta versión con version.json del servidor ----
-const BUILD=9;
+const BUILD=10;
 $('#verTxt').textContent=BUILD;
 let lastCheck=0;
 async function checkUpdate(manual){
@@ -728,6 +888,28 @@ $('#updBtn').addEventListener('click',doUpdate);
 $('#checkUpd').addEventListener('click',()=>checkUpdate(true));
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&Date.now()-lastCheck>600000)checkUpdate(false)});
 setTimeout(()=>checkUpdate(false),2500);
+// ---- Descargar precios: al abrir, al volver a la app (cada 3 horas como mucho) y con el botón ----
+let prAt=0;
+async function loadPrices(manual){
+  const msg=$('#prMsg');
+  if(!navigator.onLine){if(manual)msg.textContent='Necesitas internet para actualizar los precios. Mientras, ves los últimos que se guardaron.';return}
+  prAt=Date.now();if(manual)msg.textContent='Buscando precios…';
+  try{
+    const r=await fetch('precios.json?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok)throw new Error('precios '+r.status);
+    const j=await r.json();if(!okPR(j))throw new Error('precios raros');
+    const nuevo=!PR||PR.creado!==j.creado||PR.generado!==j.generado;
+    PR=j;prepPR();try{localStorage.setItem(LSP,JSON.stringify(j))}catch(e){}
+    if(nuevo){render();if(fId)paintFicha()}
+    if(manual)msg.textContent=nuevo?`Precios actualizados (del ${diaTxt(j.creado)}).`:`Ya tienes los últimos precios (del ${diaTxt(j.creado)}).`;
+  }catch(e){if(manual)msg.textContent='No he podido descargar los precios. Prueba en un momento.'}}
+$('#prBtn').addEventListener('click',()=>loadPrices(true));
+$('#prInfo').addEventListener('click',()=>$('#precios').scrollIntoView({behavior:'smooth',block:'start'}));
+const prShow=$('#prShow');prShow.checked=showPr;
+prShow.addEventListener('change',()=>{showPr=prShow.checked;try{localStorage.setItem(LSPV,showPr?'1':'0')}catch(e){}grid.classList.toggle('nopr',!showPr)});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&Date.now()-prAt>3*3600e3)loadPrices(false)});
+window.addEventListener('online',()=>{if(Date.now()-prAt>600e3)loadPrices(false)});
+setTimeout(()=>loadPrices(false),1200);
 render();
 showSync();
 idle();

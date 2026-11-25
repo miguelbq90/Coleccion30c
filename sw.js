@@ -1,7 +1,7 @@
 // Guarda la app en el aparato para que abra sin internet.
-// Si subes una versión nueva de los archivos, cambia el número de CACHE (v8 -> v9).
+// Si subes una versión nueva de los archivos, cambia el número de CACHE (v9 -> v10).
 // Cada copia de la app (la normal y la de /prueba/) usa su propia caché para no pisarse.
-const CACHE = 'coleccion30c-v8@' + self.registration.scope;
+const CACHE = 'coleccion30c-v9@' + self.registration.scope;
 const IMGS = 'coleccion30c-fotos-v1';
 const SHELL = ['./', './index.html', './app30c.webmanifest', './icono30c-192.png', './icono30c-512.png', './icono30c-maskable.png', './icono30c-apple.png',
   './fonts/dmsans.woff', './fonts/montserrat.woff', './fonts/poppins-bold.woff', './fonts/archivoblack.woff'];
@@ -42,6 +42,7 @@ self.addEventListener('fetch', e => {
 
   if (url.origin !== self.location.origin) return; // GitHub y demás: siempre por internet
   if (url.pathname.endsWith('/version.json')) return; // el aviso de versión nueva siempre va por internet
+  if (url.pathname.endsWith('/precios.json')) return; // los precios: siempre por internet (la app guarda la última copia)
 
   // La app: primero lo guardado (rápido y sin conexión); por detrás se baja la versión nueva.
   // no-cache: pregunta siempre al servidor si hay versión nueva (si no la hay, no se descarga nada)
