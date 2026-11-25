@@ -189,6 +189,10 @@ input[type=search],input[type=password]{width:100%;min-height:44px;font:16px 'DM
 .steps label{font-weight:600;display:block;margin-bottom:6px}
 a.btn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
 .src{margin:28px 0 0;font-size:14px;color:var(--mute)}
+.rob{position:relative;z-index:20;display:flex;align-items:center;justify-content:center;gap:10px 14px;flex-wrap:wrap;padding:8px max(5vw,16px);background:#4ee1ff;color:#0b1e2a;font-weight:600;text-align:center}
+.rob a{min-height:40px;display:inline-flex;align-items:center;padding:0 16px;border-radius:10px;background:#0b1e2a;color:#4ee1ff;font-weight:700;text-decoration:none}
+.ro #openLote,.ro #undo,.ro #lote,.ro .tk,.ro #syncbox,.ro #shareBox,.ro .fg>div:has(#goals),.ro .fg>div:has(#copyMine),.ro .fg>div:has(#reset){display:none!important}
+input[type=text]{width:100%;min-height:44px;font:16px 'DM Sans',system-ui,sans-serif;padding:0 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--slot);color:var(--ink)}
 .upd{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;padding:8px max(5vw,16px);background:var(--acc);color:var(--acc-ink);font-weight:600}
 .upd button{min-height:40px;padding:0 16px;border-radius:10px;border:0;background:var(--acc-ink);color:var(--acc);font-weight:700}
 .toast{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom,0px));transform:translate(-50%,160%);z-index:16;display:flex;align-items:center;gap:12px;width:max-content;max-width:calc(100% - 32px);padding:6px 6px 6px 16px;border-radius:14px;background:var(--ink);color:var(--bg);box-shadow:0 6px 20px rgba(0,0,0,.25);transition:transform .25s}
@@ -260,6 +264,7 @@ a.btn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
 </style>
 </head>
 <body>
+<div class="rob" id="rob" hidden role="status"><span id="robTxt">Estás viendo una colección compartida · solo mirar</span><a id="robBack" href="./">Ir a mi colección</a></div>
 <div class="upd" id="upd" hidden role="status"><span>Hay una versión nueva de la app</span><button id="updBtn" type="button">Actualizar</button></div>
 <header class="cover band">
   <div class="deco" aria-hidden="true"><div class="mos" id="mos"></div></div>
@@ -280,7 +285,7 @@ a.btn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
       <div class="bar" aria-hidden="true"><i id="barfill"></i><i id="bartr" class="tr"></i></div>
       <p class="left" id="left">Te faltan 191</p>
       <div class="din" id="din" hidden>
-        <div><span class="k">Tu colección vale</span><b id="vale">—</b><span class="ch" id="valeCh"></span></div>
+        <div><span class="k" id="valeK">Tu colección vale</span><b id="vale">—</b><span class="ch" id="valeCh"></span></div>
         <div><span class="k" id="costaK">Te falta por comprar</span><b id="costa">—</b></div>
         <p class="nt"><span id="dinNota"></span> · <button type="button" class="lk" id="prInfo">¿De dónde sale?</button></p>
       </div>
@@ -363,6 +368,17 @@ a.btn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
       </div>
     </div>
     <div class="fg">
+      <div id="shareBox">
+        <h2>Compartir mi colección</h2>
+        <p>Crea un enlace para que otra persona vea tu colección siempre al día: lo que te falta, lo que viene en camino y los precios. Solo puede mirar; no puede cambiar nada.</p>
+        <p class="msg" id="shareOff">Para compartir, primero conecta la sincronización (más arriba, «Sincronizar iPhone y portátil»).</p>
+        <div id="shareOn" hidden>
+          <label for="shareName" style="display:block;font-weight:600;margin-bottom:6px">Tu nombre (lo verá quien abra el enlace)</label>
+          <input id="shareName" type="text" maxlength="40" autocomplete="given-name" placeholder="Por ejemplo: Miguel">
+          <div class="lrow"><button class="btn solid" id="shareBtn">Compartir el enlace</button><button class="btn danger" id="shareStop">Dejar de compartir</button></div>
+          <p class="msg" id="shareMsg" role="status" style="margin-top:10px"></p>
+        </div>
+      </div>
       <div>
         <h2>Actualizaciones</h2>
         <p>Tienes la versión <b id="verTxt"></b>. La app avisa sola cuando hay una nueva; también puedes comprobarlo aquí.</p>
@@ -470,6 +486,12 @@ const CMCL={'c58/102':'Pikachu-30CBS-58','c4/102':'Charizard-30CBS-4','c149/147'
 }
 
 // Estado: cada carta guarda si la tienes (o) y cuándo cambió (t). Al sincronizar gana el cambio más reciente de cada carta.
+// Modo «solo mirar»: alguien abrió el enlace de una colección compartida (#ver=número-de-la-nota&de=nombre).
+// En este modo la app NUNCA guarda ni sincroniza nada: solo lee la colección compartida.
+const VER=(()=>{const m=location.hash.match(/^#ver=([0-9a-f]{20,40})(?:&de=([^&]*))?/i);if(!m)return null;let de='';try{de=decodeURIComponent(m[2]||'')}catch(e){}return {id:m[1].toLowerCase(),de:de.slice(0,40)}})();
+const RO=!!VER;
+const T=(tu,el)=>RO?el:tu;
+if(RO)document.documentElement.classList.add('ro');
 let st={v:2,cards:{},goal:{list:SECS.map(s=>s.k),t:0}};
 let owned=new Set(),transit=new Set(),goalSecs=new Set(SECS.map(s=>s.k)),hist=[];
 let view='todas',sec='all',q='';
@@ -499,8 +521,10 @@ function merge(remote){
   if(r.goal&&r.goal.t>st.goal.t){st.goal=r.goal;ch=true}
   if(ch)derive();return ch}
 const ser=s=>{const c={};Object.keys(s.cards).sort().forEach(k=>{const e=s.cards[k];c[k]=e.q>1?{o:e.o,t:e.t,q:e.q}:{o:e.o,t:e.t}});return JSON.stringify({v:2,cards:c,goal:s.goal?{list:s.goal.list,t:s.goal.t}:null})};
-function saveLocal(){try{localStorage.setItem(LS,ser(st))}catch(e){}}
-try{merge(JSON.parse(localStorage.getItem(LS)||'null'))}catch(e){}
+function saveLocal(){if(RO)return;try{localStorage.setItem(LS,ser(st))}catch(e){}}
+const LSVER=RO?'c30-ver-'+VER.id:'';
+if(!RO){try{merge(JSON.parse(localStorage.getItem(LS)||'null'))}catch(e){}}
+else{try{merge(JSON.parse(localStorage.getItem(LSVER)||'null'))}catch(e){}}  // última copia vista, para verla sin conexión
 derive();
 
 // ---- Precios: precios.json lo actualiza cada día un robot en GitHub con la guía pública de Cardmarket ----
@@ -564,7 +588,7 @@ function visible(c,f){
   if(view==='tengo'&&stOf(c.id)!==1)return false;
   return !f||match(c,f)}
 const nums=()=>grid.classList.contains('nums');
-const stTxt=v=>v===1?'la tienes':v===2?'en camino':'te falta';
+const stTxt=v=>v===1?T('la tienes','la tiene'):v===2?'en camino':T('te falta','le falta');
 const qtLabel=c=>{const n=qOf(c.id)||1;return `Tienes ${n} de ${c.num} ${c.name}. Cambiar cantidad`};
 const prLabel=c=>{const p=prOf(c.id);return `${c.num} ${c.name}: ${p==null?'sin precio':'unos '+eur(p)}. Ver precio y Cardmarket`};
 function extras(c){const p=prOf(c.id),n=qOf(c.id)||1;
@@ -579,12 +603,12 @@ function render(){
     const list=CARDS.filter(c=>c.sec===s.k&&visible(c,f));
     if(!list.length&&(f||sec==='all'))continue;
     hits=hits.concat(list);
-    html+=`<section class="sect"><div class="sh"><h2>${s.t} <span>${s.r}</span></h2><span class="cnt" data-c="${s.k}"></span><div class="mini" aria-hidden="true"><i data-m="${s.k}"></i></div></div>${list.length?`<div class="pk">${list.map(pk).join('')}</div>`:`<p class="empty">${view==='faltan'?'No te falta ninguna de esta sección.':view==='camino'?'No tienes ninguna de esta sección en camino.':'Todavía no tienes ninguna de esta sección.'}</p>`}</section>`}
-  if(!hits.length&&!html)html=`<p class="empty">${f?'Ninguna carta coincide con «'+esc(q.trim())+'».':view==='faltan'?'No te falta ninguna por comprar.':view==='camino'?'No tienes ninguna carta en camino.':'Todavía no has marcado ninguna carta.'}</p>`;
+    html+=`<section class="sect"><div class="sh"><h2>${s.t} <span>${s.r}</span></h2><span class="cnt" data-c="${s.k}"></span><div class="mini" aria-hidden="true"><i data-m="${s.k}"></i></div></div>${list.length?`<div class="pk">${list.map(pk).join('')}</div>`:`<p class="empty">${view==='faltan'?T('No te falta ninguna de esta sección.','No le falta ninguna de esta sección.'):view==='camino'?T('No tienes ninguna de esta sección en camino.','No tiene ninguna de esta sección en camino.'):T('Todavía no tienes ninguna de esta sección.','Todavía no tiene ninguna de esta sección.')}</p>`}</section>`}
+  if(!hits.length&&!html)html=`<p class="empty">${f?'Ninguna carta coincide con «'+esc(q.trim())+'».':view==='faltan'?T('No te falta ninguna por comprar.','No le falta ninguna por comprar.'):view==='camino'?T('No tienes ninguna carta en camino.','No tiene ninguna carta en camino.'):T('Todavía no has marcado ninguna carta.','Todavía no ha marcado ninguna carta.')}</p>`;
   grid.classList.toggle('nopr',!showPr);grid.innerHTML=html;
   if(f&&hits.length){
     if(hits.length===1){const c=hits[0],v=stOf(c.id),o=v===1;
-      hitEl.innerHTML=`<div class="one${o?'':' miss'}"><div class="big1${o?' own':''}"><span class="bfb"><b>${esc(c.num)}</b><i>${esc(c.name)}</i></span>${nums()?'':`<img src="${esc(src(c,'large'))}" alt="${esc(c.name)}">`}</div><div><p><b>${esc(c.num)}</b> ${esc(c.name)}${c.tag?' · '+esc(c.tag):''}</p><p>${o?'La tienes'+(qOf(c.id)>1?` (×${qOf(c.id)})`:''):v===2?'En camino':'<span class="no">Te falta</span>'}${prOf(c.id)!=null?` · unos <b>${eur(prOf(c.id))}</b> ${arrow(trendOf(c.id),1)}`:''}</p><div class="lrow" style="margin-top:0"><button class="btn solid" data-one="${esc(c.id)}">${o?'Quitar de las que tengo':v===2?'Ha llegado: la tengo':'Marcar que la tengo'}</button>${o?'':`<button class="btn" data-tko="${esc(c.id)}">${v===2?'Quitar de en camino':'Marcar en camino'}</button>`}<button class="btn" data-fi="${esc(c.id)}">${o?'Cuántas tengo y precio':'Ver precio'}</button>${v===0?`<a class="btn" href="${esc(c.cm)}" target="_blank" rel="noopener">Ver en Cardmarket</a>`:''}</div></div></div>`}
+      hitEl.innerHTML=`<div class="one${o?'':' miss'}"><div class="big1${o?' own':''}"><span class="bfb"><b>${esc(c.num)}</b><i>${esc(c.name)}</i></span>${nums()?'':`<img src="${esc(src(c,'large'))}" alt="${esc(c.name)}">`}</div><div><p><b>${esc(c.num)}</b> ${esc(c.name)}${c.tag?' · '+esc(c.tag):''}</p><p>${o?T('La tienes','La tiene')+(qOf(c.id)>1?` (×${qOf(c.id)})`:''):v===2?'En camino':`<span class="no">${T('Te falta','Le falta')}</span>`}${prOf(c.id)!=null?` · unos <b>${eur(prOf(c.id))}</b> ${arrow(trendOf(c.id),1)}`:''}</p><div class="lrow" style="margin-top:0">${RO?'':`<button class="btn solid" data-one="${esc(c.id)}">${o?'Quitar de las que tengo':v===2?'Ha llegado: la tengo':'Marcar que la tengo'}</button>${o?'':`<button class="btn" data-tko="${esc(c.id)}">${v===2?'Quitar de en camino':'Marcar en camino'}</button>`}`}<button class="btn" data-fi="${esc(c.id)}">${o&&!RO?'Cuántas tengo y precio':'Ver precio'}</button>${v===0?`<a class="btn" href="${esc(c.cm)}" target="_blank" rel="noopener">Ver en Cardmarket</a>`:''}</div></div></div>`}
     else{const miss=hits.filter(c=>stOf(c.id)===0),tr=hits.filter(c=>stOf(c.id)===2);hitEl.innerHTML=`${hits.length} cartas coinciden · ${miss.length?`<span class="no">te faltan ${miss.length}</span>`:'no te falta ninguna'}${tr.length?` · ${tr.length} en camino`:''}`}
     hitEl.hidden=false}else{hitEl.hidden=true;hitEl.innerHTML=''}
   counts()}
@@ -632,7 +656,7 @@ function counts(){
   $('#barfill').style.width=(t?h/t*100:0)+'%';
   $('#bartr').style.width=(t?tr/t*100:0)+'%';
   let rep=0;owned.forEach(id=>rep+=qOf(id)-1);
-  $('#left').textContent=(t-h?`Te faltan ${t-h}${tr?` (${tr} en camino)`:''} · ${Math.floor(h/t*100)} % completada`:'¡Completa! No te falta ninguna')+(rep?` · ${rep} repetida${rep>1?'s':''}`:'');
+  $('#left').textContent=(t-h?`${T('Te faltan','Le faltan')} ${t-h}${tr?` (${tr} en camino)`:''} · ${Math.floor(h/t*100)} % completada`:T('¡Completa! No te falta ninguna','¡Completa! No le falta ninguna'))+(rep?` · ${rep} repetida${rep>1?'s':''}`:'');
   $('#ch-all').textContent=h+'/'+t;
   SECS.forEach(s=>{const p=per[s.k];$('#ch-'+s.k).textContent=p.h+'/'+p.t;
     document.querySelectorAll(`[data-c="${s.k}"]`).forEach(e=>e.textContent=`${p.h} de ${p.t}${p.tr?` · ${p.tr} en camino`:''}`);
@@ -650,7 +674,8 @@ function money(){
     else if(goalSecs.has(c.sec)){if(v===2){trn++;return}nf++;if(p==null)sin++;else falta+=p}});
   $('#vale').textContent=owned.size?'≈ '+eur(vale):'0 €';
   $('#costa').textContent=nf?'≈ '+eur(falta):'Nada 🎉';
-  $('#costaK').textContent=trn?`Te falta por comprar (sin las ${trn} en camino)`:'Te falta por comprar';
+  $('#costaK').textContent=(trn?`${T('Te falta','Le falta')} por comprar (sin las ${trn} en camino)`:T('Te falta por comprar','Le falta por comprar'));
+  $('#valeK').textContent=T('Tu colección vale','Su colección vale');
   // Evolución: lo que valían tus cartas de hoy hace unos días (historial diario del robot).
   const ch=$('#valeCh');ch.textContent='';ch.className='ch';
   if(owned.size&&Array.isArray(PR.h)&&PR.h.length>1){
@@ -669,7 +694,7 @@ function money(){
 const toastEl=$('#toast');let tt=null;
 function toast(txt,undo){$('#toastTxt').textContent=txt;$('#toastUndo').hidden=!undo;toastEl.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>toastEl.classList.remove('on'),4500)}
 function remember(){hist.push(snap());if(hist.length>40)hist.shift()}
-function undo(){if(!hist.length)return;restore(hist.pop());render();if(fId)paintFicha();queue();toast('Deshecho')}
+function undo(){if(RO||!hist.length)return;restore(hist.pop());render();if(fId)paintFicha();queue();toast('Deshecho')}
 
 // ---- Sincronización con una nota secreta (gist) de GitHub ----
 const GH='https://api.github.com',FILE='coleccion30c.json';
@@ -679,13 +704,14 @@ const syncEl=$('#sync');
 syncEl.addEventListener('click',()=>$('#syncbox').scrollIntoView({behavior:'smooth',block:'start'}));
 function setSync(txt,ok){syncEl.textContent=txt;syncEl.classList.toggle('ok',!!ok)}
 const hora=()=>new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
-function idle(){if(!cfg.token)setSync('Guardado en este aparato · sin sincronizar');else if(!navigator.onLine)setSync('Sin conexión · tus cambios se subirán al volver internet')}
+function idle(){if(RO)return;if(!cfg.token)setSync('Guardado en este aparato · sin sincronizar');else if(!navigator.onLine)setSync('Sin conexión · tus cambios se subirán al volver internet')}
 async function gh(path,opt){
   opt=opt||{};
   const h={'Accept':'application/vnd.github+json','Authorization':'Bearer '+cfg.token};
   if(opt.body)h['Content-Type']='application/json';
   const r=await fetch(GH+path,{method:opt.method||'GET',headers:h,body:opt.body,cache:'no-store'});
   if(!r.ok){const e=new Error('GitHub '+r.status);e.status=r.status;throw e}
+  if(r.status===204)return null;
   return r.json()}
 async function ensureGist(){
   if(cfg.gist)return;
@@ -698,6 +724,7 @@ async function ensureGist(){
   cfg.gist=g.id;saveCfg()}
 let busy=false,again=false,wt=null;
 async function sync(){
+  if(RO)return;
   if(!cfg.token){idle();return}
   if(!navigator.onLine){idle();return}
   if(busy){again=true;return}
@@ -720,12 +747,12 @@ async function sync(){
     else setSync('No se pudo sincronizar · lo reintento solo')}
   busy=false;
   if(again){again=false;sync()}}
-function queue(){saveLocal();if(!cfg.token){idle();return}setSync('Cambios pendientes de subir…');clearTimeout(wt);wt=setTimeout(sync,1500)}
+function queue(){if(RO)return;saveLocal();if(!cfg.token){idle();return}setSync('Cambios pendientes de subir…');clearTimeout(wt);wt=setTimeout(sync,1500)}
 window.addEventListener('online',()=>sync());
 window.addEventListener('offline',idle);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')sync()});
 setInterval(()=>{if(document.visibilityState==='visible'&&navigator.onLine&&cfg.token)sync()},120000);
-function showSync(){$('#syncOff').hidden=!!cfg.token;$('#syncOn').hidden=!cfg.token}
+function showSync(){$('#syncOff').hidden=!!cfg.token;$('#syncOn').hidden=!cfg.token;if(typeof showShare==='function')showShare()}
 $('#connect').addEventListener('click',async()=>{
   const v=$('#token').value.trim(),msg=$('#syncMsg');
   if(!v){msg.textContent='Primero pega la clave que te da GitHub.';return}
@@ -744,6 +771,7 @@ function paint(c){
   return b}
 // Tocar la carta: si te falta o está en camino, pasa a «la tengo»; si ya la tienes, se quita.
 function toggle(c){
+  if(RO){openFicha(c);return}
   remember();
   const was=stOf(c.id),on=was!==1;mark(c.id,on,Date.now());derive();
   const b=paint(c);if(b){b.classList.remove('pop');if(on){void b.offsetWidth;b.classList.add('pop')}}
@@ -753,6 +781,7 @@ function toggle(c){
   toast(`${c.num} ${c.name}: ${on?(was===2?'ha llegado, ya la tienes':'la tienes'):'quitada'}`,true)}
 // Botón del camión: la has comprado y está en camino (o lo deshaces).
 function toggleTransit(c){
+  if(RO)return;
   if(stOf(c.id)===1)return;
   remember();
   const on=stOf(c.id)!==2;setState(c.id,on?2:0,Date.now());derive();paint(c);
@@ -762,6 +791,7 @@ function toggleTransit(c){
   toast(`${c.num} ${c.name}: ${on?'en camino':'ya no está en camino'}`,true)}
 // Cambiar cuántas tienes de una carta (repetidas)
 function changeQty(c,d){
+  if(RO)return;
   const n=qOf(c.id);if(!n)return;
   remember();
   if(!setQty(c.id,n+d,Date.now())){hist.pop();return}
@@ -776,10 +806,10 @@ function paintFicha(){
   const det=[];if(e){if(num(e.a7))det.push('Media de la última semana: '+eur(e.a7));if(num(e.a30))det.push('Media del último mes: '+eur(e.a30))}
   ficha.innerHTML=`<div class="fwrap"><div class="fimg${o?' own':' miss'}"><span class="bfb"><b>${esc(c.num)}</b><i>${esc(c.name)}</i></span><img src="${esc(src(c,'large'))}" alt=""></div><div class="finfo">
   <h2 id="fT">${esc(c.num)} ${esc(c.name)}</h2>
-  <p class="fst">${c.sec==='cls'?'Colección Clásica':'Celebración 30.º Aniversario'}${c.tag?' · '+esc(c.tag):''} · <b>${o?'La tienes':v===2?'En camino':'Te falta'}</b></p>
-  ${o?`<p class="fl" id="fQl">¿Cuántas tienes?</p><div class="stp" role="group" aria-labelledby="fQl"><button type="button" data-fq="-1" aria-label="Una menos"${n<=1?' disabled':''}>−</button><output aria-live="polite">${n}</output><button type="button" data-fq="1" aria-label="Una más"${n>=99?' disabled':''}>+</button></div>`:''}
-  ${p!=null?`<p class="fpx">${eur(p)}${tr?`<small class="${tr>0?'up':'dn'}">${tr>0?'▲ subiendo':'▼ bajando'}</small>`:''}</p><p class="fdet">Precio de referencia de Cardmarket, media de todos los idiomas${PR?' · '+diaTxt(PR.creado):''}${det.length?'<br>'+det.join('<br>'):''}${o&&n>1?`<br><b>Tus ${n} copias valen unos ${eur(p*n)}</b>`:''}</p>`:`<p class="fdet">${PR?'Esta carta aún no tiene precio en Cardmarket.':'Los precios se descargan la primera vez que abres la app con internet.'}</p>`}
-  <div class="lrow"><a class="btn solid" href="${esc(c.cm)}" target="_blank" rel="noopener">Ver en Cardmarket</a>${o?'':`<button class="btn" type="button" data-fone>${v===2?'Ha llegado: la tengo':'Marcar que la tengo'}</button><button class="btn" type="button" data-ftk>${v===2?'Quitar de en camino':'Marcar en camino'}</button>`}<button class="btn" type="button" data-fx>Cerrar</button></div>
+  <p class="fst">${c.sec==='cls'?'Colección Clásica':'Celebración 30.º Aniversario'}${c.tag?' · '+esc(c.tag):''} · <b>${o?T('La tienes','La tiene')+(RO&&n>1?` (×${n})`:''):v===2?'En camino':T('Te falta','Le falta')}</b></p>
+  ${o&&!RO?`<p class="fl" id="fQl">¿Cuántas tienes?</p><div class="stp" role="group" aria-labelledby="fQl"><button type="button" data-fq="-1" aria-label="Una menos"${n<=1?' disabled':''}>−</button><output aria-live="polite">${n}</output><button type="button" data-fq="1" aria-label="Una más"${n>=99?' disabled':''}>+</button></div>`:''}
+  ${p!=null?`<p class="fpx">${eur(p)}${tr?`<small class="${tr>0?'up':'dn'}">${tr>0?'▲ subiendo':'▼ bajando'}</small>`:''}</p><p class="fdet">Precio de referencia de Cardmarket, media de todos los idiomas${PR?' · '+diaTxt(PR.creado):''}${det.length?'<br>'+det.join('<br>'):''}${o&&n>1?`<br><b>${T('Tus','Sus')} ${n} copias valen unos ${eur(p*n)}</b>`:''}</p>`:`<p class="fdet">${PR?'Esta carta aún no tiene precio en Cardmarket.':'Los precios se descargan la primera vez que abres la app con internet.'}</p>`}
+  <div class="lrow"><a class="btn solid" href="${esc(c.cm)}" target="_blank" rel="noopener">Ver en Cardmarket</a>${o||RO?'':`<button class="btn" type="button" data-fone>${v===2?'Ha llegado: la tengo':'Marcar que la tengo'}</button><button class="btn" type="button" data-ftk>${v===2?'Quitar de en camino':'Marcar en camino'}</button>`}<button class="btn" type="button" data-fx>Cerrar</button></div>
   </div></div>`}
 function openFicha(c){fId=c.id;fBack=document.activeElement;paintFicha();velo.hidden=false;ficha.hidden=false;const x=ficha.querySelector('[data-fx]');if(x)x.focus({preventScroll:true})}
 function closeFicha(){if(!fId)return;ficha.hidden=true;velo.hidden=true;fId=null;ficha.innerHTML='';if(fBack&&document.contains(fBack))fBack.focus({preventScroll:true})}
@@ -822,6 +852,7 @@ const loteEl=$('#lote'),openBtn=$('#openLote');
 openBtn.addEventListener('click',()=>{const o=loteEl.hidden;loteEl.hidden=!o;openBtn.setAttribute('aria-expanded',o);if(o)$('#loteTxt').focus()});
 // modo: 'add' = las tengo · 'tr' = en camino · 'del' = quitar de las que tengo
 function lote(mode){
+  if(RO)return;
   const {ids,bad,qty}=parse($('#loteTxt').value);const msg=$('#loteMsg');
   if(!ids.length){msg.innerHTML=bad.length?'No he reconocido ningún número: '+esc(bad.join(', ')):'Escribe algún número primero.';return}
   remember();let n=0;const t=Date.now();
@@ -845,27 +876,29 @@ function copy(text,ok){
 $('#sheetClose').addEventListener('click',()=>{sheet.hidden=true});
 $('#copyMiss').addEventListener('click',()=>{
   const pool=CARDS.filter(c=>sec==='all'?goalSecs.has(c.sec):c.sec===sec),miss=pool.filter(c=>stOf(c.id)===0),trn=pool.filter(c=>stOf(c.id)===2).length;
-  if(!miss.length){toast('No te falta ninguna',false);return}
+  if(!miss.length){toast(T('No te falta ninguna','No le falta ninguna'),false);return}
   const where=sec==='all'?'':' ('+SECS.find(s=>s.k===sec).s+')';
   let tot=0;miss.forEach(c=>{const p=prOf(c.id);if(p!=null)tot+=p});
   const lines=miss.map(c=>{const p=prOf(c.id);return (c.sec==='cls'?'Clásica ':'')+c.num+' '+c.name+(c.tag.endsWith('/30')?' '+c.tag:'')+(c.en&&c.en!==c.name?' ['+c.en+']':'')+(p!=null?' · unos '+eur(p):'')+'\n   '+c.cm});
-  copy(`Me faltan ${miss.length} cartas de Celebración 30.º Aniversario${where}${trn?` (sin contar ${trn} que ya están en camino)`:''}${PR?`. Total aproximado: ${eur(tot)} (precio de referencia de Cardmarket del ${diaTxt(PR.creado)}, todos los idiomas)`:''}:\n`+lines.join('\n'),`Copiadas ${miss.length} cartas que te faltan`)});
+  copy(`${RO?`A ${VER.de||'la colección compartida'} le faltan`:'Me faltan'} ${miss.length} cartas de Celebración 30.º Aniversario${where}${trn?` (sin contar ${trn} que ya están en camino)`:''}${PR?`. Total aproximado: ${eur(tot)} (precio de referencia de Cardmarket del ${diaTxt(PR.creado)}, todos los idiomas)`:''}:\n`+lines.join('\n'),`Copiadas ${miss.length} cartas que ${T('te','le')} faltan`)});
 $('#copyMine').addEventListener('click',()=>{
   if(!owned.size){toast('Aún no has marcado ninguna',false);return}
   const mine=[...owned].sort((a,b)=>BY[a].i-BY[b].i),dup=mine.filter(id=>qOf(id)>1);
   copy(compress(mine)+(dup.length?', '+dup.map(id=>(/^\d{3}$/.test(id)?String(+id):BY[id].num)+'x'+qOf(id)).join(', '):''),`Copiadas tus ${owned.size} cartas`)});
 const resetBtn=$('#reset');let armed=null;
 resetBtn.addEventListener('click',()=>{
+  if(RO)return;
   if(!armed){resetBtn.textContent='¿Seguro? Toca otra vez';armed=setTimeout(()=>{armed=null;resetBtn.textContent='Borrar todas las marcas'},4000);return}
   clearTimeout(armed);armed=null;resetBtn.textContent='Borrar todas las marcas';
   if(!owned.size&&!transit.size)return;remember();setAll(new Set(),new Set());render();queue();toast('Marcas borradas',true)});
 $('#goals').innerHTML=SECS.map(s=>`<label class="ck2"><input type="checkbox" id="g-${s.k}" data-g="${s.k}"${goalSecs.has(s.k)?' checked':''}> ${s.t}</label>`).join('');
 document.querySelectorAll('[data-g]').forEach(i=>i.addEventListener('change',()=>{
+  if(RO)return;
   if(!i.checked&&goalSecs.size===1){i.checked=true;return}
   i.checked?goalSecs.add(i.dataset.g):goalSecs.delete(i.dataset.g);
   st.goal={list:SECS.map(s=>s.k).filter(k=>goalSecs.has(k)),t:Date.now()};counts();queue()}));
 // ---- Actualizaciones: compara esta versión con version.json del servidor ----
-const BUILD=14;
+const BUILD=15;
 $('#verTxt').textContent=BUILD;
 let lastCheck=0;
 async function checkUpdate(manual){
@@ -908,6 +941,74 @@ async function loadPrices(manual){
     if(nuevo){render();if(fId)paintFicha()}
     if(manual)msg.textContent=nuevo?`Precios actualizados (del ${diaTxt(j.creado)}).`:`Ya tienes los últimos precios (del ${diaTxt(j.creado)}).`;
   }catch(e){if(manual)msg.textContent='No he podido descargar los precios. Prueba en un momento.'}}
+// ---- Compartir mi colección: un enlace de «solo mirar» que lee la copia de GitHub (la nota secreta) ----
+const APP=location.origin+location.pathname;
+const LSN='c30-nombre';
+function showShare(){const on=!!cfg.token;$('#shareOff').hidden=on;$('#shareOn').hidden=!on}
+try{$('#shareName').value=localStorage.getItem(LSN)||''}catch(e){}
+$('#shareBtn').addEventListener('click',async()=>{
+  const msg=$('#shareMsg');msg.textContent='';
+  if(!cfg.token){showShare();return}
+  if(!cfg.gist){if(!navigator.onLine){msg.textContent='Necesitas internet la primera vez.';return}try{await ensureGist()}catch(e){msg.textContent='No he podido hablar con GitHub. Prueba en un momento.';return}}
+  const name=$('#shareName').value.trim().slice(0,40);try{localStorage.setItem(LSN,name)}catch(e){}
+  const url=APP+'#ver='+cfg.gist+(name?'&de='+encodeURIComponent(name):'');
+  const text=`${name?name+' te comparte su':'Te comparto mi'} colección de Pokémon «Celebración 30.º Aniversario». Aquí ves las cartas que ${name?'le':'me'} faltan, siempre al día:`;
+  if(navigator.share){try{await navigator.share({title:'Colección 30C',text,url});msg.textContent='Enlace compartido.';return}catch(e){if(e&&e.name==='AbortError')return}}
+  copy(text+'\n'+url,'Enlace copiado: pégalo en WhatsApp');msg.textContent='Enlace copiado. Pégalo en WhatsApp o donde quieras.'});
+// Dejar de compartir: la colección pasa a una nota nueva y se borra la antigua, así el enlace viejo deja de funcionar
+const stopBtn=$('#shareStop');let stopArmed=null;
+stopBtn.addEventListener('click',async()=>{
+  const msg=$('#shareMsg');
+  if(!stopArmed){stopBtn.textContent='¿Seguro? Toca otra vez';stopArmed=setTimeout(()=>{stopArmed=null;stopBtn.textContent='Dejar de compartir'},4000);return}
+  clearTimeout(stopArmed);stopArmed=null;stopBtn.textContent='Dejar de compartir';
+  if(!cfg.token)return;
+  if(!navigator.onLine){msg.textContent='Necesitas internet para anular el enlace.';return}
+  msg.textContent='Anulando el enlace…';
+  try{
+    await sync();
+    const old=cfg.gist;
+    const g=await gh('/gists',{method:'POST',body:JSON.stringify({description:'Colección 30C · no borrar (la usa la app)',public:false,files:{[FILE]:{content:ser(st)}}})});
+    cfg.gist=g.id;saveCfg();
+    if(old&&old!==g.id)await gh('/gists/'+old,{method:'DELETE'});
+    msg.textContent='Hecho: el enlace que compartiste ya no funciona. Tus aparatos siguen sincronizados. Si vuelves a compartir, se crea un enlace nuevo.';
+  }catch(e){msg.textContent='No he podido anularlo. Prueba otra vez en un momento.'}});
+// Modo «solo mirar»: descarga la colección compartida (sin clave) y la vuelve a mirar cada poco
+let verEtag='',verAt=0,verBusy=false;
+async function loadShared(){
+  if(!RO||verBusy)return;
+  if(!navigator.onLine){setSync('Sin conexión · ves la última copia que se guardó');return}
+  verBusy=true;verAt=Date.now();
+  try{
+    const h={'Accept':'application/vnd.github+json'};if(verEtag)h['If-None-Match']=verEtag;
+    const r=await fetch(GH+'/gists/'+VER.id,{headers:h,cache:'no-store'});
+    if(r.status===304){setSync(`Colección de ${VER.de||'otra persona'} · al día a las ${hora()}`,true);return}
+    if(r.status===404){$('#robTxt').textContent='Este enlace ya no funciona: puede que hayan dejado de compartir la colección.';setSync('Enlace anulado');st={v:2,cards:{},goal:{list:SECS.map(s=>s.k),t:0}};derive();render();try{localStorage.removeItem(LSVER)}catch(e){}return}
+    if(!r.ok)throw new Error('GitHub '+r.status);
+    const et=r.headers.get('ETag');const g=await r.json();
+    const f=g.files&&g.files[FILE];if(!f)throw new Error('sin colección');
+    let txt=f.content;if(f.truncated&&f.raw_url)txt=await (await fetch(f.raw_url,{cache:'no-store'})).text();
+    const remote=JSON.parse(txt);if(!clean(remote))throw new Error('colección rara');
+    if(!VER.de&&g.owner&&g.owner.login)VER.de=g.owner.login;
+    st={v:2,cards:{},goal:{list:SECS.map(s=>s.k),t:0}};merge(remote);derive();
+    try{localStorage.setItem(LSVER,ser(st))}catch(e){}
+    verEtag=et||'';
+    $('#robTxt').textContent=`Estás viendo la colección de ${VER.de||'otra persona'} · solo mirar`;
+    render();setSync(`Colección de ${VER.de||'otra persona'} · al día a las ${hora()}`,true);
+  }catch(e){setSync(Object.keys(st.cards).length?'No he podido actualizarla · ves la última copia guardada':'No he podido cargar la colección · lo reintento en un momento')}
+  finally{verBusy=false}}
+if(RO){
+  document.title='Colección de '+(VER.de||'otra persona')+' · 30C';
+  $('#rob').hidden=false;$('#robTxt').textContent=`Estás viendo la colección de ${VER.de||'otra persona'} · solo mirar`;
+  $('#robBack').setAttribute('href',APP);
+  $('#copyMiss').textContent='Copiar lo que le falta';
+  syncEl.addEventListener('click',e=>{e.stopImmediatePropagation();loadShared()},true);
+  setSync('Cargando la colección…');
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&Date.now()-verAt>30000)loadShared()});
+  window.addEventListener('online',()=>loadShared());
+  setInterval(()=>{if(document.visibilityState==='visible')loadShared()},120000);
+  setTimeout(loadShared,50);
+}
+window.addEventListener('hashchange',()=>{if(/^#ver=/.test(location.hash)||RO)location.reload()});
 $('#prBtn').addEventListener('click',()=>loadPrices(true));
 $('#prInfo').addEventListener('click',()=>$('#precios').scrollIntoView({behavior:'smooth',block:'start'}));
 const prShow=$('#prShow');prShow.checked=showPr;
