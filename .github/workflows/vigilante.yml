@@ -1,0 +1,42 @@
+# Vigilante: comprueba cada 6 horas (y tras cada cambio) que la app funciona y está al día.
+# Si algo falla, intenta arreglarlo solo y, si no puede, abre un aviso («issue») que te llega por correo.
+# También se puede lanzar a mano: pestaña «Actions» → «Vigilante de la app» → «Run workflow».
+name: Vigilante de la app
+
+on:
+  schedule:
+    - cron: '41 */6 * * *'   # cada 6 horas
+  push:
+    branches: [main]         # después de cada actualización de la app
+  workflow_dispatch:         # a mano, o lo lanza el robot de precios al terminar
+
+permissions:
+  contents: write   # para volver a publicar la web si GitHub falla
+  pages: write      # para pedir una nueva publicación de la web
+  actions: write    # para relanzar el robot de precios
+  issues: write     # para avisarte si hay un problema
+
+concurrency:
+  group: vigilante
+  cancel-in-progress: true
+
+jobs:
+  vigilar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Preparar el navegador de pruebas
+        run: pip install --quiet "playwright==1.*"
+
+      - name: Revisar la app
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: python vigilante/vigilar.py

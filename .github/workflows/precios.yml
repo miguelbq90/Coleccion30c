@@ -15,6 +15,7 @@ on:
 
 permissions:
   contents: write
+  actions: write   # para avisar al vigilante cuando hay precios nuevos
 
 concurrency:
   group: precios
@@ -42,3 +43,11 @@ jobs:
           git commit -m "Precios de Cardmarket del $(date -u +%Y-%m-%d)"
           git pull --rebase origin main
           git push origin HEAD:main
+          echo "nuevos=1" >> "$GITHUB_OUTPUT"
+        id: guardar
+
+      - name: Pedir al vigilante que compruebe la web
+        if: steps.guardar.outputs.nuevos == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run vigilante.yml --repo "${{ github.repository }}" --ref main
