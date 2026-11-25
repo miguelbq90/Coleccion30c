@@ -1,7 +1,10 @@
 // Guarda la app en el aparato para que abra sin internet.
-// Si subes una versión nueva de los archivos, cambia el número de CACHE (v1 -> v2).
-const CACHE = 'coleccion30c-v1';
-const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable.png', './apple-touch-icon.png'];
+// Si subes una versión nueva de los archivos, cambia el número de CACHE (v3 -> v4).
+// Cada copia de la app (la normal y la de /prueba/) usa su propia caché para no pisarse.
+const CACHE = 'coleccion30c-v3@' + self.registration.scope;
+const IMGS = 'coleccion30c-fotos-v1';
+const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable.png', './apple-touch-icon.png',
+  './fonts/dmsans.woff', './fonts/montserrat.woff', './fonts/poppins-bold.woff', './fonts/archivoblack.woff'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -10,7 +13,7 @@ self.addEventListener('install', e => {
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(keys => Promise.all(keys.filter(k => k !== CACHE && k.endsWith('@' + self.registration.scope)).map(k => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
@@ -19,13 +22,29 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  const same = url.origin === self.location.origin;
-  const font = /(^|\.)fonts\.(googleapis|gstatic)\.com$/.test(url.hostname);
-  if (!same && !font) return; // GitHub y demás: siempre por internet
 
-  // Primero lo guardado (rápido y sin conexión); por detrás se baja la versión nueva.
+  // Fotos de las cartas: si ya se vio, sale del aparato (vale sin conexión); si no, se baja y se guarda.
+  if (url.hostname === 'images.scrydex.com') {
+    e.respondWith((async () => {
+      const c = await caches.open(IMGS);
+      const hit = await c.match(req);
+      if (hit) return hit;
+      try {
+        const res = await fetch(req);
+        if (res && (res.ok || res.type === 'opaque')) c.put(req, res.clone()).catch(() => {});
+        return res;
+      } catch (err) {
+        return new Response('', { status: 504, statusText: 'Sin conexión' });
+      }
+    })());
+    return;
+  }
+
+  if (url.origin !== self.location.origin) return; // GitHub y demás: siempre por internet
+
+  // La app: primero lo guardado (rápido y sin conexión); por detrás se baja la versión nueva.
   const fresh = fetch(req).then(async res => {
-    if (res && (res.ok || res.type === 'opaque')) {
+    if (res && res.ok) {
       const copy = res.clone();
       const c = await caches.open(CACHE);
       await c.put(req, copy);
@@ -36,7 +55,7 @@ self.addEventListener('fetch', e => {
 
   e.respondWith((async () => {
     const c = await caches.open(CACHE);
-    const hit = await c.match(req, { ignoreSearch: same });
+    const hit = await c.match(req, { ignoreSearch: true });
     if (hit) return hit;
     const res = await fresh;
     if (res) return res;
