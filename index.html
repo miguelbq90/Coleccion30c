@@ -89,7 +89,7 @@ textarea{display:block;width:100%;min-height:96px;font:16px/1.5 'DM Sans',system
 .tools{position:sticky;top:0;z-index:5;background:var(--tools);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px max(5vw,16px)}
 .tools .wrap{display:grid;gap:8px}
 .r1{display:flex;flex-wrap:wrap;gap:10px}
-.srch{flex:1 1 260px}
+.fq{display:contents}.srch{flex:1 1 260px}
 input[type=search],input[type=password]{width:100%;min-height:44px;font:16px 'DM Sans',system-ui,sans-serif;padding:0 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--slot);color:var(--ink)}
 .seg{display:flex;flex:none;border:1.5px solid var(--line);border-radius:12px;overflow:hidden}
 .seg button{min-height:41px;padding:0 14px;border:0;background:transparent;font-weight:600;white-space:nowrap}
@@ -362,7 +362,7 @@ input[type=text]{width:100%;min-height:44px;font:16px 'DM Sans',system-ui,sans-s
 <div class="tools">
   <div class="wrap">
     <div class="r1">
-      <label class="srch"><span class="vh">Buscar carta</span><input id="q" type="search" placeholder="Busca por número o nombre: 54, 5/30, Mew…" autocomplete="off" enterkeyhint="search"></label>
+      <form class="fq" id="qForm" role="search" autocomplete="off"><label class="srch"><span class="vh">Buscar carta</span><input id="q" name="buscar-carta" type="search" placeholder="Busca por número o nombre: 54, 5/30, Mew…" autocomplete="off" data-lpignore="true" data-1p-ignore data-form-type="other" enterkeyhint="search"></label></form>
       <div class="seg" role="group" aria-label="Qué cartas mostrar">
         <button data-v="todas" aria-pressed="true">Todas</button><button data-v="faltan" aria-pressed="false">Me faltan</button><button data-v="camino" aria-pressed="false">En camino</button><button data-v="tengo" aria-pressed="false">Tengo</button>
       </div>
@@ -396,13 +396,13 @@ input[type=text]{width:100%;min-height:44px;font:16px 'DM Sans',system-ui,sans-s
         <div><button class="btn solid" id="connect">3. Conectar este aparato</button></div>
         <p class="msg" id="syncMsg" role="status"></p>
       </div>
-      <div class="steps" id="acOut" hidden>
-        <div><label for="acEmail">Correo</label><input id="acEmail" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="tucorreo@ejemplo.com"></div>
-        <div><label for="acPass">Contraseña (mínimo 6 caracteres)</label><input id="acPass" type="password" autocomplete="current-password"></div>
-        <div class="lrow" style="margin-top:0"><button class="btn solid" id="acIn">Entrar</button><button class="btn" id="acNew">Crear cuenta</button></div>
+      <form class="steps" id="acOut" hidden autocomplete="on">
+        <div><label for="acEmail">Correo</label><input id="acEmail" name="email" type="email" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="tucorreo@ejemplo.com"></div>
+        <div><label for="acPass">Contraseña (mínimo 6 caracteres)</label><input id="acPass" name="password" type="password" autocomplete="current-password"></div>
+        <div class="lrow" style="margin-top:0"><button class="btn solid" id="acIn" type="button">Entrar</button><button class="btn" id="acNew" type="button">Crear cuenta</button></div>
         <p style="margin:0"><button class="lk" id="acForgot" type="button">¿Has olvidado la contraseña?</button></p>
         <p class="msg" id="acMsg" role="status"></p>
-      </div>
+      </form>
       <div class="steps" id="acOn" hidden>
         <p id="acWho" style="margin:0"></p>
         <div id="acVerify" class="vnote" hidden><p style="margin:0 0 10px">Para ayudar a otra persona, confirma tu correo: abre el mensaje que te ha llegado de Firebase y pulsa el enlace. Si no lo ves, mira en «Spam».</p><div class="lrow" style="margin-top:0"><button class="btn solid" id="acCheck">Ya lo he confirmado</button><button class="btn" id="acResend">Reenviar el correo</button></div></div>
@@ -940,7 +940,8 @@ async function acDo(kind){
   }catch(e){msg.textContent=fbMsg(e)}}
 $('#acIn').addEventListener('click',()=>acDo('in'));
 $('#acNew').addEventListener('click',()=>acDo('new'));
-$('#acPass').addEventListener('keydown',e=>{if(e.key==='Enter')acDo('in')});
+$('#acPass').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();acDo('in')}});
+$('#acOut').addEventListener('submit',e=>{e.preventDefault();acDo('in')});
 $('#acForgot').addEventListener('click',async()=>{
   const msg=$('#acMsg'),em=$('#acEmail').value.trim();
   if(!em){msg.textContent='Escribe arriba tu correo y vuelve a pulsar aquí.';return}
@@ -1130,7 +1131,12 @@ hitEl.addEventListener('click',e=>{
 $('#toastUndo').addEventListener('click',undo);
 $('#undo').addEventListener('click',undo);
 let qt=null;
-$('#q').addEventListener('input',e=>{q=e.target.value;clearTimeout(qt);qt=setTimeout(render,150)});
+const noCorreo=el=>{if(el.value.includes('@')){el.value='';return true}return false};
+$('#q').addEventListener('input',e=>{noCorreo(e.target);q=e.target.value;clearTimeout(qt);qt=setTimeout(render,150)});
+$('#qForm').addEventListener('submit',e=>{e.preventDefault();$('#q').blur()});
+// El autorrelleno del navegador a veces no avisa: se revisa al tocar la página y cada poco al principio
+['pointerdown','keydown','focusin'].forEach(t=>addEventListener(t,()=>{const el=$('#q');if(noCorreo(el)&&q){q='';render()}},true));
+[400,1500,4000].forEach(ms=>setTimeout(()=>{const el=$('#q');if(noCorreo(el)&&q){q='';render()}},ms));
 document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{view=b.dataset.v;document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()}));
 document.querySelectorAll('[data-s]').forEach(b=>b.addEventListener('click',()=>{sec=b.dataset.s;document.querySelectorAll('[data-s]').forEach(x=>x.setAttribute('aria-pressed',x===b));render()}));
 const modeBtn=$('#mode');
@@ -1196,7 +1202,7 @@ document.querySelectorAll('[data-g]').forEach(i=>i.addEventListener('change',()=
   i.checked?goalSecs.add(i.dataset.g):goalSecs.delete(i.dataset.g);
   st.goal={list:SECS.map(s=>s.k).filter(k=>goalSecs.has(k)),t:Date.now()};counts();queue()}));
 // ---- Actualizaciones: compara esta versión con version.json del servidor ----
-const BUILD=18;
+const BUILD=19;
 $('#verTxt').textContent=BUILD;
 let lastCheck=0;
 async function checkUpdate(manual){
