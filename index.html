@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Colección 30C</title>
+<title>Zuroku</title>
 <meta name="theme-color" content="#1b1b45">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Colección 30C">
+<meta name="apple-mobile-web-app-title" content="Zuroku">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="manifest" href="app30c.webmanifest">
 <link rel="icon" href="icono30c-192.png" type="image/png">
@@ -278,14 +278,14 @@ input[type=text]{width:100%;min-height:44px;font:16px 'DM Sans',system-ui,sans-s
   <div class="deco" aria-hidden="true"><div class="mos" id="mos"></div></div>
   <div class="wrap cov">
     <div class="ttl">
-      <h1 class="logo"><span class="vh">Colección 30C</span><svg id="logo" aria-hidden="true" viewBox="0 0 640 130" preserveAspectRatio="xMinYMid meet">
+      <h1 class="logo"><span class="vh">Zuroku</span><svg id="logo" aria-hidden="true" viewBox="0 0 640 130" preserveAspectRatio="xMinYMid meet">
         <defs>
           <linearGradient id="lgY" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff27a"/><stop offset=".55" stop-color="#ffd23f"/><stop offset="1" stop-color="#ff9f1c"/></linearGradient>
           <linearGradient id="lgH" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9fcf"/><stop offset=".3" stop-color="#ffe56b"/><stop offset=".55" stop-color="#7ff0b8"/><stop offset=".78" stop-color="#8fcaff"/><stop offset="1" stop-color="#c3a6ff"/></linearGradient>
         </defs>
         <g id="logoG"></g>
       </svg></h1>
-      <p class="sub">30C · Celebración 30.º Aniversario</p>
+      <p class="sub">Celebración 30.º Aniversario</p>
       <button class="sync" id="sync" type="button" aria-controls="syncbox">Guardado en este aparato</button>
     </div>
     <div class="tal">
@@ -673,7 +673,7 @@ function render(){
 }
 // Título con letras gruesas, contorno, relieve y un pequeño bote en cada letra (diseño propio).
 {
-  const word='COLECCIÓN',n=word.length;
+  const word='ZUROKU',n=word.length;
   const off=[...word].map((_,i)=>Math.round(Math.sin(i*1.25)*7)),rot=[...word].map((_,i)=>(i%2?3.5:-3.5).toFixed(1));
   const dy=off.map((o,i)=>i?o-off[i-1]:o).join(' '),r=rot.join(' ');
   const t=(cls,dx,dyy)=>`<text class="${cls}" x="${14+dx}" y="${104+dyy}" dy="${dy}" rotate="${r}">${word}</text>`;
@@ -946,7 +946,7 @@ async function invite(email){
   const name=(acct&&acct.name)||'';
   const url=APP+'#ayudar='+acct.uid+(name?'&de='+encodeURIComponent(name):'');
   const text=`${name?name+' te invita a ayudarle con su':'Te invito a ayudarme con mi'} colección de Pokémon «Celebración 30.º Aniversario». Abre el enlace y entra (o crea tu cuenta) con este correo: ${email}`;
-  if(navigator.share){try{await navigator.share({title:'Colección 30C',text,url});return}catch(e){if(e&&e.name==='AbortError')return}}
+  if(navigator.share){try{await navigator.share({title:'Zuroku',text,url});return}catch(e){if(e&&e.name==='AbortError')return}}
   copy(text+'\n'+url,'Invitación copiada: pégala en WhatsApp')}
 $('#helpAdd').addEventListener('click',async()=>{
   const msg=$('#helpMsg'),em=$('#helpEmail').value.trim().toLowerCase();
@@ -1011,7 +1011,7 @@ async function saveAyuda(){
     setSync(`Guardado a las ${hora()} · ${QUIEN()} lo verá en su app`,true)}
   catch(e){setSync(e&&e.status===403?'Sin permiso para marcar: pide que te añadan como ayudante':'No se pudo guardar · lo reintento');if(!(e&&e.status===403)){clearTimeout(ayT);ayT=setTimeout(saveAyuda,15000)}}}
 if(AY){
-  document.title='Ayudando a '+QUIEN()+' · 30C';
+  document.title='Ayudando a '+QUIEN()+' · Zuroku';
   $('#rob').hidden=false;ayBanner(`Cargando la colección de ${QUIEN()}…`);
   $('#copyMiss').textContent='Copiar lo que le falta';
   try{const L=ayudo().filter(x=>x.uid!==AY.uid);L.unshift({uid:AY.uid,de:AY.de});localStorage.setItem(LSAY,JSON.stringify(L.slice(0,10)))}catch(e){}
@@ -1164,7 +1164,7 @@ document.querySelectorAll('[data-g]').forEach(i=>i.addEventListener('change',()=
   i.checked?goalSecs.add(i.dataset.g):goalSecs.delete(i.dataset.g);
   st.goal={list:SECS.map(s=>s.k).filter(k=>goalSecs.has(k)),t:Date.now()};counts();queue()}));
 // ---- Actualizaciones: compara esta versión con version.json del servidor ----
-const BUILD=16;
+const BUILD=17;
 $('#verTxt').textContent=BUILD;
 let lastCheck=0;
 async function checkUpdate(manual){
@@ -1218,7 +1218,7 @@ $('#shareBtn').addEventListener('click',async()=>{
   const name=$('#shareName').value.trim().slice(0,40);try{localStorage.setItem(LSN,name)}catch(e){}
   const url=APP+'#ver='+cfg.gist+(name?'&de='+encodeURIComponent(name):'');
   const text=`${name?name+' te comparte su':'Te comparto mi'} colección de Pokémon «Celebración 30.º Aniversario». Aquí ves las cartas que ${name?'le':'me'} faltan, siempre al día:`;
-  if(navigator.share){try{await navigator.share({title:'Colección 30C',text,url});msg.textContent='Enlace compartido.';return}catch(e){if(e&&e.name==='AbortError')return}}
+  if(navigator.share){try{await navigator.share({title:'Zuroku',text,url});msg.textContent='Enlace compartido.';return}catch(e){if(e&&e.name==='AbortError')return}}
   copy(text+'\n'+url,'Enlace copiado: pégalo en WhatsApp');msg.textContent='Enlace copiado. Pégalo en WhatsApp o donde quieras.'});
 // Dejar de compartir: la colección pasa a una nota nueva y se borra la antigua, así el enlace viejo deja de funcionar
 const stopBtn=$('#shareStop');let stopArmed=null;
@@ -1262,7 +1262,7 @@ async function loadShared(){
   }catch(e){setSync(Object.keys(st.cards).length?'No he podido actualizarla · ves la última copia guardada':'No he podido cargar la colección · lo reintento en un momento')}
   finally{verBusy=false}}
 if(VER){
-  document.title='Colección de '+(VER.de||'otra persona')+' · 30C';
+  document.title='Colección de '+(VER.de||'otra persona')+' · Zuroku';
   $('#rob').hidden=false;$('#robTxt').textContent=`Estás viendo la colección de ${VER.de||'otra persona'} · solo mirar`;
   $('#robBack').setAttribute('href',APP);
   $('#copyMiss').textContent='Copiar lo que le falta';

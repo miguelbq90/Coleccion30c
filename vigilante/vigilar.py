@@ -1,4 +1,4 @@
-"""Vigilante de la app Colección 30C.
+"""Vigilante de la app Zuroku (antes «Colección 30C»).
 
 Lo ejecuta GitHub cada 6 horas, después de cada actualización de la app y después
 de cada actualización de precios (ver .github/workflows/vigilante.yml).
@@ -41,7 +41,8 @@ PAUSA = int(os.environ.get("ESPERA_SEG", "60"))  # segundos entre intentos
 HOY = datetime.date.fromisoformat(os.environ["HOY"]) if os.environ.get("HOY") else datetime.datetime.now(datetime.timezone.utc).date()
 REVISION = os.environ.get("RUN_URL", "")
 FOTO = "https://images.scrydex.com/pokemon/me55-1/small"
-TITULO = "⚠️ La app Colección 30C necesita atención"
+TITULO = "⚠️ La app Zuroku necesita atención"
+TITULOS_VIEJOS = ("⚠️ La app Colección 30C necesita atención",)
 DIAS_MAX = 2
 
 bien, arreglos, problemas, avisos = [], [], [], []
@@ -258,7 +259,7 @@ def revisar_firebase():
 # ---------- Aviso en GitHub ----------
 def avisar():
     s, lista = github("GET", f"/repos/{REPO}/issues?state=open&per_page=50")
-    abierto = next((i for i in (lista or []) if i.get("title") == TITULO and "pull_request" not in i), None)
+    abierto = next((i for i in (lista or []) if i.get("title") in (TITULO, *TITULOS_VIEJOS) and "pull_request" not in i), None)
     enlace = f"\n\n[Ver esta revisión]({REVISION})" if REVISION else ""
     if problemas:
         texto = ("He encontrado algo que no va bien en tu app:\n\n" + "\n".join(f"- ❌ {x}" for x in problemas)
@@ -278,7 +279,7 @@ def avisar():
 
 
 def resumen():
-    lineas = ["## Revisión de la app Colección 30C", ""]
+    lineas = ["## Revisión de la app Zuroku", ""]
     lineas += [f"- ✅ {x}" for x in bien] + [f"- 🔧 {x}" for x in arreglos] + [f"- ⚠️ {x}" for x in avisos] + [f"- ❌ {x}" for x in problemas]
     txt = "\n".join(lineas)
     print(txt)

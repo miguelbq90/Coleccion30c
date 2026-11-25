@@ -1,7 +1,7 @@
 {
-  "name": "Colección 30C",
-  "short_name": "Colección 30C",
-  "description": "Mi colección de cartas Celebración 30.º Aniversario: qué tengo y qué me falta.",
+  "name": "Zuroku",
+  "short_name": "Zuroku",
+  "description": "Zuroku: tus colecciones de cartas. Qué tienes, qué te falta y cuánto vale.",
   "lang": "es",
   "start_url": "./",
   "scope": "./",
