@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Colección 30C</title>
+<meta name="theme-color" content="#d4241b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Colección 30C">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday hobby tool: cheerful, tidy, fast to tap
+   IDEA a 9-pocket collector binder: owned cards sit in their pocket as foil, empty pockets show the printed number
+   PICTURE the binder grid of all 191 pockets, filling with holo as cards are marked
+   COLOUR binder red cover band, white pockets, Pikachu-yellow progress, pastel holo for owned, blue focus
+   TYPE Rubik 800 for numbers and title, Rubik 400/500 for text
+   LAYOUT red cover: title left, big tally right; sticky search and filters; full-width pocket grid by section; tools band last. Phone: tally under title, 4 pockets a row */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#121214);--ink:light-dark(#16161a,#f1f0ec);--mute:light-dark(#5b5b64,#a9a8b0);--line:light-dark(#c4c3ca,#3b3b43);--slot:light-dark(#f4f4f6,#1c1c21);--panel:light-dark(#f1f1f3,#19191d);--red:light-dark(#d4241b,#7c1a13);--red2:light-dark(#a91b13,#5c120d);--yel:light-dark(#f5be00,#ffcb05);--blue:light-dark(#1f5fbf,#86b6ff)}
+:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 Rubik,system-ui,-apple-system,sans-serif;overflow-x:clip}
+[hidden]{display:none!important}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.band{padding-block:clamp(20px,3vw,40px);padding-left:max(5vw,16px);padding-right:max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.cover{background:var(--red);color:#fff}
+.cover :focus-visible{outline-color:var(--yel)}
+.cov{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,auto);gap:20px 48px;align-items:end}
+h1{font-weight:800;font-size:clamp(32px,4.4vw,48px);line-height:1.05;letter-spacing:-.02em;margin:0;text-wrap:balance}
+.sub{margin:10px 0 0;max-width:56ch;opacity:.92}
+.sync{margin:10px 0 0;padding:0;min-height:32px;border:0;background:none;color:inherit;text-align:left;font-size:14px;display:flex;align-items:center;gap:8px;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.5)}
+.sync::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--yel);flex:none}
+.sync.ok::before{background:#8ef0a8}
+.big{font-weight:800;font-size:clamp(48px,7vw,76px);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.big small{font-size:.42em;font-weight:700;opacity:.85;letter-spacing:0}
+.bar{height:12px;border-radius:99px;background:rgba(255,255,255,.25);margin:12px 0 8px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:#ffcb05;border-radius:inherit;transition:width .35s}
+.left{margin:0;font-weight:500}
+.acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.btn{font-weight:500;min-height:44px;padding:0 16px;border-radius:12px;border:1.5px solid currentColor;background:transparent;white-space:nowrap}
+.cover .btn{border-color:rgba(255,255,255,.75)}
+.cover .btn.solid{background:#fff;color:var(--red2);border-color:#fff}
+.btn.solid{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:default}
+.lote{background:var(--panel);border-bottom:1px solid var(--line)}
+.lote h2,.foot h2{font-size:22px;font-weight:700;line-height:1.2;margin:0 0 6px}
+.lote p{margin:0 0 12px;color:var(--mute);max-width:70ch}
+.lote code{font:inherit;font-weight:500;color:var(--ink)}
+textarea{display:block;width:100%;min-height:96px;font:16px/1.5 Rubik,system-ui,sans-serif;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);resize:vertical}
+.lrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;align-items:center}
+.msg{margin:0;font-weight:500}
+.tools{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 93%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px max(5vw,16px)}
+.tools .wrap{display:grid;gap:8px}
+.r1{display:flex;flex-wrap:wrap;gap:10px}
+.srch{flex:1 1 260px}
+input[type=search]{width:100%;min-height:44px;font:16px Rubik,system-ui,sans-serif;padding:0 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--slot);color:var(--ink)}
+.seg{display:flex;flex:none;border:1.5px solid var(--line);border-radius:12px;overflow:hidden}
+.seg button{min-height:41px;padding:0 14px;border:0;background:transparent;font-weight:500;white-space:nowrap}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.r2{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.r2::-webkit-scrollbar{display:none}
+.chip{flex:none;min-height:44px;padding:0 14px;border-radius:99px;border:1.5px solid var(--line);background:transparent;font-size:15px;white-space:nowrap}
+.chip span{color:var(--mute);margin-left:5px;font-variant-numeric:tabular-nums}
+.chip[aria-pressed=true]{background:var(--red);border-color:var(--red);color:#fff}
+.chip[aria-pressed=true] span{color:#fff;opacity:.85}
+.sep{flex:none;width:1px;background:var(--line);margin:8px 2px}
+.hit{max-width:1240px;margin:0 auto;padding:14px max(5vw,16px) 0;font-weight:500;font-size:17px}
+.hit b{font-weight:800}
+.hit .no{color:var(--red)}
+.sect{max-width:1240px;margin:0 auto 30px}
+.sect:last-child{margin-bottom:0}
+.sh{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:4px 12px;margin-bottom:12px}
+.sh h2{font-size:22px;font-weight:700;line-height:1.2;margin:0}
+.sh h2 span{font-weight:400;font-size:16px;color:var(--mute);white-space:nowrap}
+.cnt{color:var(--mute);font-variant-numeric:tabular-nums;white-space:nowrap}
+.mini{grid-column:1/-1;height:6px;border-radius:99px;background:var(--slot);overflow:hidden}
+.mini i{display:block;height:100%;width:0;background:var(--yel);transition:width .35s}
+.pk{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px}
+.p{position:relative;aspect-ratio:63/88;display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:8px;text-align:left;background:var(--slot);border:1.5px dashed var(--line);border-radius:10px;overflow:hidden}
+.p:hover{border-color:var(--ink)}
+.p b{font-weight:800;font-size:20px;line-height:1;letter-spacing:-.01em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.p.cl b{font-size:15px}
+.p .nm{font-size:13px;line-height:1.25;hyphens:auto;overflow-wrap:break-word;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.p em{margin-top:auto;font-style:normal;font-size:13px;line-height:1.2;color:var(--mute);white-space:nowrap}
+.p .ck{position:absolute;right:5px;bottom:5px;width:20px;height:20px;padding:3px;border-radius:50%;background:#16161a;fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;display:none}
+.p.own{color:#16161a;border:1.5px solid rgba(0,0,0,.14);background:linear-gradient(135deg,rgba(255,255,255,.6),rgba(255,255,255,0) 46%),conic-gradient(from 200deg at 35% 30%,#ffd0e5,#fff0a3,#c4f4d4,#bde0ff,#dacdff,#ffd0e5)}
+.p.own em{color:#3c3c45}
+.p.own .ck{display:block}
+.p.pop::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.85) 50%,transparent 70%);transform:translateX(-120%);animation:shine .6s ease-out forwards}
+@keyframes shine{to{transform:translateX(120%)}}
+.nums .pk{grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:6px}
+.nums .p{aspect-ratio:1;align-items:center;justify-content:center;padding:4px;border-radius:8px}
+.nums .p .nm,.nums .p em,.nums .p .ck{display:none}
+.nums .p b{font-size:17px}
+.nums .p.cl b{font-size:13px}
+.empty{max-width:1240px;margin:0 auto;padding:28px 0;font-size:17px;color:var(--mute)}
+.foot{background:var(--panel);border-top:1px solid var(--line)}
+.fg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 40px}
+.fg p{margin:0 0 12px;color:var(--mute)}
+.ck2{display:flex;align-items:center;gap:10px;min-height:44px;cursor:pointer}
+.ck2 input{width:22px;height:22px;accent-color:var(--red);flex:none}
+.danger{color:var(--red)}
+.src{margin:28px 0 0;font-size:14px;color:var(--mute)}
+.toast{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom,0px));transform:translate(-50%,160%);z-index:10;display:flex;align-items:center;gap:12px;width:max-content;max-width:calc(100% - 32px);padding:6px 6px 6px 16px;border-radius:14px;background:var(--ink);color:var(--bg);box-shadow:0 6px 20px rgba(0,0,0,.25);transition:transform .25s}
+.toast.on{transform:translate(-50%,0)}
+.toast span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.toast button{flex:none;min-height:40px;padding:0 12px;border:0;border-radius:10px;background:transparent;color:var(--yel);font-weight:700}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:12;background:var(--bg);border-top:1px solid var(--line);box-shadow:0 -8px 30px rgba(0,0,0,.2);padding:16px max(5vw,16px) max(16px,env(safe-area-inset-bottom,0px))}
+.sheet textarea{min-height:140px}
+a.btn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
+.syncbox{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:16px 40px;padding-bottom:28px;margin-bottom:28px;border-bottom:1px solid var(--line)}
+.syncbox h2{margin:0 0 6px}
+.syncbox p{margin:0 0 12px;color:var(--mute)}
+.steps{display:grid;gap:12px;align-content:start}
+.steps label{font-weight:500;display:block;margin-bottom:6px}
+input[type=password]{width:100%;min-height:44px;font:16px Rubik,system-ui,sans-serif;padding:0 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.syncbox .msg{color:var(--ink)}
+@media(max-width:860px){.fg,.syncbox{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.cov{grid-template-columns:minmax(0,1fr)}.seg{flex:1 1 100%}.seg button{flex:1;padding:0 8px}.pk{grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:8px}.p{padding:7px}.p b{font-size:18px}.p.cl b{font-size:14px}.nums .pk{grid-template-columns:repeat(auto-fill,minmax(56px,1fr))}}
+@media(prefers-reduced-motion:reduce){.p.pop::after{animation:none;display:none}.bar i,.mini i,.toast{transition:none}}
+</style>
+</head>
+<body>
+<header class="cover band">
+  <div class="wrap">
+    <div class="cov">
+      <div>
+        <h1>Mi colección Celebración 30.º Aniversario</h1>
+        <p class="sub">Toca una carta para marcar que la tienes. Funciona sin internet y, cuando vuelve la conexión, se pone al día en todos tus aparatos.</p>
+        <button class="sync" id="sync" type="button" aria-controls="syncbox">Guardado en este aparato</button>
+      </div>
+      <div>
+        <div class="big"><span id="have">0</span><small> / <span id="goal">191</span></small></div>
+        <div class="bar" aria-hidden="true"><i id="barfill"></i></div>
+        <p class="left" id="left">Te faltan 191</p>
+      </div>
+    </div>
+    <div class="acts">
+      <button class="btn solid" id="openLote" aria-expanded="false" aria-controls="lote">Añadir varias de golpe</button>
+      <button class="btn" id="copyMiss">Copiar lo que me falta</button>
+      <button class="btn" id="undo" disabled>Deshacer</button>
+    </div>
+  </div>
+</header>
+
+<section class="lote band" id="lote" hidden>
+  <div class="wrap">
+    <h2>Añadir varias de golpe</h2>
+    <p>Escribe los números separados por comas o espacios. Rangos con guion (<code>1-22</code>), <code>5/30</code> para los Pikachu del subset, <code>R</code>, <code>G</code> o <code>B</code> para los Mew RGB y el número completo de la Clásica (<code>58/102</code>).</p>
+    <label class="vh" for="loteTxt">Números de las cartas</label>
+    <textarea id="loteTxt" placeholder="Ej.: 1-22, 53, 54, 5/30, 129, R, 58/102"></textarea>
+    <div class="lrow">
+      <button class="btn solid" id="loteAdd">Marcar que las tengo</button>
+      <button class="btn" id="loteDel">Quitar de las que tengo</button>
+      <p class="msg" id="loteMsg" role="status"></p>
+    </div>
+  </div>
+</section>
+
+<div class="tools">
+  <div class="wrap">
+    <div class="r1">
+      <label class="srch"><span class="vh">Buscar carta</span><input id="q" type="search" placeholder="Busca por número o nombre: 54, 5/30, Mew…" autocomplete="off" enterkeyhint="search"></label>
+      <div class="seg" role="group" aria-label="Qué cartas mostrar">
+        <button data-v="todas" aria-pressed="true">Todas</button><button data-v="faltan" aria-pressed="false">Me faltan</button><button data-v="tengo" aria-pressed="false">Tengo</button>
+      </div>
+    </div>
+    <div class="r2" id="chips" role="group" aria-label="Sección">
+      <button class="chip" data-s="all" aria-pressed="true">Todo<span id="ch-all"></span></button>
+      <button class="chip" data-s="main" aria-pressed="false">Principal<span id="ch-main"></span></button>
+      <button class="chip" data-s="sec" aria-pressed="false">Secretas<span id="ch-sec"></span></button>
+      <button class="chip" data-s="rgb" aria-pressed="false">Mew RGB<span id="ch-rgb"></span></button>
+      <button class="chip" data-s="cls" aria-pressed="false">Clásica<span id="ch-cls"></span></button>
+      <span class="sep" aria-hidden="true"></span>
+      <button class="chip" id="mode" aria-pressed="false">Ver solo números</button>
+    </div>
+  </div>
+</div>
+
+<p class="hit" id="hit" role="status" hidden></p>
+<main class="band" id="grid" aria-label="Cartas de la colección"></main>
+
+<footer class="foot band">
+  <div class="wrap">
+    <div class="syncbox" id="syncbox">
+      <div>
+        <h2>Sincronizar iPhone y portátil</h2>
+        <p>Tu colección siempre se guarda en este aparato, con o sin internet. Para que el iPhone y el portátil tengan la misma, se guarda también una copia en una nota secreta de tu cuenta gratuita de GitHub.</p>
+        <p>La clave solo da permiso para esas notas («gists»): no puede tocar nada más de tu cuenta.</p>
+      </div>
+      <div class="steps" id="syncOff">
+        <a class="btn" href="https://github.com/settings/tokens/new?scopes=gist&amp;description=Coleccion%2030C" target="_blank" rel="noopener">1. Crear la clave en GitHub</a>
+        <div><label for="token">2. Pega aquí la clave</label><input id="token" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ghp_…"></div>
+        <div><button class="btn solid" id="connect">3. Conectar este aparato</button></div>
+        <p class="msg" id="syncMsg" role="status"></p>
+      </div>
+      <div class="steps" id="syncOn" hidden>
+        <p>Conectado. Se sincroniza al abrir la app, a los pocos segundos de cada cambio y en cuanto vuelve internet.</p>
+        <div class="lrow" style="margin-top:0"><button class="btn solid" id="syncNow">Sincronizar ahora</button><button class="btn" id="disconnect">Desconectar este aparato</button></div>
+        <p class="msg" id="syncMsg2" role="status"></p>
+      </div>
+    </div>
+    <div class="fg">
+      <div>
+        <h2>Copia de seguridad</h2>
+        <p>Copia tu colección como lista de números. Si algún día la pegas en «Añadir varias de golpe», vuelve tal cual.</p>
+        <button class="btn" id="copyMine">Copiar mis cartas</button>
+      </div>
+      <div>
+        <h2>Qué cuenta para completarla</h2>
+        <p>Desmarca lo que no quieras perseguir y el contador de arriba se ajusta.</p>
+        <div id="goals"></div>
+      </div>
+      <div>
+        <h2>Empezar de cero</h2>
+        <p>Borra todas las marcas. Puedes deshacerlo justo después.</p>
+        <button class="btn danger" id="reset">Borrar todas las marcas</button>
+      </div>
+    </div>
+    <p class="src">Lista de cartas: WikiDex y Pokellector (noviembre de 2026). RI = Rara Ilustración, RIE = Rara Ilustración Especial, RF = Rara Futurista. La Colección Clásica lleva el número de la carta original.</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toastTxt"></span><button id="toastUndo">Deshacer</button></div>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="wrap">
+    <p class="msg" style="margin-bottom:10px">No he podido copiarlo yo solo. Mantén pulsado el texto, selecciónalo todo y copia.</p>
+    <label class="vh" for="sheetTxt">Texto para copiar</label>
+    <textarea id="sheetTxt" readonly></textarea>
+    <div class="lrow"><button class="btn solid" id="sheetClose">Cerrar</button></div>
+  </div>
+</div>
+
+<script>
+{
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(3,'0');
+const fold=s=>String(s).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const TAGS={r:'Rara',t:'Objeto',ir:'RI',sir:'RIE',fut:'RF'};
+const M1=[["Exeggcute","c"],["Exeggutor de Alola","c","Alolan Exeggutor"],["Volbeat","c"],["Illumise","c"],["Tropius","c"],["Cherubi","c"],["Cherrim","c"],["Vivillon","c"],["Vulpix","c"],["Ninetales","c"],["Moltres","c"],["Ho-Oh","r"],["Victini","c"],["Reshiram","r"],["Fuecoco ex","ex"],["Slowpoke","c"],["Lapras","c"],["Articuno","c"],["Kyogre","r"],["Palkia","r"],["Greninja ex","ex"],["Wishiwashi","c"]];
+const M2=[["Pikachu ex","ex"],["Pikachu ex","ex"],["Zapdos","c"],["Zekrom","r"],["Zeraora","c"],["Toxel","c"],["Toxtricity","c"],["Toxtricity","c"],["Morpeko","c"],["Miraidon","r"],["Mewtwo","r"],["Mewtwo ex","ex"],["Mew","r"],["Mew ex","ex"],["Marill","c"],["Azumarill","c"],["Espeon","c"],["Espeon ex","ex"],["Sylveon ex","ex"],["Unown","c"],["Drifloon","c"],["Cresselia","c"],["Chandelure","c"],["Xerneas","r"],["Comfey","c"],["Cosmog","c"],["Cosmoem","c"],["Lunala","r"],["Gimmighoul","c"],["Groudon","r"],["Lucario","c"],["Seismitoad","c"],["Lycanroc","c"],["Koraidon","r"],["Nidoran♀","c"],["Nidorina","c"],["Meowth de Alola","c","Alolan Meowth"],["Gengar ex","ex"],["Umbreon","c"],["Umbreon ex","ex"],["Murkrow","c"],["Scraggy","c"],["Zorua","c"],["Zoroark","c"],["Deino","c"],["Zweilous","c"],["Hydreigon","c"],["Yveltal","r"],["Meowth de Galar","c","Galarian Meowth"],["Jirachi ex","ex"],["Dialga","r"],["Ferrothorn","c"],["Solgaleo","r"],["Zacian","r"],["Zamazenta","r"],["Gholdengo","c"],["Salamence ex","ex"],["Jangmo-o","c"],["Hakamo-o","c"],["Kommo-o","c"],["Meowth","c"],["Kangaskhan","c"],["Ditto","c"],["Eevee","c"],["Eevee","c"],["Eevee","c"],["Snorlax","c"],["Igglybuff","c"],["Lugia","r"],["Zorua de Hisui","c","Hisuian Zorua"],["Zoroark de Hisui","c","Hisuian Zoroark"],["Minior","c"],["Maushold","c"],["Pokétableta","t","Poké Pad"],["Cambio","t","Switch"],["Ultra Ball","t"]];
+const SX=[["Exeggutor de Alola","ir","Alolan Exeggutor"],["Moltres","ir"],["Lapras","ir"],["Articuno","ir"],["Zapdos","ir"],["Toxtricity","ir"],["Morpeko","ir"],["Drifloon","ir"],["Chandelure","ir"],["Lycanroc","ir"],["Meowth de Alola","ir","Alolan Meowth"],["Scraggy","ir"],["Meowth de Galar","ir","Galarian Meowth"],["Gholdengo","ir"],["Kommo-o","ir"],["Meowth","ir"],["Zorua de Hisui","ir","Hisuian Zorua"],["Maushold","ir"],["Fuecoco ex","sir"],["Greninja ex","sir"],["Pikachu ex","sir"],["Pikachu ex","sir"],["Mewtwo ex","sir"],["Mew ex","sir"],["Sylveon ex","sir"],["Gengar ex","sir"],["Jirachi ex","sir"],["Salamence ex","sir"],["Mewtwo ex","fut"],["Mew ex","fut"]];
+const CL=[["58/102","Pikachu"],["4/102","Charizard"],["18/132","Misty"],["69/132","Jigglypuff de Erika","Erika's Jigglypuff"],["25/111","Sneasel"],["106/105","Celebi Luminoso","Shining Celebi"],["149/147","Lugia"],["5/109","Delcatty"],["19/109","Tyranitar Oscuro","Dark Tyranitar"],["108/115","Scizor-ex","Scizor ex"],["11/113","Metagross δ"],["106/106","Palkia Nivel X","Palkia LV.X"],["43/146","Uxie"],["47/127","Crobat G"],["94/102","Gengar (Prime)","Gengar"],["99/102","Darkrai y Cresselia LEYENDA (arriba)","Darkrai & Cresselia LEGEND"],["100/102","Darkrai y Cresselia LEYENDA (abajo)","Darkrai & Cresselia LEGEND"],["101/101","N"],["85/124","Rayquaza-EX"],["11/101","Genesect-EX"],["106/160","M-Gardevoir-EX","M Gardevoir-EX"],["41/122","Greninja TURBO","Greninja BREAK"],["89/149","Solgaleo-GX"],["57/111","Buzzwole-GX"],["33/181","Pikachu y Zekrom-GX","Pikachu & Zekrom-GX"],["138/202","Zacian V"],["050/185","Raikou Increíble","Amazing Raikou"],["114/264","Mew VMAX"],["123/172","Arceus V-ASTRO","Arceus VSTAR"],["203/193","Magikarp"]];
+const SECS=[{k:'main',t:'Set principal',r:'001–128',s:'Principal'},{k:'sec',t:'Secretas',r:'129–158',s:'Secretas'},{k:'rgb',t:'Mew RGB',r:'R · G · B',s:'Mew RGB'},{k:'cls',t:'Colección Clásica',r:'30 reimpresiones',s:'Clásica'}];
+const CARDS=[],BY={};
+const norm=n=>n.split('/').map(x=>String(parseInt(x,10))).join('/');
+const add=(id,num,name,en,tag,sec)=>{const c={id,num,name,en:en||'',tag:tag||'',sec,i:CARDS.length};CARDS.push(c);BY[id]=c};
+const addArr=(arr,start,sec)=>arr.forEach((a,j)=>{const id=pad(start+j);add(id,id,a[0],a[2],TAGS[a[1]],sec)});
+addArr(M1,1,'main');
+for(let k=1;k<=30;k++)add(pad(22+k),pad(22+k),'Pikachu','',String(k).padStart(2,'0')+'/30','main');
+addArr(M2,53,'main');
+addArr(SX,129,'sec');
+['R','G','B'].forEach(l=>add(l,l+'/RGB','Mew','','RGB','rgb'));
+CL.forEach(([n,nm,en])=>add('c'+norm(n),n,nm,en,'','cls'));
+
+// Estado: cada carta guarda si la tienes (o) y cuándo cambió (t). Al sincronizar gana el cambio más reciente de cada carta.
+let st={v:2,cards:{},goal:{list:SECS.map(s=>s.k),t:0}};
+let owned=new Set(),goalSecs=new Set(SECS.map(s=>s.k)),hist=[];
+let view='todas',sec='all',q='';
+const LS='c30-estado',LSC='c30-sync',LSM='c30-modo';
+function derive(){owned=new Set(Object.keys(st.cards).filter(id=>BY[id]&&st.cards[id].o===1));goalSecs=new Set(st.goal.list)}
+function mark(id,on,t){const cur=st.cards[id];if(!!(cur&&cur.o===1)===on)return false;st.cards[id]={o:on?1:0,t};return true}
+function setOwned(next){const t=Date.now();CARDS.forEach(c=>mark(c.id,next.has(c.id),t));derive()}
+function clean(s){
+  const out={v:2,cards:{},goal:null};
+  if(!s||typeof s!=='object'||!s.cards||typeof s.cards!=='object')return null;
+  for(const id of Object.keys(s.cards)){const e=s.cards[id];if(BY[id]&&e&&(e.o===0||e.o===1)&&typeof e.t==='number')out.cards[id]={o:e.o,t:e.t}}
+  const g=s.goal;
+  if(g&&Array.isArray(g.list)&&typeof g.t==='number'){const list=g.list.filter(k=>SECS.some(x=>x.k===k));if(list.length)out.goal={list,t:g.t}}
+  return out}
+function merge(remote){
+  const r=clean(remote);if(!r)return false;let ch=false;
+  for(const id of Object.keys(r.cards)){const l=st.cards[id];if(!l||r.cards[id].t>l.t){st.cards[id]=r.cards[id];ch=true}}
+  if(r.goal&&r.goal.t>st.goal.t){st.goal=r.goal;ch=true}
+  if(ch)derive();return ch}
+const ser=s=>{const c={};Object.keys(s.cards).sort().forEach(k=>c[k]={o:s.cards[k].o,t:s.cards[k].t});return JSON.stringify({v:2,cards:c,goal:s.goal?{list:s.goal.list,t:s.goal.t}:null})};
+function saveLocal(){try{localStorage.setItem(LS,ser(st))}catch(e){}}
+try{merge(JSON.parse(localStorage.getItem(LS)||'null'))}catch(e){}
+derive();
+
+function parse(txt){
+  const ids=new Set(),bad=[];
+  for(const raw of txt.split(/[\s,;]+/)){
+    const t=raw.trim().replace(/[–—]/g,'-');if(!t)continue;let m;
+    if(m=t.match(/^(\d{1,3})-(\d{1,3})$/)){let a=+m[1],b=+m[2];if(a>b)[a,b]=[b,a];if(a<1||b>158){bad.push(raw);continue}for(let i=a;i<=b;i++)ids.add(pad(i));continue}
+    if(m=t.match(/^([rgb])(\/rgb)?$/i)){ids.add(m[1].toUpperCase());continue}
+    if(m=t.match(/^(\d{1,3})$/)){const v=+m[1];if(v>=1&&v<=158){ids.add(pad(v));continue}bad.push(raw);continue}
+    if(m=t.match(/^(\d{1,3})\/(\d{1,3})$/)){const a=+m[1],b=+m[2];
+      if(b===128&&a>=1&&a<=158){ids.add(pad(a));continue}
+      if(b===30&&a>=1&&a<=30){ids.add(pad(22+a));continue}
+      if(BY['c'+a+'/'+b]){ids.add('c'+a+'/'+b);continue}}
+    bad.push(raw)}
+  return {ids:[...ids],bad}}
+function compress(list){
+  const nums=list.filter(id=>/^\d{3}$/.test(id)).map(Number).sort((a,b)=>a-b),out=[];
+  for(let i=0;i<nums.length;){let j=i;while(j+1<nums.length&&nums[j+1]===nums[j]+1)j++;out.push(j>i?nums[i]+'-'+nums[j]:String(nums[i]));i=j+1}
+  list.filter(id=>/^[RGB]$/.test(id)).forEach(x=>out.push(x));
+  list.filter(id=>id[0]==='c').forEach(x=>out.push(BY[x].num));
+  return out.join(', ')}
+function match(c,f){
+  if(/^\d+$/.test(f)){const v=+f;return c.sec==='cls'?+c.num.split('/')[0]===v:+c.id===v}
+  let m=f.match(/^(\d+)\/(\d+)$/);
+  if(m){const a=+m[1],b=+m[2];if(b===30)return c.id===pad(22+a)&&a>=1&&a<=30;if(b===128)return c.id===pad(a);return c.id==='c'+a+'/'+b}
+  if(m=f.match(/^([rgb])\/rgb$/))return c.id===m[1].toUpperCase();
+  return fold(c.name).includes(f)||fold(c.en).includes(f)}
+
+const grid=$('#grid'),hitEl=$('#hit');
+function visible(c,f){
+  if(sec!=='all'&&c.sec!==sec)return false;
+  if(view==='faltan'&&owned.has(c.id))return false;
+  if(view==='tengo'&&!owned.has(c.id))return false;
+  return !f||match(c,f)}
+function pk(c){const o=owned.has(c.id);
+  return `<button class="p${o?' own':''}${c.sec==='cls'?' cl':''}" data-id="${esc(c.id)}" aria-pressed="${o}" title="${esc(c.num+' '+c.name)}"><b>${esc(c.num)}</b><span class="nm" lang="es">${esc(c.name)}</span>${c.tag?`<em>${esc(c.tag)}</em>`:''}<svg class="ck" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg></button>`}
+function render(){
+  document.querySelectorAll('[data-g]').forEach(i=>i.checked=goalSecs.has(i.dataset.g));
+  const f=fold(q.trim());let html='',hits=[];
+  for(const s of SECS){
+    if(sec!=='all'&&s.k!==sec)continue;
+    const list=CARDS.filter(c=>c.sec===s.k&&visible(c,f));
+    if(!list.length&&(f||sec==='all'))continue;
+    hits=hits.concat(list);
+    html+=`<section class="sect"><div class="sh"><h2>${s.t} <span>${s.r}</span></h2><span class="cnt" data-c="${s.k}"></span><div class="mini" aria-hidden="true"><i data-m="${s.k}"></i></div></div>${list.length?`<div class="pk">${list.map(pk).join('')}</div>`:`<p class="empty">${view==='faltan'?'No te falta ninguna de esta sección.':'Todavía no tienes ninguna de esta sección.'}</p>`}</section>`}
+  if(!hits.length&&!html)html=`<p class="empty">${f?'Ninguna carta coincide con «'+esc(q.trim())+'».':view==='faltan'?'No te falta ninguna. Colección completa.':'Todavía no has marcado ninguna carta.'}</p>`;
+  grid.innerHTML=html;
+  if(f&&hits.length){const miss=hits.filter(c=>!owned.has(c.id));
+    hitEl.innerHTML=hits.length===1?`<b>${esc(hits[0].num)}</b> ${esc(hits[0].name)} · ${owned.has(hits[0].id)?'la tienes':'<span class="no">te falta</span>'}`:`${hits.length} cartas coinciden · ${miss.length?`<span class="no">te faltan ${miss.length}</span>`:'las tienes todas'}`;
+    hitEl.hidden=false}else hitEl.hidden=true;
+  counts()}
+function counts(){
+  const per={};SECS.forEach(s=>per[s.k]={h:0,t:0});
+  CARDS.forEach(c=>{per[c.sec].t++;if(owned.has(c.id))per[c.sec].h++});
+  let h=0,t=0;SECS.forEach(s=>{if(goalSecs.has(s.k)){h+=per[s.k].h;t+=per[s.k].t}});
+  $('#have').textContent=h;$('#goal').textContent=t;
+  $('#barfill').style.width=(t?h/t*100:0)+'%';
+  $('#left').textContent=t-h?`Te faltan ${t-h} · ${Math.floor(h/t*100)} % completada`:'¡Completa! No te falta ninguna';
+  $('#ch-all').textContent=h+'/'+t;
+  SECS.forEach(s=>{const p=per[s.k];$('#ch-'+s.k).textContent=p.h+'/'+p.t;
+    document.querySelectorAll(`[data-c="${s.k}"]`).forEach(e=>e.textContent=`${p.h} de ${p.t}`);
+    document.querySelectorAll(`[data-m="${s.k}"]`).forEach(e=>e.style.width=(p.h/p.t*100)+'%')});
+  $('#undo').disabled=!hist.length}
+
+const toastEl=$('#toast');let tt=null;
+function toast(txt,undo){$('#toastTxt').textContent=txt;$('#toastUndo').hidden=!undo;toastEl.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>toastEl.classList.remove('on'),4500)}
+function remember(){hist.push([...owned]);if(hist.length>40)hist.shift()}
+function undo(){if(!hist.length)return;setOwned(new Set(hist.pop()));render();queue();toast('Deshecho')}
+
+// ---- Sincronización con una nota secreta (gist) de GitHub ----
+const GH='https://api.github.com',FILE='coleccion30c.json';
+let cfg={};try{cfg=JSON.parse(localStorage.getItem(LSC)||'{}')||{}}catch(e){cfg={}}
+const saveCfg=()=>{try{localStorage.setItem(LSC,JSON.stringify(cfg))}catch(e){}};
+const syncEl=$('#sync');
+syncEl.addEventListener('click',()=>$('#syncbox').scrollIntoView({behavior:'smooth',block:'start'}));
+function setSync(txt,ok){syncEl.textContent=txt;syncEl.classList.toggle('ok',!!ok)}
+const hora=()=>new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+function idle(){if(!cfg.token)setSync('Guardado en este aparato · sin sincronizar');else if(!navigator.onLine)setSync('Sin conexión · tus cambios se subirán al volver internet')}
+async function gh(path,opt){
+  opt=opt||{};
+  const h={'Accept':'application/vnd.github+json','Authorization':'Bearer '+cfg.token};
+  if(opt.body)h['Content-Type']='application/json';
+  const r=await fetch(GH+path,{method:opt.method||'GET',headers:h,body:opt.body,cache:'no-store'});
+  if(!r.ok){const e=new Error('GitHub '+r.status);e.status=r.status;throw e}
+  return r.json()}
+async function ensureGist(){
+  if(cfg.gist)return;
+  for(let page=1;page<=5;page++){
+    const list=await gh('/gists?per_page=100&page='+page);
+    const g=list.find(x=>x&&x.files&&x.files[FILE]);
+    if(g){cfg.gist=g.id;saveCfg();return}
+    if(list.length<100)break}
+  const g=await gh('/gists',{method:'POST',body:JSON.stringify({description:'Colección 30C · no borrar (la usa la app)',public:false,files:{[FILE]:{content:ser(st)}}})});
+  cfg.gist=g.id;saveCfg()}
+let busy=false,again=false,wt=null;
+async function sync(){
+  if(!cfg.token){idle();return}
+  if(!navigator.onLine){idle();return}
+  if(busy){again=true;return}
+  busy=true;setSync('Sincronizando…');
+  try{
+    await ensureGist();
+    let g;
+    try{g=await gh('/gists/'+cfg.gist)}
+    catch(e){if(e.status===404){cfg.gist=null;saveCfg();await ensureGist();g=await gh('/gists/'+cfg.gist)}else throw e}
+    const f=g.files&&g.files[FILE];let remote=null;
+    if(f){let txt=f.content;if(f.truncated&&f.raw_url)txt=await (await fetch(f.raw_url,{cache:'no-store'})).text();try{remote=JSON.parse(txt)}catch(e){remote=null}}
+    const changed=merge(remote);
+    const cr=clean(remote);
+    if(!cr||ser(cr)!==ser(st))await gh('/gists/'+cfg.gist,{method:'PATCH',body:JSON.stringify({files:{[FILE]:{content:ser(st)}}})});
+    saveLocal();if(changed)render();
+    setSync('Sincronizado a las '+hora(),true)}
+  catch(e){
+    if(e&&e.status===401)setSync('La clave de GitHub ya no funciona · revísala abajo');
+    else if(!navigator.onLine)idle();
+    else setSync('No se pudo sincronizar · lo reintento solo')}
+  busy=false;
+  if(again){again=false;sync()}}
+function queue(){saveLocal();if(!cfg.token){idle();return}setSync('Cambios pendientes de subir…');clearTimeout(wt);wt=setTimeout(sync,1500)}
+window.addEventListener('online',()=>sync());
+window.addEventListener('offline',idle);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')sync()});
+setInterval(()=>{if(document.visibilityState==='visible'&&navigator.onLine&&cfg.token)sync()},120000);
+function showSync(){$('#syncOff').hidden=!!cfg.token;$('#syncOn').hidden=!cfg.token}
+$('#connect').addEventListener('click',async()=>{
+  const v=$('#token').value.trim(),msg=$('#syncMsg');
+  if(!v){msg.textContent='Primero pega la clave que te da GitHub.';return}
+  if(!navigator.onLine){msg.textContent='Necesitas internet para conectar la primera vez.';return}
+  const old=cfg;cfg={token:v};msg.textContent='Comprobando la clave…';
+  try{await ensureGist();saveCfg();$('#token').value='';msg.textContent='';showSync();await sync();$('#syncMsg2').textContent='Listo: este aparato ya está conectado.'}
+  catch(e){cfg=old;msg.textContent=e&&e.status===401?'Esa clave no funciona. Comprueba que la copiaste entera y que marcaste la casilla «gist».':e&&e.status===403?'GitHub no deja usar esa clave para notas: crea otra con la casilla «gist» marcada.':'No he podido hablar con GitHub. Prueba otra vez en un momento.'}});
+$('#syncNow').addEventListener('click',()=>{$('#syncMsg2').textContent='';sync()});
+$('#disconnect').addEventListener('click',()=>{cfg={};try{localStorage.removeItem(LSC)}catch(e){}showSync();idle();$('#syncMsg').textContent='Desconectado. Tu colección sigue guardada en este aparato.'});
+
+grid.addEventListener('click',e=>{
+  const b=e.target.closest('.p');if(!b)return;
+  const c=BY[b.dataset.id];if(!c)return;
+  remember();
+  const on=!owned.has(c.id);mark(c.id,on,Date.now());derive();
+  b.classList.toggle('own',on);b.setAttribute('aria-pressed',on);
+  b.classList.remove('pop');if(on){void b.offsetWidth;b.classList.add('pop')}
+  if(q.trim())render();else counts();
+  queue();
+  toast(`${c.num} ${c.name}: ${on?'la tienes':'quitada'}`,true)});
+$('#toastUndo').addEventListener('click',undo);
+$('#undo').addEventListener('click',undo);
+let qt=null;
+$('#q').addEventListener('input',e=>{q=e.target.value;clearTimeout(qt);qt=setTimeout(render,120)});
+document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{view=b.dataset.v;document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()}));
+document.querySelectorAll('[data-s]').forEach(b=>b.addEventListener('click',()=>{sec=b.dataset.s;document.querySelectorAll('[data-s]').forEach(x=>x.setAttribute('aria-pressed',x===b));render()}));
+const modeBtn=$('#mode');
+function setMode(n){grid.classList.toggle('nums',n);modeBtn.setAttribute('aria-pressed',n);modeBtn.textContent=n?'Ver cartas':'Ver solo números';try{localStorage.setItem(LSM,n?'1':'0')}catch(e){}}
+modeBtn.addEventListener('click',()=>setMode(!grid.classList.contains('nums')));
+try{if(localStorage.getItem(LSM)==='1')setMode(true)}catch(e){}
+
+const loteEl=$('#lote'),openBtn=$('#openLote');
+openBtn.addEventListener('click',()=>{const o=loteEl.hidden;loteEl.hidden=!o;openBtn.setAttribute('aria-expanded',o);if(o)$('#loteTxt').focus()});
+function lote(adding){
+  const {ids,bad}=parse($('#loteTxt').value);const msg=$('#loteMsg');
+  if(!ids.length){msg.innerHTML=bad.length?'No he reconocido ningún número: '+esc(bad.join(', ')):'Escribe algún número primero.';return}
+  remember();let n=0;const t=Date.now();
+  ids.forEach(id=>{if(mark(id,adding,t))n++});
+  derive();render();queue();
+  msg.innerHTML=(adding?`Marcadas ${n} cartas nuevas`:`Quitadas ${n} cartas`)+(ids.length>n?` (${ids.length-n} ya estaban así)`:'')+(bad.length?`. No he reconocido: ${esc(bad.join(', '))}`:'.');
+  if(!bad.length)$('#loteTxt').value='';
+  toast(adding?`Añadidas ${n} cartas`:`Quitadas ${n} cartas`,true)}
+$('#loteAdd').addEventListener('click',()=>lote(true));
+$('#loteDel').addEventListener('click',()=>lote(false));
+
+const sheet=$('#sheet');
+function copy(text,ok){
+  const fail=()=>{sheet.hidden=false;const t=$('#sheetTxt');t.value=text;t.focus();t.select()};
+  try{navigator.clipboard.writeText(text).then(()=>toast(ok,false),fail)}catch(e){fail()}}
+$('#sheetClose').addEventListener('click',()=>{sheet.hidden=true});
+$('#copyMiss').addEventListener('click',()=>{
+  const miss=CARDS.filter(c=>(sec==='all'?goalSecs.has(c.sec):c.sec===sec)&&!owned.has(c.id));
+  if(!miss.length){toast('No te falta ninguna',false);return}
+  const where=sec==='all'?'':' ('+SECS.find(s=>s.k===sec).s+')';
+  const lines=miss.map(c=>(c.sec==='cls'?'Clásica ':'')+c.num+' '+c.name+(c.tag.endsWith('/30')?' '+c.tag:'')+(c.en&&c.en!==c.name?' ['+c.en+']':''));
+  copy(`Me faltan ${miss.length} cartas de Celebración 30.º Aniversario${where}:\n`+lines.join('\n'),`Copiadas ${miss.length} cartas que te faltan`)});
+$('#copyMine').addEventListener('click',()=>{
+  if(!owned.size){toast('Aún no has marcado ninguna',false);return}
+  copy(compress([...owned].sort((a,b)=>BY[a].i-BY[b].i)),`Copiadas tus ${owned.size} cartas`)});
+const resetBtn=$('#reset');let armed=null;
+resetBtn.addEventListener('click',()=>{
+  if(!armed){resetBtn.textContent='¿Seguro? Toca otra vez';armed=setTimeout(()=>{armed=null;resetBtn.textContent='Borrar todas las marcas'},4000);return}
+  clearTimeout(armed);armed=null;resetBtn.textContent='Borrar todas las marcas';
+  if(!owned.size)return;remember();setOwned(new Set());render();queue();toast('Marcas borradas',true)});
+$('#goals').innerHTML=SECS.map(s=>`<label class="ck2"><input type="checkbox" id="g-${s.k}" data-g="${s.k}"${goalSecs.has(s.k)?' checked':''}> ${s.t}</label>`).join('');
+document.querySelectorAll('[data-g]').forEach(i=>i.addEventListener('change',()=>{
+  if(!i.checked&&goalSecs.size===1){i.checked=true;return}
+  i.checked?goalSecs.add(i.dataset.g):goalSecs.delete(i.dataset.g);
+  st.goal={list:SECS.map(s=>s.k).filter(k=>goalSecs.has(k)),t:Date.now()};counts();queue()}));
+render();
+showSync();
+idle();
+sync();
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>
