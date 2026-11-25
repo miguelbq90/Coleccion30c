@@ -1,7 +1,7 @@
 // Guarda la app en el aparato para que abra sin internet.
-// Si subes una versión nueva de los archivos, cambia el número de CACHE (v4 -> v5).
+// Si subes una versión nueva de los archivos, cambia el número de CACHE (v6 -> v7).
 // Cada copia de la app (la normal y la de /prueba/) usa su propia caché para no pisarse.
-const CACHE = 'coleccion30c-v4@' + self.registration.scope;
+const CACHE = 'coleccion30c-v6@' + self.registration.scope;
 const IMGS = 'coleccion30c-fotos-v1';
 const SHELL = ['./', './index.html', './app30c.webmanifest', './icono30c-192.png', './icono30c-512.png', './icono30c-maskable.png', './icono30c-apple.png',
   './fonts/dmsans.woff', './fonts/montserrat.woff', './fonts/poppins-bold.woff', './fonts/archivoblack.woff'];
@@ -41,9 +41,11 @@ self.addEventListener('fetch', e => {
   }
 
   if (url.origin !== self.location.origin) return; // GitHub y demás: siempre por internet
+  if (url.pathname.endsWith('/version.json')) return; // el aviso de versión nueva siempre va por internet
 
   // La app: primero lo guardado (rápido y sin conexión); por detrás se baja la versión nueva.
-  const fresh = fetch(req).then(async res => {
+  // no-cache: pregunta siempre al servidor si hay versión nueva (si no la hay, no se descarga nada)
+  const fresh = fetch(req.url, { cache: 'no-cache', credentials: 'same-origin' }).then(async res => {
     if (res && res.ok) {
       const copy = res.clone();
       const c = await caches.open(CACHE);

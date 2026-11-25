@@ -123,7 +123,13 @@ input[type=search],input[type=password]{width:100%;min-height:44px;font:16px 'DM
 .mini{grid-column:1/-1;height:6px;border-radius:99px;background:var(--slot);overflow:hidden}
 .mini i{display:block;height:100%;width:0;background:var(--mini);transition:width .35s}
 .pk{display:grid;grid-template-columns:repeat(auto-fill,minmax(124px,1fr));gap:14px}
-.p{position:relative;aspect-ratio:63/88;padding:0;border-radius:6%/4.3%;overflow:hidden;background:var(--slot);border:1.5px dashed var(--line);text-align:left;color:var(--ink)}
+.pw{position:relative;min-width:0}
+.cm{position:absolute;top:5px;right:5px;z-index:4;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--acc);color:var(--acc-ink);box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.cm svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cm svg circle{fill:currentColor;stroke:none}
+.cm:hover{transform:scale(1.08)}
+.pw:has(.p.own) .cm,.nums .cm{display:none}
+.p{position:relative;width:100%;aspect-ratio:63/88;padding:0;border-radius:6%/4.3%;overflow:hidden;background:var(--slot);border:1.5px dashed var(--line);text-align:left;color:var(--ink)}
 .p:hover{border-color:var(--ink)}
 .p .fb{position:absolute;inset:0;padding:9px 9px 30px;display:flex;flex-direction:column;align-items:flex-start;gap:4px}
 .p .fb b{font-size:20px;line-height:1;letter-spacing:-.01em;font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -165,6 +171,8 @@ input[type=search],input[type=password]{width:100%;min-height:44px;font:16px 'DM
 .steps label{font-weight:600;display:block;margin-bottom:6px}
 a.btn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
 .src{margin:28px 0 0;font-size:14px;color:var(--mute)}
+.upd{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;padding:8px max(5vw,16px);background:var(--acc);color:var(--acc-ink);font-weight:600}
+.upd button{min-height:40px;padding:0 16px;border-radius:10px;border:0;background:var(--acc-ink);color:var(--acc);font-weight:700}
 .toast{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom,0px));transform:translate(-50%,160%);z-index:10;display:flex;align-items:center;gap:12px;width:max-content;max-width:calc(100% - 32px);padding:6px 6px 6px 16px;border-radius:14px;background:var(--ink);color:var(--bg);box-shadow:0 6px 20px rgba(0,0,0,.25);transition:transform .25s}
 .toast.on{transform:translate(-50%,0)}
 .toast span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -192,6 +200,7 @@ a.btn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
 </style>
 </head>
 <body>
+<div class="upd" id="upd" hidden role="status"><span>Hay una versión nueva de la app</span><button id="updBtn" type="button">Actualizar</button></div>
 <header class="cover band">
   <div class="deco" aria-hidden="true"><div class="mos" id="mos"></div></div>
   <div class="wrap cov">
@@ -289,6 +298,12 @@ a.btn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
     </div>
     <div class="fg">
       <div>
+        <h2>Actualizaciones</h2>
+        <p>Tienes la versión <b id="verTxt"></b>. La app avisa sola cuando hay una nueva; también puedes comprobarlo aquí.</p>
+        <button class="btn" id="checkUpd">Buscar actualizaciones</button>
+        <p class="msg" id="updMsg" role="status" style="margin-top:10px"></p>
+      </div>
+      <div>
         <h2>Estilo</h2>
         <p>Elige cómo se ve la app en este aparato.</p>
         <div class="temas" id="temas">
@@ -338,7 +353,7 @@ const TAGS={r:'Rara',t:'Objeto',ir:'RI',sir:'RIE',fut:'RF'};
 const RANK={fut:7,sir:6,rgb:5,cls:4,ir:3,ex:2,pk:1.5,r:1,t:0,c:0};
 const IMG='https://images.scrydex.com/pokemon/';
 const M1=[["Exeggcute","c"],["Exeggutor de Alola","c","Alolan Exeggutor"],["Volbeat","c"],["Illumise","c"],["Tropius","c"],["Cherubi","c"],["Cherrim","c"],["Vivillon","c"],["Vulpix","c"],["Ninetales","c"],["Moltres","c"],["Ho-Oh","r"],["Victini","c"],["Reshiram","r"],["Fuecoco ex","ex"],["Slowpoke","c"],["Lapras","c"],["Articuno","c"],["Kyogre","r"],["Palkia","r"],["Greninja ex","ex"],["Wishiwashi","c"]];
-const M2=[["Pikachu ex","ex"],["Pikachu ex","ex"],["Zapdos","c"],["Zekrom","r"],["Zeraora","c"],["Toxel","c"],["Toxtricity","c"],["Toxtricity","c"],["Morpeko","c"],["Miraidon","r"],["Mewtwo","r"],["Mewtwo ex","ex"],["Mew","r"],["Mew ex","ex"],["Marill","c"],["Azumarill","c"],["Espeon","c"],["Espeon ex","ex"],["Sylveon ex","ex"],["Unown","c"],["Drifloon","c"],["Cresselia","c"],["Chandelure","c"],["Xerneas","r"],["Comfey","c"],["Cosmog","c"],["Cosmoem","c"],["Lunala","r"],["Gimmighoul","c"],["Groudon","r"],["Lucario","c"],["Seismitoad","c"],["Lycanroc","c"],["Koraidon","r"],["Nidoran♀","c"],["Nidorina","c"],["Meowth de Alola","c","Alolan Meowth"],["Gengar ex","ex"],["Umbreon","c"],["Umbreon ex","ex"],["Murkrow","c"],["Scraggy","c"],["Zorua","c"],["Zoroark","c"],["Deino","c"],["Zweilous","c"],["Hydreigon","c"],["Yveltal","r"],["Meowth de Galar","c","Galarian Meowth"],["Jirachi ex","ex"],["Dialga","r"],["Ferrothorn","c"],["Solgaleo","r"],["Zacian","r"],["Zamazenta","r"],["Gholdengo","c"],["Salamence ex","ex"],["Jangmo-o","c"],["Hakamo-o","c"],["Kommo-o","c"],["Meowth","c"],["Kangaskhan","c"],["Ditto","c"],["Eevee","c"],["Eevee","c"],["Eevee","c"],["Snorlax","c"],["Igglybuff","c"],["Lugia","r"],["Zorua de Hisui","c","Hisuian Zorua"],["Zoroark de Hisui","c","Hisuian Zoroark"],["Minior","c"],["Maushold","c"],["Pokétableta","t","Poké Pad"],["Cambio","t","Switch"],["Ultra Ball","t"]];
+const M2=[["Pikachu ex","ex"],["Pikachu ex","ex"],["Zapdos","c"],["Zekrom","r"],["Zeraora","c"],["Toxel","c"],["Toxtricity","c"],["Toxtricity","c"],["Morpeko","c"],["Miraidon","r"],["Mewtwo","r"],["Mewtwo ex","ex"],["Mew","r"],["Mew ex","ex"],["Marill","c"],["Azumarill","c"],["Espeon","c"],["Espeon ex","ex"],["Sylveon ex","ex"],["Unown","c"],["Drifloon","c"],["Cresselia","c"],["Chandelure","c"],["Xerneas","r"],["Comfey","c"],["Cosmog","c"],["Cosmoem","c"],["Lunala","r"],["Gimmighoul","c"],["Groudon","r"],["Lucario","c"],["Seismitoad","c"],["Lycanroc","c"],["Koraidon","r"],["Nidoran♀","c","Nidoran F"],["Nidorina","c"],["Meowth de Alola","c","Alolan Meowth"],["Gengar ex","ex"],["Umbreon","c"],["Umbreon ex","ex"],["Murkrow","c"],["Scraggy","c"],["Zorua","c"],["Zoroark","c"],["Deino","c"],["Zweilous","c"],["Hydreigon","c"],["Yveltal","r"],["Meowth de Galar","c","Galarian Meowth"],["Jirachi ex","ex"],["Dialga","r"],["Ferrothorn","c"],["Solgaleo","r"],["Zacian","r"],["Zamazenta","r"],["Gholdengo","c"],["Salamence ex","ex"],["Jangmo-o","c"],["Hakamo-o","c"],["Kommo-o","c"],["Meowth","c"],["Kangaskhan","c"],["Ditto","c"],["Eevee","c"],["Eevee","c"],["Eevee","c"],["Snorlax","c"],["Igglybuff","c"],["Lugia","r"],["Zorua de Hisui","c","Hisuian Zorua"],["Zoroark de Hisui","c","Hisuian Zoroark"],["Minior","c"],["Maushold","c"],["Pokétableta","t","Poké Pad"],["Cambio","t","Switch"],["Ultra Ball","t"]];
 const SX=[["Exeggutor de Alola","ir","Alolan Exeggutor"],["Moltres","ir"],["Lapras","ir"],["Articuno","ir"],["Zapdos","ir"],["Toxtricity","ir"],["Morpeko","ir"],["Drifloon","ir"],["Chandelure","ir"],["Lycanroc","ir"],["Meowth de Alola","ir","Alolan Meowth"],["Scraggy","ir"],["Meowth de Galar","ir","Galarian Meowth"],["Gholdengo","ir"],["Kommo-o","ir"],["Meowth","ir"],["Zorua de Hisui","ir","Hisuian Zorua"],["Maushold","ir"],["Fuecoco ex","sir"],["Greninja ex","sir"],["Pikachu ex","sir"],["Pikachu ex","sir"],["Mewtwo ex","sir"],["Mew ex","sir"],["Sylveon ex","sir"],["Gengar ex","sir"],["Jirachi ex","sir"],["Salamence ex","sir"],["Mewtwo ex","fut"],["Mew ex","fut"]];
 const CL=[["58/102","Pikachu","","58"],["4/102","Charizard","","4"],["18/132","Misty","","18"],["69/132","Jigglypuff de Erika","Erika's Jigglypuff","69"],["25/111","Sneasel","","25"],["106/105","Celebi Luminoso","Shining Celebi","106"],["149/147","Lugia (Cristal)","Lugia","149"],["5/109","Delcatty","","5"],["19/109","Tyranitar Oscuro","Dark Tyranitar","19"],["108/115","Scizor-ex","Scizor ex","108"],["11/113","Metagross δ","Metagross","11"],["106/106","Palkia Nivel X","Palkia LV.X","106p"],["43/146","Uxie","","43"],["47/127","Crobat G","","47"],["94/102","Gengar (Prime)","Gengar","94"],["99/102","Darkrai y Cresselia LEYENDA (arriba)","Darkrai & Cresselia LEGEND","99"],["100/102","Darkrai y Cresselia LEYENDA (abajo)","Darkrai & Cresselia LEGEND","100"],["101/101","N","","101"],["85/124","Rayquaza-EX","","85"],["11/101","Genesect-EX","","11g"],["106/160","M-Gardevoir-EX","M Gardevoir-EX","106m"],["41/122","Greninja TURBO","Greninja BREAK","41"],["89/149","Solgaleo-GX","","89"],["57/111","Buzzwole-GX","","57"],["33/181","Pikachu y Zekrom-GX","Pikachu & Zekrom-GX","33"],["138/202","Zacian V","","138"],["050/185","Raikou Increíble","Amazing Raikou","50"],["114/264","Mew VMAX","","114"],["123/172","Arceus V-ASTRO","Arceus VSTAR","123"],["203/193","Magikarp","","203"]];
 const SECS=[{k:'main',t:'Set principal',r:'001–128',s:'Principal'},{k:'sec',t:'Secretas',r:'129–158',s:'Secretas'},{k:'rgb',t:'Mew RGB',r:'R · G · B',s:'Mew RGB'},{k:'cls',t:'Colección Clásica',r:'30 reimpresiones',s:'Clásica'}];
@@ -353,6 +368,26 @@ addArr(SX,129,'sec');
 ['R','G','B'].forEach(l=>add(l,l+'/RGB','Mew','','RGB','rgb','rgb','me55-'+l));
 CL.forEach(([n,nm,en,key])=>add('c'+norm(n),n,nm,en,'','cls','cls','me55c-'+key));
 const src=(c,size)=>IMG+c.img+'/'+(size||'small');
+// Enlaces a Cardmarket: cada carta tiene su página. Si un nombre sale varias veces con rarezas distintas, Cardmarket añade V1, V2, V3…
+const CM='https://www.cardmarket.com/es/Pokemon/Products/';
+const slug=t=>String(t).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/['’.]/g,'').replace(/[^A-Za-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+const CMCL={'c58/102':'Pikachu-30CBS-58','c4/102':'Charizard-30CBS-4','c149/147':'Lugia-30CAQ-149','c101/101':'N-30CNVI-101','c85/124':'Rayquaza-EX-30CDRX-85'};
+{
+  const tierOf=c=>c.rk==='ir'?2:c.rk==='sir'?3:c.rk==='fut'?4:c.rk==='rgb'?5:1;
+  const groups={};
+  CARDS.filter(c=>c.sec!=='cls').forEach(c=>{const k=c.en||c.name;(groups[k]=groups[k]||[]).push(c)});
+  Object.values(groups).forEach(list=>{
+    const tiers=[...new Set(list.map(tierOf))].sort((a,b)=>a-b);
+    list.forEach(c=>{c.v=tiers.length>1?tiers.indexOf(tierOf(c))+1:0});
+  });
+  // Excepción comprobada: el Mew 065 no lleva V y los Mew RGB llevan V1.
+  BY['065'].v=0;['R','G','B'].forEach(l=>BY[l].v=1);
+  CARDS.forEach(c=>{
+    if(c.sec==='cls'){c.cm=CMCL[c.id]?CM+'Singles/30th-Celebration/'+CMCL[c.id]:CM+'Search?searchString='+encodeURIComponent(c.en||c.name);return}
+    const code=c.sec==='rgb'?c.id+'RGB':c.id;
+    c.cm=CM+'Singles/30th-Celebration/'+slug(c.en||c.name)+(c.v?'-V'+c.v:'')+'-30C'+code;
+  });
+}
 
 // Estado: cada carta guarda si la tienes (o) y cuándo cambió (t). Al sincronizar gana el cambio más reciente de cada carta.
 let st={v:2,cards:{},goal:{list:SECS.map(s=>s.k),t:0}};
@@ -416,7 +451,7 @@ function visible(c,f){
   return !f||match(c,f)}
 const nums=()=>grid.classList.contains('nums');
 function pk(c){const o=owned.has(c.id);
-  return `<button class="p${o?' own':''}${c.sec==='cls'?' cl':''}" data-id="${esc(c.id)}" aria-pressed="${o}" aria-label="${esc(c.num+' '+c.name+(o?', la tienes':', te falta'))}"><span class="fb"><b>${esc(c.num)}</b><i lang="es">${esc(c.name)}</i>${c.tag?`<em>${esc(c.tag)}</em>`:''}</span>${nums()?'':`<img src="${esc(src(c))}" alt="" loading="lazy" decoding="async">`}<span class="nb">${esc(c.num)}</span><svg class="ck" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg></button>`}
+  return `<div class="pw"><button class="p${o?' own':''}${c.sec==='cls'?' cl':''}" data-id="${esc(c.id)}" aria-pressed="${o}" aria-label="${esc(c.num+' '+c.name+(o?', la tienes':', te falta'))}"><span class="fb"><b>${esc(c.num)}</b><i lang="es">${esc(c.name)}</i>${c.tag?`<em>${esc(c.tag)}</em>`:''}</span>${nums()?'':`<img src="${esc(src(c))}" alt="" loading="lazy" decoding="async">`}<span class="nb">${esc(c.num)}</span><svg class="ck" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg></button><a class="cm" href="${esc(c.cm)}" target="_blank" rel="noopener" aria-label="${esc('Ver '+c.num+' '+c.name+' en Cardmarket')}" title="Ver en Cardmarket"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.2l2.1 10.2a1.6 1.6 0 0 0 1.6 1.3h8.3a1.6 1.6 0 0 0 1.6-1.2L20.5 8H6.4"/><circle cx="9.5" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg></a></div>`}
 function render(){
   document.querySelectorAll('[data-g]').forEach(i=>i.checked=goalSecs.has(i.dataset.g));
   const f=fold(q.trim());let html='',hits=[];
@@ -430,7 +465,7 @@ function render(){
   grid.innerHTML=html;
   if(f&&hits.length){
     if(hits.length===1){const c=hits[0],o=owned.has(c.id);
-      hitEl.innerHTML=`<div class="one${o?'':' miss'}"><div class="big1">${nums()?'':`<img src="${esc(src(c,'large'))}" alt="${esc(c.name)}">`}</div><div><p><b>${esc(c.num)}</b> ${esc(c.name)}${c.tag?' · '+esc(c.tag):''}</p><p>${o?'La tienes':'<span class="no">Te falta</span>'}</p><button class="btn solid" data-one="${esc(c.id)}">${o?'Quitar de las que tengo':'Marcar que la tengo'}</button></div></div>`}
+      hitEl.innerHTML=`<div class="one${o?'':' miss'}"><div class="big1">${nums()?'':`<img src="${esc(src(c,'large'))}" alt="${esc(c.name)}">`}</div><div><p><b>${esc(c.num)}</b> ${esc(c.name)}${c.tag?' · '+esc(c.tag):''}</p><p>${o?'La tienes':'<span class="no">Te falta</span>'}</p><div class="lrow" style="margin-top:0"><button class="btn solid" data-one="${esc(c.id)}">${o?'Quitar de las que tengo':'Marcar que la tengo'}</button><a class="btn" href="${esc(c.cm)}" target="_blank" rel="noopener">Ver en Cardmarket</a></div></div></div>`}
     else{const miss=hits.filter(c=>!owned.has(c.id));hitEl.innerHTML=`${hits.length} cartas coinciden · ${miss.length?`<span class="no">te faltan ${miss.length}</span>`:'las tienes todas'}`}
     hitEl.hidden=false}else{hitEl.hidden=true;hitEl.innerHTML=''}
   counts()}
@@ -606,7 +641,7 @@ $('#copyMiss').addEventListener('click',()=>{
   const miss=CARDS.filter(c=>(sec==='all'?goalSecs.has(c.sec):c.sec===sec)&&!owned.has(c.id));
   if(!miss.length){toast('No te falta ninguna',false);return}
   const where=sec==='all'?'':' ('+SECS.find(s=>s.k===sec).s+')';
-  const lines=miss.map(c=>(c.sec==='cls'?'Clásica ':'')+c.num+' '+c.name+(c.tag.endsWith('/30')?' '+c.tag:'')+(c.en&&c.en!==c.name?' ['+c.en+']':''));
+  const lines=miss.map(c=>(c.sec==='cls'?'Clásica ':'')+c.num+' '+c.name+(c.tag.endsWith('/30')?' '+c.tag:'')+(c.en&&c.en!==c.name?' ['+c.en+']':'')+'\n   '+c.cm);
   copy(`Me faltan ${miss.length} cartas de Celebración 30.º Aniversario${where}:\n`+lines.join('\n'),`Copiadas ${miss.length} cartas que te faltan`)});
 $('#copyMine').addEventListener('click',()=>{
   if(!owned.size){toast('Aún no has marcado ninguna',false);return}
@@ -621,6 +656,35 @@ document.querySelectorAll('[data-g]').forEach(i=>i.addEventListener('change',()=
   if(!i.checked&&goalSecs.size===1){i.checked=true;return}
   i.checked?goalSecs.add(i.dataset.g):goalSecs.delete(i.dataset.g);
   st.goal={list:SECS.map(s=>s.k).filter(k=>goalSecs.has(k)),t:Date.now()};counts();queue()}));
+// ---- Actualizaciones: compara esta versión con version.json del servidor ----
+const BUILD=7;
+$('#verTxt').textContent=BUILD;
+let lastCheck=0;
+async function checkUpdate(manual){
+  const msg=$('#updMsg');
+  if(!navigator.onLine){if(manual)msg.textContent='Necesitas internet para comprobarlo.';return}
+  lastCheck=Date.now();
+  if(manual)msg.textContent='Comprobando…';
+  try{
+    const r=await fetch('version.json?t='+Date.now(),{cache:'no-store'});
+    const j=await r.json();
+    if(typeof j.build==='number'&&j.build>BUILD){$('#upd').hidden=false;if(manual)msg.textContent='Hay una versión nueva ('+j.build+'). Pulsa «Actualizar» arriba.'}
+    else if(manual)msg.textContent='Ya tienes la última versión.';
+  }catch(e){if(manual)msg.textContent='No he podido comprobarlo. Prueba en un momento.'}}
+async function doUpdate(){
+  const b=$('#updBtn');b.textContent='Actualizando…';b.disabled=true;
+  try{
+    const ks=await caches.keys();
+    await Promise.all(ks.filter(k=>k.indexOf('fotos')<0).map(k=>caches.delete(k)));
+    const reg=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration();
+    if(reg)await reg.update();
+  }catch(e){}
+  location.reload();
+}
+$('#updBtn').addEventListener('click',doUpdate);
+$('#checkUpd').addEventListener('click',()=>checkUpdate(true));
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&Date.now()-lastCheck>600000)checkUpdate(false)});
+setTimeout(()=>checkUpdate(false),2500);
 render();
 showSync();
 idle();
