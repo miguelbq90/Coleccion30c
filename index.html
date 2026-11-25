@@ -239,29 +239,6 @@ a.btn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
 .fpx small{font-size:14px;font-weight:700;margin-left:6px}
 .fdet{margin:2px 0 12px;color:var(--mute);font-size:14px}
 .ficha .lrow{margin-top:4px}
-.vsum{margin:0 0 4px;font-size:21px;font-weight:700;line-height:1.3}
-.vsum b{color:var(--acc)}
-[data-tema=holo] .vsum b,[data-tema=azul] .vsum b{color:var(--acc)}
-.vnote{margin:10px 0;padding:10px 14px;border-radius:12px;background:var(--panel);border:1.5px solid var(--line);font-size:15px}
-.vlist{list-style:none;margin:12px 0 10px;padding:0;display:grid;gap:8px}
-.vrow{display:flex;align-items:center;gap:10px;padding:6px 8px 6px 10px;border-radius:12px;background:var(--slot);border:1.5px solid var(--line)}
-.vrow label{flex:1 1 0;display:flex;align-items:center;gap:12px;min-height:52px;cursor:pointer}
-.vrow input{width:24px;height:24px;accent-color:var(--acc);flex:none;margin:0}
-.vim{flex:none;width:40px;aspect-ratio:63/88;border-radius:4px;overflow:hidden;position:relative;background:var(--panel)}
-.vim img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.vtx{flex:1 1 0;line-height:1.25}
-.vtx b{display:block;font-size:15px}
-.vtx small{color:var(--mute);font-size:13px}
-.vpr{font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
-.vcm{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--acc);color:var(--acc-ink)}
-.vcm svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.vcm svg circle{fill:currentColor;stroke:none}
-.vsel{margin:0 0 12px;color:var(--mute);font-size:15px}
-.vdone{margin:8px 0 0;color:var(--mute);font-size:15px}
-#bmLink{cursor:grab}
-.pasos{margin:6px 0 12px;padding-left:22px;color:var(--mute)}
-.pasos li{margin-bottom:6px}
-.pasos b{color:var(--ink)}
 @media(max-width:600px){.fwrap{gap:14px}.fimg{width:31vw}.finfo h2{font-size:18px}.ficha .lrow .btn{flex:1 1 100%;justify-content:center}}
 @media(max-width:860px){.syncbox{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:600px){
@@ -386,19 +363,6 @@ a.btn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
       </div>
     </div>
     <div class="fg">
-      <div id="marcador">
-        <h2>«¿Cuáles me faltan?» en Cardmarket</h2>
-        <p>Un marcador del navegador: lo tocas en la página de un vendedor de Cardmarket y la app te enseña qué cartas suyas te faltan y cuánto cuestan. Solo lee la página que estás viendo; no toca tu cuenta.</p>
-        <p><b>En el portátil (Chrome):</b> arrastra este botón a tu barra de marcadores.</p>
-        <p><a class="btn solid" id="bmLink" href="#">¿Cuáles me faltan?</a></p>
-        <p><b>En el iPhone (Safari):</b> copia el marcador y sigue estos pasos.</p>
-        <button class="btn" id="bmCopy">Copiar el marcador</button>
-        <ol class="pasos">
-          <li>Guarda cualquier página en favoritos: <b>Compartir → Añadir favorito</b>, con el nombre <b>¿Cuáles me faltan?</b></li>
-          <li>Abre los favoritos (el libro), pulsa <b>Editar</b>, toca ese favorito, borra la dirección y <b>pega</b> lo que copiaste.</li>
-          <li>En Cardmarket, toca la barra de direcciones, escribe <b>Cuáles</b> y toca tu favorito.</li>
-        </ol>
-      </div>
       <div>
         <h2>Actualizaciones</h2>
         <p>Tienes la versión <b id="verTxt"></b>. La app avisa sola cuando hay una nueva; también puedes comprobarlo aquí.</p>
@@ -448,7 +412,6 @@ a.btn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
 
 <div class="velo" id="velo" hidden></div>
 <div class="sheet ficha" id="ficha" hidden role="dialog" aria-modal="true" aria-labelledby="fT"></div>
-<div class="sheet ficha" id="vend" hidden role="dialog" aria-modal="true" aria-labelledby="vT"></div>
 
 <div class="sheet" id="sheet" hidden>
   <div class="wrap">
@@ -509,7 +472,7 @@ const CMCL={'c58/102':'Pikachu-30CBS-58','c4/102':'Charizard-30CBS-4','c149/147'
 // Estado: cada carta guarda si la tienes (o) y cuándo cambió (t). Al sincronizar gana el cambio más reciente de cada carta.
 let st={v:2,cards:{},goal:{list:SECS.map(s=>s.k),t:0}};
 let owned=new Set(),transit=new Set(),goalSecs=new Set(SECS.map(s=>s.k)),hist=[];
-let view='todas',sec='all',q='',vData=null;
+let view='todas',sec='all',q='';
 const LS='c30-estado',LSC='c30-sync',LSM='c30-modo',LST='c30-tema';
 // Estado de cada carta: 0 = me falta, 1 = la tengo, 2 = en camino (comprada, sin llegar)
 function derive(){const ks=Object.keys(st.cards).filter(id=>BY[id]);owned=new Set(ks.filter(id=>st.cards[id].o===1));transit=new Set(ks.filter(id=>st.cards[id].o===2));goalSecs=new Set(st.goal.list)}
@@ -593,7 +556,7 @@ function match(c,f){
 const grid=$('#grid'),hitEl=$('#hit'),fanEl=$('#fan');
 // Las imágenes: si cargan, se ocultan los textos de respaldo; si fallan (sin conexión), se quitan y queda el texto.
 const onImg=e=>{const t=e.target;if(t.tagName!=='IMG')return;const box=t.closest('.p,.fc,.big1,.fimg');if(e.type==='load'){if(box)box.classList.add('ok')}else if(/\/large$/.test(t.src)){t.src=t.src.replace(/large$/,'small')}else{t.remove()}};
-[grid,fanEl,hitEl,document.getElementById('ficha'),document.getElementById('vend')].forEach(el=>{el.addEventListener('load',onImg,true);el.addEventListener('error',onImg,true)});
+[grid,fanEl,hitEl,document.getElementById('ficha')].forEach(el=>{el.addEventListener('load',onImg,true);el.addEventListener('error',onImg,true)});
 function visible(c,f){
   if(sec!=='all'&&c.sec!==sec)return false;
   if(view==='faltan'&&stOf(c.id)!==0)return false;
@@ -624,8 +587,7 @@ function render(){
       hitEl.innerHTML=`<div class="one${o?'':' miss'}"><div class="big1${o?' own':''}"><span class="bfb"><b>${esc(c.num)}</b><i>${esc(c.name)}</i></span>${nums()?'':`<img src="${esc(src(c,'large'))}" alt="${esc(c.name)}">`}</div><div><p><b>${esc(c.num)}</b> ${esc(c.name)}${c.tag?' · '+esc(c.tag):''}</p><p>${o?'La tienes'+(qOf(c.id)>1?` (×${qOf(c.id)})`:''):v===2?'En camino':'<span class="no">Te falta</span>'}${prOf(c.id)!=null?` · unos <b>${eur(prOf(c.id))}</b> ${arrow(trendOf(c.id),1)}`:''}</p><div class="lrow" style="margin-top:0"><button class="btn solid" data-one="${esc(c.id)}">${o?'Quitar de las que tengo':v===2?'Ha llegado: la tengo':'Marcar que la tengo'}</button>${o?'':`<button class="btn" data-tko="${esc(c.id)}">${v===2?'Quitar de en camino':'Marcar en camino'}</button>`}<button class="btn" data-fi="${esc(c.id)}">${o?'Cuántas tengo y precio':'Ver precio'}</button>${v===0?`<a class="btn" href="${esc(c.cm)}" target="_blank" rel="noopener">Cardmarket en español</a>`:''}</div></div></div>`}
     else{const miss=hits.filter(c=>stOf(c.id)===0),tr=hits.filter(c=>stOf(c.id)===2);hitEl.innerHTML=`${hits.length} cartas coinciden · ${miss.length?`<span class="no">te faltan ${miss.length}</span>`:'no te falta ninguna'}${tr.length?` · ${tr.length} en camino`:''}`}
     hitEl.hidden=false}else{hitEl.hidden=true;hitEl.innerHTML=''}
-  counts();
-  if(vData)paintVend()}
+  counts()}
 // Decoración de la cabecera: rayos, confeti y destellos (dibujo propio) y mosaico con las ilustraciones más especiales.
 {
   const NS='http://www.w3.org/2000/svg';let seed=30;const rnd=()=>(seed=seed*16807%2147483647)/2147483647;
@@ -829,67 +791,6 @@ ficha.addEventListener('click',e=>{
   const qb=e.target.closest('[data-fq]');if(qb){changeQty(c,+qb.dataset.fq);return}
   if(e.target.closest('[data-fone]')){toggle(c);return}
   if(e.target.closest('[data-ftk]')){toggleTransit(c);return}});
-// ---- «¿Cuáles me faltan?»: un marcador lee las cartas de una página de Cardmarket y abre la app con ellas ----
-const APP=location.origin+location.pathname;
-const BM_CODE=`(()=>{const s=new Set,a=h=>{const m=String(h||'').match(/\\/Products\\/Singles\\/30th-Celebration\\/([^/?#]+)/);if(m)s.add(decodeURIComponent(m[1]))};a(location.pathname);document.querySelectorAll('a[href*="30th-Celebration/"]').forEach(e=>a(e.getAttribute('href')));if(!s.size){alert('No veo cartas de la 30.º Aniversario en esta página.\\nAbre las cartas de un vendedor en Cardmarket y filtra por la expansión 30th Celebration.');return}const u=(location.pathname.match(/\\/Users\\/([^/]+)/)||[])[1]||'',url='${APP}#cm='+encodeURIComponent([...s].join(','))+(u?'&de='+encodeURIComponent(decodeURIComponent(u)):'');const w=window.open(url,'coleccion30c');if(!w)location.href=url})()`;
-const BM='javascript:'+encodeURIComponent(BM_CODE);
-// De la dirección de Cardmarket a la carta: «…-30C149» → 149, «…-30CRRGB» → Mew R, «Charizard-30CBS-4» → Clásica 4/102
-function idFromSlug(sl){
-  sl=String(sl);let m=sl.match(/-30C(\d{3})$/i);
-  if(m)return BY[m[1]]&&BY[m[1]].sec!=='cls'?m[1]:null;
-  if(m=sl.match(/-30C([RGB])RGB$/i))return m[1].toUpperCase();
-  if(m=sl.match(/^(.+)-30C[A-Z]+-?0*(\d+)$/i)){
-    const n=+m[2],name=m[1].toLowerCase(),cands=CARDS.filter(c=>c.sec==='cls'&&+c.num.split('/')[0]===n);
-    if(cands.length===1)return cands[0].id;
-    let best=null,score=0;
-    cands.forEach(c=>{const sc=slug(c.en||c.name).toLowerCase().split('-').filter(w=>w.length>=3&&name.includes(w)).length;if(sc>score){score=sc;best=c}});
-    return best?best.id:null}
-  return null}
-const LSV='c30-vendedor',vend=$('#vend');let vBack=null;
-function checkHash(){
-  if(!location.hash.startsWith('#cm='))return;
-  const pr=new URLSearchParams(location.hash.slice(1)),list=(pr.get('cm')||'').split(',').filter(Boolean),de=(pr.get('de')||'').slice(0,60);
-  history.replaceState(null,'',location.pathname+location.search);
-  const ids=new Set();let unk=0;list.forEach(x=>{const id=idFromSlug(x);if(id)ids.add(id);else unk++});
-  // Si el vendedor tiene varias páginas: se juntan las que mires en los últimos 30 minutos
-  let prev=null,merged=false;try{prev=JSON.parse(localStorage.getItem(LSV)||'null')}catch(e){}
-  if(prev&&de&&prev.de===de&&Date.now()-prev.t<1800e3&&Array.isArray(prev.ids)){prev.ids.forEach(i=>{if(BY[i])ids.add(i)});merged=true}
-  try{localStorage.setItem(LSV,JSON.stringify({de,t:Date.now(),ids:[...ids]}))}catch(e){}
-  closeFicha();
-  vData={de,ids:[...ids],unk,merged,sel:null,done:0};
-  paintVend();vBack=document.activeElement;velo.hidden=false;vend.hidden=false;vend.scrollTop=0;
-  const x=vend.querySelector('[data-vx]');if(x)x.focus({preventScroll:true})}
-const vMiss=()=>vData.ids.map(id=>BY[id]).filter(c=>c&&stOf(c.id)===0&&goalSecs.has(c.sec)).sort((a,b)=>a.i-b.i);
-function paintVend(){
-  if(!vData)return;
-  const all=vData.ids.map(id=>BY[id]).filter(Boolean),miss=vMiss(),own=all.filter(c=>stOf(c.id)===1).length,trn=all.filter(c=>stOf(c.id)===2).length;
-  if(!vData.sel)vData.sel=new Set(miss.map(c=>c.id));
-  [...vData.sel].forEach(id=>{if(stOf(id)!==0)vData.sel.delete(id)});
-  let tot=0,stot=0;miss.forEach(c=>{const p=prOf(c.id);if(p!=null){tot+=p;if(vData.sel.has(c.id))stot+=p}});
-  const n=vData.sel.size,quien=vData.de?esc(vData.de):'esta página',vacia=!owned.size&&!transit.size;
-  vend.innerHTML=`<div class="wrap" style="max-width:680px">
-  <h2 id="vT" style="font-size:22px;margin:0 0 6px">Cartas de ${quien}</h2>
-  <p class="vsum">${miss.length?`${miss.length>1?'Te faltan':'Te falta'} <b>${miss.length}</b> de sus ${all.length} carta${all.length>1?'s':''} de la colección${PR&&tot?` · ≈ ${eur(tot)}`:''}`:all.length?`No te falta ninguna de sus ${all.length} carta${all.length>1?'s':''} 🎉`:'No he reconocido ninguna carta de la colección'}</p>
-  <p class="fst" style="margin-bottom:4px">${[own?`ya tienes ${own}`:'',trn?`${trn} en camino`:'',vData.merged?'junto con la página anterior de este vendedor':'',vData.unk?`${vData.unk} enlace${vData.unk>1?'s':''} sin reconocer`:''].filter(Boolean).join(' · ')||'&nbsp;'}</p>
-  ${vacia?`<p class="vnote">Este navegador todavía no tiene tu colección. En el iPhone pasa porque se abre en Safari y no en el icono de la app: baja hasta «Sincronizar iPhone y portátil» y conecta este navegador una vez con tu clave.</p>`:''}
-  ${vData.done?`<p class="vnote">✓ ${vData.done} carta${vData.done>1?'s':''} marcada${vData.done>1?'s':''} «en camino».</p>`:''}
-  ${miss.length?`<ul class="vlist">${miss.map(c=>{const p=prOf(c.id);return `<li class="vrow"><label><input type="checkbox" data-vs="${esc(c.id)}"${vData.sel.has(c.id)?' checked':''}><span class="vim"><img src="${esc(src(c))}" alt="" loading="lazy"></span><span class="vtx"><b>${esc(c.num)} ${esc(c.name)}</b><small>${esc(c.tag||SECS.find(x=>x.k===c.sec).s)}</small></span><span class="vpr">${p!=null?eur(p,1):''}</span></label><a class="vcm" href="${esc(c.cm)}" target="_blank" rel="noopener" aria-label="${esc('Ver '+c.num+' '+c.name+' en Cardmarket')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.2l2.1 10.2a1.6 1.6 0 0 0 1.6 1.3h8.3a1.6 1.6 0 0 0 1.6-1.2L20.5 8H6.4"/><circle cx="9.5" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg></a></li>`}).join('')}</ul>
-  <p class="vsel">Seleccionadas: ${n}${PR&&n?` · ≈ ${eur(stot)}`:''}. Quita la marca a las que no vayas a comprar.</p>`:''}
-  <div class="lrow">${miss.length?`<button class="btn solid" type="button" data-vtr${n?'':' disabled'}>Las he comprado: ${n} en camino</button>`:''}<button class="btn" type="button" data-vx>Cerrar</button></div></div>`}
-function closeVend(){if(vend.hidden)return;vend.hidden=true;vend.innerHTML='';vData=null;if(ficha.hidden)velo.hidden=true;if(vBack&&document.contains(vBack))vBack.focus({preventScroll:true})}
-vend.addEventListener('change',e=>{const i=e.target.closest('[data-vs]');if(!i||!vData)return;i.checked?vData.sel.add(i.dataset.vs):vData.sel.delete(i.dataset.vs);const y=vend.scrollTop;paintVend();vend.scrollTop=y});
-vend.addEventListener('click',e=>{
-  if(e.target.closest('[data-vx]')){closeVend();return}
-  if(e.target.closest('[data-vtr]')&&vData&&vData.sel.size){
-    remember();const t=Date.now();let k=0;vData.sel.forEach(id=>{if(stOf(id)===0&&setState(id,2,t))k++});
-    derive();vData.done=k;vData.sel=new Set();render();queue();
-    toast(`${k} carta${k>1?'s':''} en camino`,true)}});
-velo.addEventListener('click',closeVend);
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&vData)closeVend()});
-// Instalar el marcador: arrastrarlo (portátil) o copiarlo (iPhone)
-const bmLink=$('#bmLink');bmLink.setAttribute('href',BM);
-bmLink.addEventListener('click',e=>{e.preventDefault();toast('Arrástralo a la barra de marcadores; aquí no hace nada',false)});
-$('#bmCopy').addEventListener('click',()=>copy(BM,'Marcador copiado: pégalo en tu favorito'));
 grid.addEventListener('click',e=>{
   const pf=e.target.closest('[data-pr],[data-qt]');if(pf){const c=BY[pf.dataset.pr||pf.dataset.qt];if(c)openFicha(c);return}
   const k=e.target.closest('.tk');if(k){const c=BY[k.dataset.tk];if(c)toggleTransit(c);return}
@@ -964,7 +865,7 @@ document.querySelectorAll('[data-g]').forEach(i=>i.addEventListener('change',()=
   i.checked?goalSecs.add(i.dataset.g):goalSecs.delete(i.dataset.g);
   st.goal={list:SECS.map(s=>s.k).filter(k=>goalSecs.has(k)),t:Date.now()};counts();queue()}));
 // ---- Actualizaciones: compara esta versión con version.json del servidor ----
-const BUILD=12;
+const BUILD=13;
 $('#verTxt').textContent=BUILD;
 let lastCheck=0;
 async function checkUpdate(manual){
@@ -1015,8 +916,6 @@ document.addEventListener('visibilitychange',()=>{if(document.visibilityState===
 window.addEventListener('online',()=>{if(Date.now()-prAt>600e3)loadPrices(false)});
 setTimeout(()=>loadPrices(false),1200);
 render();
-checkHash();
-window.addEventListener('hashchange',checkHash);
 showSync();
 idle();
 sync();
