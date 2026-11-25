@@ -113,6 +113,11 @@ input[type=search],input[type=password]{width:100%;min-height:44px;font:16px 'DM
 .one .big1{flex:none;width:min(220px,38vw);aspect-ratio:63/88;border-radius:5.5%/4%;overflow:hidden;position:relative;box-shadow:var(--glow);background:var(--slot)}
 .one .big1 img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .one.miss .big1 img{filter:grayscale(1);opacity:.55}
+.bfb{position:absolute;inset:0;padding:12px;display:flex;flex-direction:column;gap:4px;border:1.5px dashed var(--line);border-radius:inherit}
+.bfb b{font-family:var(--disp),system-ui,sans-serif;font-weight:var(--dispw);font-size:26px;line-height:1}
+.bfb i{font-style:normal;font-size:15px;line-height:1.25}
+.own>.bfb{border:0;color:#16161a;background:linear-gradient(135deg,rgba(255,255,255,.6),rgba(255,255,255,0) 46%),conic-gradient(from 200deg at 35% 30%,#ffd0e5,#fff0a3,#c4f4d4,#bde0ff,#dacdff,#ffd0e5)}
+.ok>.bfb{visibility:hidden}
 .one>div:last-child{flex:1 1 160px}
 .one p{margin:0 0 10px}
 .one .btn{white-space:normal;text-align:left;padding:8px 14px}
@@ -550,7 +555,7 @@ function match(c,f){
 
 const grid=$('#grid'),hitEl=$('#hit'),fanEl=$('#fan');
 // Las imágenes: si cargan, se ocultan los textos de respaldo; si fallan (sin conexión), se quitan y queda el texto.
-const onImg=e=>{const t=e.target;if(t.tagName!=='IMG')return;const box=t.closest('.p,.fc,.big1,.fimg');if(e.type==='load'){if(box)box.classList.add('ok')}else{t.remove()}};
+const onImg=e=>{const t=e.target;if(t.tagName!=='IMG')return;const box=t.closest('.p,.fc,.big1,.fimg');if(e.type==='load'){if(box)box.classList.add('ok')}else if(/\/large$/.test(t.src)){t.src=t.src.replace(/large$/,'small')}else{t.remove()}};
 [grid,fanEl,hitEl,document.getElementById('ficha')].forEach(el=>{el.addEventListener('load',onImg,true);el.addEventListener('error',onImg,true)});
 function visible(c,f){
   if(sec!=='all'&&c.sec!==sec)return false;
@@ -579,7 +584,7 @@ function render(){
   grid.classList.toggle('nopr',!showPr);grid.innerHTML=html;
   if(f&&hits.length){
     if(hits.length===1){const c=hits[0],v=stOf(c.id),o=v===1;
-      hitEl.innerHTML=`<div class="one${o?'':' miss'}"><div class="big1">${nums()?'':`<img src="${esc(src(c,'large'))}" alt="${esc(c.name)}">`}</div><div><p><b>${esc(c.num)}</b> ${esc(c.name)}${c.tag?' · '+esc(c.tag):''}</p><p>${o?'La tienes'+(qOf(c.id)>1?` (×${qOf(c.id)})`:''):v===2?'En camino':'<span class="no">Te falta</span>'}${prOf(c.id)!=null?` · unos <b>${eur(prOf(c.id))}</b> ${arrow(trendOf(c.id),1)}`:''}</p><div class="lrow" style="margin-top:0"><button class="btn solid" data-one="${esc(c.id)}">${o?'Quitar de las que tengo':v===2?'Ha llegado: la tengo':'Marcar que la tengo'}</button>${o?'':`<button class="btn" data-tko="${esc(c.id)}">${v===2?'Quitar de en camino':'Marcar en camino'}</button>`}<button class="btn" data-fi="${esc(c.id)}">${o?'Cuántas tengo y precio':'Ver precio'}</button>${v===0?`<a class="btn" href="${esc(c.cm)}" target="_blank" rel="noopener">Cardmarket en español</a>`:''}</div></div></div>`}
+      hitEl.innerHTML=`<div class="one${o?'':' miss'}"><div class="big1${o?' own':''}"><span class="bfb"><b>${esc(c.num)}</b><i>${esc(c.name)}</i></span>${nums()?'':`<img src="${esc(src(c,'large'))}" alt="${esc(c.name)}">`}</div><div><p><b>${esc(c.num)}</b> ${esc(c.name)}${c.tag?' · '+esc(c.tag):''}</p><p>${o?'La tienes'+(qOf(c.id)>1?` (×${qOf(c.id)})`:''):v===2?'En camino':'<span class="no">Te falta</span>'}${prOf(c.id)!=null?` · unos <b>${eur(prOf(c.id))}</b> ${arrow(trendOf(c.id),1)}`:''}</p><div class="lrow" style="margin-top:0"><button class="btn solid" data-one="${esc(c.id)}">${o?'Quitar de las que tengo':v===2?'Ha llegado: la tengo':'Marcar que la tengo'}</button>${o?'':`<button class="btn" data-tko="${esc(c.id)}">${v===2?'Quitar de en camino':'Marcar en camino'}</button>`}<button class="btn" data-fi="${esc(c.id)}">${o?'Cuántas tengo y precio':'Ver precio'}</button>${v===0?`<a class="btn" href="${esc(c.cm)}" target="_blank" rel="noopener">Cardmarket en español</a>`:''}</div></div></div>`}
     else{const miss=hits.filter(c=>stOf(c.id)===0),tr=hits.filter(c=>stOf(c.id)===2);hitEl.innerHTML=`${hits.length} cartas coinciden · ${miss.length?`<span class="no">te faltan ${miss.length}</span>`:'no te falta ninguna'}${tr.length?` · ${tr.length} en camino`:''}`}
     hitEl.hidden=false}else{hitEl.hidden=true;hitEl.innerHTML=''}
   counts()}
@@ -769,7 +774,7 @@ const velo=$('#velo'),ficha=$('#ficha');let fId=null,fBack=null;
 function paintFicha(){
   const c=BY[fId];if(!c)return;const v=stOf(c.id),o=v===1,n=qOf(c.id),p=prOf(c.id),e=PR&&PR.p[c.id],tr=trendOf(c.id);
   const det=[];if(e){if(num(e.a7))det.push('Media de la última semana: '+eur(e.a7));if(num(e.a30))det.push('Media del último mes: '+eur(e.a30))}
-  ficha.innerHTML=`<div class="fwrap"><div class="fimg${o?'':' miss'}"><img src="${esc(src(c,'large'))}" alt=""></div><div class="finfo">
+  ficha.innerHTML=`<div class="fwrap"><div class="fimg${o?' own':' miss'}"><span class="bfb"><b>${esc(c.num)}</b><i>${esc(c.name)}</i></span><img src="${esc(src(c,'large'))}" alt=""></div><div class="finfo">
   <h2 id="fT">${esc(c.num)} ${esc(c.name)}</h2>
   <p class="fst">${c.sec==='cls'?'Colección Clásica':'Celebración 30.º Aniversario'}${c.tag?' · '+esc(c.tag):''} · <b>${o?'La tienes':v===2?'En camino':'Te falta'}</b></p>
   ${o?`<p class="fl" id="fQl">¿Cuántas tienes?</p><div class="stp" role="group" aria-labelledby="fQl"><button type="button" data-fq="-1" aria-label="Una menos"${n<=1?' disabled':''}>−</button><output aria-live="polite">${n}</output><button type="button" data-fq="1" aria-label="Una más"${n>=99?' disabled':''}>+</button></div>`:''}
@@ -860,7 +865,7 @@ document.querySelectorAll('[data-g]').forEach(i=>i.addEventListener('change',()=
   i.checked?goalSecs.add(i.dataset.g):goalSecs.delete(i.dataset.g);
   st.goal={list:SECS.map(s=>s.k).filter(k=>goalSecs.has(k)),t:Date.now()};counts();queue()}));
 // ---- Actualizaciones: compara esta versión con version.json del servidor ----
-const BUILD=10;
+const BUILD=11;
 $('#verTxt').textContent=BUILD;
 let lastCheck=0;
 async function checkUpdate(manual){
