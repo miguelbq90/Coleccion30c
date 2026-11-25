@@ -657,7 +657,7 @@ document.querySelectorAll('[data-g]').forEach(i=>i.addEventListener('change',()=
   i.checked?goalSecs.add(i.dataset.g):goalSecs.delete(i.dataset.g);
   st.goal={list:SECS.map(s=>s.k).filter(k=>goalSecs.has(k)),t:Date.now()};counts();queue()}));
 // ---- Actualizaciones: compara esta versión con version.json del servidor ----
-const BUILD=7;
+const BUILD=8;
 $('#verTxt').textContent=BUILD;
 let lastCheck=0;
 async function checkUpdate(manual){
