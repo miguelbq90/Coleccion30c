@@ -372,7 +372,7 @@ a.btn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
       <div id="precios">
         <h2>Precios</h2>
         <p>Cada carta lleva el precio de referencia de Cardmarket (su «tendencia»). Es una media de todos los idiomas: en español puede salir algo más caro o más barato.</p>
-        <p>Para ver lo que cuesta en español, toca el carrito o el precio de la carta: Cardmarket se abre con solo las ofertas en español.</p>
+        <p>Para ver lo que cuesta en español, toca el carrito y, ya en Cardmarket, marca el filtro de idioma «Español».</p>
         <p>Los precios se actualizan solos cada día y se guardan en el aparato para verlos sin conexión. ▲ sube y ▼ baja: compara la última semana con el último mes (solo en cartas de 1 € o más).</p>
         <p id="prFecha"></p>
         <button class="btn" id="prBtn">Actualizar precios</button>
@@ -461,11 +461,11 @@ const CMCL={'c58/102':'Pikachu-30CBS-58','c4/102':'Charizard-30CBS-4','c149/147'
   });
   // Excepción comprobada: el Mew 065 no lleva V y los Mew RGB llevan V1.
   BY['065'].v=0;['R','G','B'].forEach(l=>BY[l].v=1);
-  // language=4 es el filtro de Cardmarket para ver solo las ofertas de cartas en español.
+  // Enlace limpio a la página de la carta. (Los filtros en el enlace, como el de idioma, piden iniciar sesión en Cardmarket.)
   CARDS.forEach(c=>{
-    if(c.sec==='cls'){c.cm=CMCL[c.id]?CM+'Singles/30th-Celebration/'+CMCL[c.id]+'?language=4':CM+'Search?searchString='+encodeURIComponent(c.en||c.name)+'&language=4';return}
+    if(c.sec==='cls'){c.cm=CMCL[c.id]?CM+'Singles/30th-Celebration/'+CMCL[c.id]:CM+'Search?searchString='+encodeURIComponent(c.en||c.name);return}
     const code=c.sec==='rgb'?c.id+'RGB':c.id;
-    c.cm=CM+'Singles/30th-Celebration/'+slug(c.en||c.name)+(c.v?'-V'+c.v:'')+'-30C'+code+'?language=4';
+    c.cm=CM+'Singles/30th-Celebration/'+slug(c.en||c.name)+(c.v?'-V'+c.v:'')+'-30C'+code;
   });
 }
 
@@ -584,7 +584,7 @@ function render(){
   grid.classList.toggle('nopr',!showPr);grid.innerHTML=html;
   if(f&&hits.length){
     if(hits.length===1){const c=hits[0],v=stOf(c.id),o=v===1;
-      hitEl.innerHTML=`<div class="one${o?'':' miss'}"><div class="big1${o?' own':''}"><span class="bfb"><b>${esc(c.num)}</b><i>${esc(c.name)}</i></span>${nums()?'':`<img src="${esc(src(c,'large'))}" alt="${esc(c.name)}">`}</div><div><p><b>${esc(c.num)}</b> ${esc(c.name)}${c.tag?' · '+esc(c.tag):''}</p><p>${o?'La tienes'+(qOf(c.id)>1?` (×${qOf(c.id)})`:''):v===2?'En camino':'<span class="no">Te falta</span>'}${prOf(c.id)!=null?` · unos <b>${eur(prOf(c.id))}</b> ${arrow(trendOf(c.id),1)}`:''}</p><div class="lrow" style="margin-top:0"><button class="btn solid" data-one="${esc(c.id)}">${o?'Quitar de las que tengo':v===2?'Ha llegado: la tengo':'Marcar que la tengo'}</button>${o?'':`<button class="btn" data-tko="${esc(c.id)}">${v===2?'Quitar de en camino':'Marcar en camino'}</button>`}<button class="btn" data-fi="${esc(c.id)}">${o?'Cuántas tengo y precio':'Ver precio'}</button>${v===0?`<a class="btn" href="${esc(c.cm)}" target="_blank" rel="noopener">Cardmarket en español</a>`:''}</div></div></div>`}
+      hitEl.innerHTML=`<div class="one${o?'':' miss'}"><div class="big1${o?' own':''}"><span class="bfb"><b>${esc(c.num)}</b><i>${esc(c.name)}</i></span>${nums()?'':`<img src="${esc(src(c,'large'))}" alt="${esc(c.name)}">`}</div><div><p><b>${esc(c.num)}</b> ${esc(c.name)}${c.tag?' · '+esc(c.tag):''}</p><p>${o?'La tienes'+(qOf(c.id)>1?` (×${qOf(c.id)})`:''):v===2?'En camino':'<span class="no">Te falta</span>'}${prOf(c.id)!=null?` · unos <b>${eur(prOf(c.id))}</b> ${arrow(trendOf(c.id),1)}`:''}</p><div class="lrow" style="margin-top:0"><button class="btn solid" data-one="${esc(c.id)}">${o?'Quitar de las que tengo':v===2?'Ha llegado: la tengo':'Marcar que la tengo'}</button>${o?'':`<button class="btn" data-tko="${esc(c.id)}">${v===2?'Quitar de en camino':'Marcar en camino'}</button>`}<button class="btn" data-fi="${esc(c.id)}">${o?'Cuántas tengo y precio':'Ver precio'}</button>${v===0?`<a class="btn" href="${esc(c.cm)}" target="_blank" rel="noopener">Ver en Cardmarket</a>`:''}</div></div></div>`}
     else{const miss=hits.filter(c=>stOf(c.id)===0),tr=hits.filter(c=>stOf(c.id)===2);hitEl.innerHTML=`${hits.length} cartas coinciden · ${miss.length?`<span class="no">te faltan ${miss.length}</span>`:'no te falta ninguna'}${tr.length?` · ${tr.length} en camino`:''}`}
     hitEl.hidden=false}else{hitEl.hidden=true;hitEl.innerHTML=''}
   counts()}
@@ -779,7 +779,7 @@ function paintFicha(){
   <p class="fst">${c.sec==='cls'?'Colección Clásica':'Celebración 30.º Aniversario'}${c.tag?' · '+esc(c.tag):''} · <b>${o?'La tienes':v===2?'En camino':'Te falta'}</b></p>
   ${o?`<p class="fl" id="fQl">¿Cuántas tienes?</p><div class="stp" role="group" aria-labelledby="fQl"><button type="button" data-fq="-1" aria-label="Una menos"${n<=1?' disabled':''}>−</button><output aria-live="polite">${n}</output><button type="button" data-fq="1" aria-label="Una más"${n>=99?' disabled':''}>+</button></div>`:''}
   ${p!=null?`<p class="fpx">${eur(p)}${tr?`<small class="${tr>0?'up':'dn'}">${tr>0?'▲ subiendo':'▼ bajando'}</small>`:''}</p><p class="fdet">Precio de referencia de Cardmarket, media de todos los idiomas${PR?' · '+diaTxt(PR.creado):''}${det.length?'<br>'+det.join('<br>'):''}${o&&n>1?`<br><b>Tus ${n} copias valen unos ${eur(p*n)}</b>`:''}</p>`:`<p class="fdet">${PR?'Esta carta aún no tiene precio en Cardmarket.':'Los precios se descargan la primera vez que abres la app con internet.'}</p>`}
-  <div class="lrow"><a class="btn solid" href="${esc(c.cm)}" target="_blank" rel="noopener">Ver ofertas en español</a>${o?'':`<button class="btn" type="button" data-fone>${v===2?'Ha llegado: la tengo':'Marcar que la tengo'}</button><button class="btn" type="button" data-ftk>${v===2?'Quitar de en camino':'Marcar en camino'}</button>`}<button class="btn" type="button" data-fx>Cerrar</button></div>
+  <div class="lrow"><a class="btn solid" href="${esc(c.cm)}" target="_blank" rel="noopener">Ver en Cardmarket</a>${o?'':`<button class="btn" type="button" data-fone>${v===2?'Ha llegado: la tengo':'Marcar que la tengo'}</button><button class="btn" type="button" data-ftk>${v===2?'Quitar de en camino':'Marcar en camino'}</button>`}<button class="btn" type="button" data-fx>Cerrar</button></div>
   </div></div>`}
 function openFicha(c){fId=c.id;fBack=document.activeElement;paintFicha();velo.hidden=false;ficha.hidden=false;const x=ficha.querySelector('[data-fx]');if(x)x.focus({preventScroll:true})}
 function closeFicha(){if(!fId)return;ficha.hidden=true;velo.hidden=true;fId=null;ficha.innerHTML='';if(fBack&&document.contains(fBack))fBack.focus({preventScroll:true})}
@@ -865,7 +865,7 @@ document.querySelectorAll('[data-g]').forEach(i=>i.addEventListener('change',()=
   i.checked?goalSecs.add(i.dataset.g):goalSecs.delete(i.dataset.g);
   st.goal={list:SECS.map(s=>s.k).filter(k=>goalSecs.has(k)),t:Date.now()};counts();queue()}));
 // ---- Actualizaciones: compara esta versión con version.json del servidor ----
-const BUILD=13;
+const BUILD=14;
 $('#verTxt').textContent=BUILD;
 let lastCheck=0;
 async function checkUpdate(manual){
