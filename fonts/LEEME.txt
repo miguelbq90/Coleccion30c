@@ -1,6 +1,6 @@
 Tipos de letra incluidos en la app (todos con licencia libre SIL Open Font License 1.1):
 - DM Sans (OFL-DMSans.txt)
-- Montserrat (OFL-Montserrat.txt)
+- Montserrat y Montserrat Black Italic, para el nombre de la colección (OFL-Montserrat.txt)
 - Archivo Black (OFL-ArchivoBlack.txt)
 - Poppins (Indian Type Foundry, misma licencia SIL OFL 1.1)
 Se han recortado a los caracteres del español para que pesen menos.

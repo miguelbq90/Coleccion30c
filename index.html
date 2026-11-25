@@ -48,10 +48,6 @@ h1{margin:0;line-height:1}
 .logo .ext{fill:var(--lsh);stroke:var(--lsh);stroke-width:12px;stroke-linejoin:round}
 .logo .main{fill:var(--lfill);stroke:var(--lst);stroke-width:11px;stroke-linejoin:round;paint-order:stroke}
 .logo .shine{fill:none;stroke:rgba(255,255,255,.7);stroke-width:2.5px}
-.sub{margin:6px 0 0;font-size:16px;opacity:.9}
-.sync{margin:10px 0 0;padding:0;min-height:32px;border:0;background:none;color:inherit;text-align:left;font-size:14px;display:flex;align-items:center;gap:8px;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--hdr-line)}
-.sync::before{content:"";width:9px;height:9px;border-radius:50%;background:#ffb020;flex:none}
-.sync.ok::before{background:#3ddc84}
 .big{font-size:clamp(44px,6vw,68px);line-height:1;letter-spacing:-.02em;color:var(--big);font-variant-numeric:tabular-nums;white-space:nowrap}
 .big small{font-size:.42em;opacity:.75;letter-spacing:0;color:var(--hdr-ink)}
 .bar{height:12px;border-radius:99px;background:var(--track);margin:12px 0 8px;overflow:hidden;max-width:520px}
@@ -260,7 +256,6 @@ input[type=text]{width:100%;min-height:44px;font:16px 'DM Sans',system-ui,sans-s
 .b30{left:-6%;width:62%}
 .mos{left:-10%;right:-30%;gap:8px}
 .deco::after{background:linear-gradient(180deg,var(--tint) 0%,transparent 20%,transparent 46%,var(--tint) 60%,var(--tint) 100%)}
-.sub{font-size:15px}
 .fc{width:46%;font-size:24px;box-shadow:0 6px 14px rgba(0,0,0,.3)}
 .big{font-size:46px}
 .acts{gap:8px}.acts .btn{min-height:42px;padding:0 12px;font-size:15px}
@@ -269,6 +264,38 @@ input[type=text]{width:100%;min-height:44px;font:16px 'DM Sans',system-ui,sans-s
 .nums .pk{grid-template-columns:repeat(auto-fill,minmax(56px,1fr))}
 }
 @media(prefers-reduced-motion:reduce){.b30 .rays{animation:none}.p.pop::after{animation:none;display:none}.bar i,.mini i,.toast{transition:none}}
+
+/* Nombre de la colección: letras holográficas tipo pegatina, números dorados y fuegos artificiales (diseño propio) */
+@font-face{font-family:'Tit Holo';src:url(fonts/montserrat-black-italic.woff) format('woff');font-weight:900;font-style:italic;font-display:swap}
+:root,[data-tema=noche]{--col-edge:#0d0c26;--col-star:#ffd23f}[data-tema=holo]{--col-edge:#1f1b3d;--col-star:#5b3df5}[data-tema=azul]{--col-edge:#0f2350;--col-star:#ffd23f}
+.col{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:7px;margin:12px 0 8px}
+.colk{position:relative;font:700 11px/1 'DM Sans',system-ui,sans-serif;letter-spacing:.32em;text-transform:uppercase;opacity:.85;display:flex;align-items:center;gap:8px}
+.colk::before{content:'✦';font-size:10px;letter-spacing:0;color:var(--col-star)}
+.colw{position:relative;display:inline-block;max-width:100%;padding-right:22px}
+.coln{position:relative;z-index:0;display:block;font:italic 900 clamp(25px,2.7vw,34px)/1.08 'Tit Holo',sans-serif;text-transform:uppercase;letter-spacing:.03em;padding:0 .14em .1em 0;overflow-wrap:anywhere}
+.coln::before,.coln::after{content:attr(data-t);position:absolute;inset:0;padding:inherit;pointer-events:none}
+.coln::before{z-index:-2;-webkit-text-fill-color:var(--col-edge);-webkit-text-stroke:8px var(--col-edge);text-shadow:0 4px 0 var(--col-edge)}
+.coln::after{z-index:-1;-webkit-text-fill-color:#fff;-webkit-text-stroke:3.5px #fff}
+.colf{position:relative;display:block;background:linear-gradient(112deg,transparent 42%,rgba(255,255,255,.9) 50%,transparent 58%) -120% 0/240% 100% no-repeat,linear-gradient(100deg,#ff8fc8 0%,#ffe56b 22%,#7ff0b8 42%,#7fc4ff 62%,#c3a6ff 82%,#ff8fc8 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:colShine 5s ease-in-out infinite}
+.coln .n{background:linear-gradient(180deg,#fff6a8 0%,#ffd23f 55%,#ff9f1c 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+@keyframes colShine{0%,55%{background-position:-120% 0,0 0}100%{background-position:220% 0,0 0}}
+.fw{position:absolute;display:block;pointer-events:none;background:center/contain no-repeat;animation:fwPop 2.8s ease-in-out infinite}
+.fw1{width:26px;height:26px;left:calc(100% + 6px);top:-8px;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%22-50%20-50%20100%20100%22%3E%3Cg%20stroke-linecap%3D%22round%22%3E%3Cline%20x1%3D%2214.0%22%20y1%3D%220.0%22%20x2%3D%2240.0%22%20y2%3D%220.0%22%20stroke%3D%22%23ffd23f%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%229.9%22%20y1%3D%229.9%22%20x2%3D%2221.2%22%20y2%3D%2221.2%22%20stroke%3D%22%23ff8fc8%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%220.0%22%20y1%3D%2214.0%22%20x2%3D%220.0%22%20y2%3D%2240.0%22%20stroke%3D%22%23ffd23f%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%22-9.9%22%20y1%3D%229.9%22%20x2%3D%22-21.2%22%20y2%3D%2221.2%22%20stroke%3D%22%23ff8fc8%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%22-14.0%22%20y1%3D%220.0%22%20x2%3D%22-40.0%22%20y2%3D%220.0%22%20stroke%3D%22%23ffd23f%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%22-9.9%22%20y1%3D%22-9.9%22%20x2%3D%22-21.2%22%20y2%3D%22-21.2%22%20stroke%3D%22%23ff8fc8%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%22-0.0%22%20y1%3D%22-14.0%22%20x2%3D%22-0.0%22%20y2%3D%22-40.0%22%20stroke%3D%22%23ffd23f%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%229.9%22%20y1%3D%22-9.9%22%20x2%3D%2221.2%22%20y2%3D%22-21.2%22%20stroke%3D%22%23ff8fc8%22%20stroke-width%3D%226%22/%3E%3Ccircle%20cx%3D%2242.5%22%20cy%3D%2217.5%22%20r%3D%223.2%22%20fill%3D%22%23ff8fc8%22/%3E%3Ccircle%20cx%3D%22-17.5%22%20cy%3D%2242.5%22%20r%3D%223.2%22%20fill%3D%22%23ff8fc8%22/%3E%3Ccircle%20cx%3D%22-42.5%22%20cy%3D%22-17.5%22%20r%3D%223.2%22%20fill%3D%22%23ff8fc8%22/%3E%3Ccircle%20cx%3D%2217.5%22%20cy%3D%22-42.5%22%20r%3D%223.2%22%20fill%3D%22%23ff8fc8%22/%3E%3Ccircle%20r%3D%226%22%20fill%3D%22%23fff%22/%3E%3C/g%3E%3C/svg%3E");animation-delay:.4s}
+.fw2{width:34px;height:34px;right:-8px;top:-22px;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%22-50%20-50%20100%20100%22%3E%3Cg%20stroke-linecap%3D%22round%22%3E%3Cline%20x1%3D%2214.0%22%20y1%3D%220.0%22%20x2%3D%2240.0%22%20y2%3D%220.0%22%20stroke%3D%22%237fc4ff%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%229.9%22%20y1%3D%229.9%22%20x2%3D%2221.2%22%20y2%3D%2221.2%22%20stroke%3D%22%23ffd23f%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%220.0%22%20y1%3D%2214.0%22%20x2%3D%220.0%22%20y2%3D%2240.0%22%20stroke%3D%22%237fc4ff%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%22-9.9%22%20y1%3D%229.9%22%20x2%3D%22-21.2%22%20y2%3D%2221.2%22%20stroke%3D%22%23ffd23f%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%22-14.0%22%20y1%3D%220.0%22%20x2%3D%22-40.0%22%20y2%3D%220.0%22%20stroke%3D%22%237fc4ff%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%22-9.9%22%20y1%3D%22-9.9%22%20x2%3D%22-21.2%22%20y2%3D%22-21.2%22%20stroke%3D%22%23ffd23f%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%22-0.0%22%20y1%3D%22-14.0%22%20x2%3D%22-0.0%22%20y2%3D%22-40.0%22%20stroke%3D%22%237fc4ff%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%229.9%22%20y1%3D%22-9.9%22%20x2%3D%2221.2%22%20y2%3D%22-21.2%22%20stroke%3D%22%23ffd23f%22%20stroke-width%3D%226%22/%3E%3Ccircle%20cx%3D%2242.5%22%20cy%3D%2217.5%22%20r%3D%223.2%22%20fill%3D%22%23ffd23f%22/%3E%3Ccircle%20cx%3D%22-17.5%22%20cy%3D%2242.5%22%20r%3D%223.2%22%20fill%3D%22%23ffd23f%22/%3E%3Ccircle%20cx%3D%22-42.5%22%20cy%3D%22-17.5%22%20r%3D%223.2%22%20fill%3D%22%23ffd23f%22/%3E%3Ccircle%20cx%3D%2217.5%22%20cy%3D%22-42.5%22%20r%3D%223.2%22%20fill%3D%22%23ffd23f%22/%3E%3Ccircle%20r%3D%226%22%20fill%3D%22%23fff%22/%3E%3C/g%3E%3C/svg%3E")}
+.fw3{width:18px;height:18px;right:-14px;bottom:2px;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%22-50%20-50%20100%20100%22%3E%3Cg%20stroke-linecap%3D%22round%22%3E%3Cline%20x1%3D%2214.0%22%20y1%3D%220.0%22%20x2%3D%2240.0%22%20y2%3D%220.0%22%20stroke%3D%22%237ff0b8%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%229.9%22%20y1%3D%229.9%22%20x2%3D%2221.2%22%20y2%3D%2221.2%22%20stroke%3D%22%23c3a6ff%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%220.0%22%20y1%3D%2214.0%22%20x2%3D%220.0%22%20y2%3D%2240.0%22%20stroke%3D%22%237ff0b8%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%22-9.9%22%20y1%3D%229.9%22%20x2%3D%22-21.2%22%20y2%3D%2221.2%22%20stroke%3D%22%23c3a6ff%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%22-14.0%22%20y1%3D%220.0%22%20x2%3D%22-40.0%22%20y2%3D%220.0%22%20stroke%3D%22%237ff0b8%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%22-9.9%22%20y1%3D%22-9.9%22%20x2%3D%22-21.2%22%20y2%3D%22-21.2%22%20stroke%3D%22%23c3a6ff%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%22-0.0%22%20y1%3D%22-14.0%22%20x2%3D%22-0.0%22%20y2%3D%22-40.0%22%20stroke%3D%22%237ff0b8%22%20stroke-width%3D%226%22/%3E%3Cline%20x1%3D%229.9%22%20y1%3D%22-9.9%22%20x2%3D%2221.2%22%20y2%3D%22-21.2%22%20stroke%3D%22%23c3a6ff%22%20stroke-width%3D%226%22/%3E%3Ccircle%20cx%3D%2242.5%22%20cy%3D%2217.5%22%20r%3D%223.2%22%20fill%3D%22%23c3a6ff%22/%3E%3Ccircle%20cx%3D%22-17.5%22%20cy%3D%2242.5%22%20r%3D%223.2%22%20fill%3D%22%23c3a6ff%22/%3E%3Ccircle%20cx%3D%22-42.5%22%20cy%3D%22-17.5%22%20r%3D%223.2%22%20fill%3D%22%23c3a6ff%22/%3E%3Ccircle%20cx%3D%2217.5%22%20cy%3D%22-42.5%22%20r%3D%223.2%22%20fill%3D%22%23c3a6ff%22/%3E%3Ccircle%20r%3D%226%22%20fill%3D%22%23fff%22/%3E%3C/g%3E%3C/svg%3E");animation-delay:1.3s}
+@keyframes fwPop{0%,100%{transform:scale(.55) rotate(0);opacity:.35}45%{transform:scale(1) rotate(20deg);opacity:1}}
+/* Sincronización: nube pequeña en la esquina. El punto dice el estado; si hay un problema, se muestra el texto. */
+.sync{position:absolute;z-index:3;top:12px;right:12px;display:flex;align-items:center;gap:7px;height:36px;min-width:36px;padding:0 9px;border:1px solid var(--hdr-line);border-radius:999px;background:color-mix(in srgb,var(--hdr-ink) 9%,transparent);color:inherit;font-size:13px;line-height:1;opacity:.85;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.sync:hover{opacity:1}
+.sync svg{width:19px;height:19px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round}
+.sync::after{content:"";position:absolute;left:21px;top:19px;width:9px;height:9px;border-radius:50%;background:#ffb020;box-shadow:0 0 0 2px var(--col-edge)}
+.sync.ok::after{background:#3ddc84}
+.sync.err::after{background:#ff5470}
+.sync .syt{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.sync.err{opacity:1}
+.sync.err .syt{position:static;width:auto;height:auto;clip:auto;max-width:min(58vw,320px);overflow:hidden;text-overflow:ellipsis}
+@media(max-width:600px){.cover.band.syncerr{padding-top:64px}.sync.err .syt{max-width:calc(100vw - 90px)}}
+@media (prefers-reduced-motion:reduce){.colf,.fw{animation:none}.fw{opacity:1;transform:none}}
 </style>
 </head>
 <body>
@@ -276,6 +303,7 @@ input[type=text]{width:100%;min-height:44px;font:16px 'DM Sans',system-ui,sans-s
 <div class="upd" id="upd" hidden role="status"><span>Hay una versión nueva de la app</span><button id="updBtn" type="button">Actualizar</button></div>
 <header class="cover band">
   <div class="deco" aria-hidden="true"><div class="mos" id="mos"></div></div>
+  <button class="sync" id="sync" type="button" aria-controls="syncbox" title="Guardado en este aparato"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18.5h10.2a4.3 4.3 0 0 0 .6-8.56A6 6 0 0 0 6.3 9.1 4.7 4.7 0 0 0 7 18.5Z"/></svg><span class="syt">Guardado en este aparato</span></button>
   <div class="wrap cov">
     <div class="ttl">
       <h1 class="logo"><span class="vh">Zuroku</span><svg id="logo" aria-hidden="true" viewBox="0 0 640 130" preserveAspectRatio="xMinYMid meet">
@@ -285,8 +313,7 @@ input[type=text]{width:100%;min-height:44px;font:16px 'DM Sans',system-ui,sans-s
         </defs>
         <g id="logoG"></g>
       </svg></h1>
-      <p class="sub">Celebración 30.º Aniversario</p>
-      <button class="sync" id="sync" type="button" aria-controls="syncbox">Guardado en este aparato</button>
+      <div class="sub col" id="colTit"><span class="colk">Colección<i class="fw fw1" aria-hidden="true"></i></span><span class="colw"><span class="coln" id="colName"></span><i class="fw fw2" aria-hidden="true"></i><i class="fw fw3" aria-hidden="true"></i></span></div>
     </div>
     <div class="tal">
       <div class="big"><span id="have">0</span><small> / <span id="goal">191</span></small></div>
@@ -671,6 +698,10 @@ function render(){
   $('#mos').innerHTML=list.concat(list.slice(0,10)).map(c=>`<img src="${esc(src(c))}" alt="" decoding="async">`).join('');
   $('#mos').addEventListener('error',e=>{if(e.target.tagName==='IMG')e.target.style.visibility='hidden'},true);
 }
+// Nombre de la colección con letras holográficas (los números salen en dorado)
+function setColName(t){const el=$('#colName');if(!el)return;t=String(t||'');el.dataset.t=t;
+  el.innerHTML='<span class="colf">'+esc(t).replace(/(\d+(?:[.,]\d+)*(?:\.?º)?)/g,'<span class="n">$1</span>')+'</span>'}
+setColName('Celebración 30.º Aniversario');
 // Título con letras gruesas, contorno, relieve y un pequeño bote en cada letra (diseño propio).
 {
   const word='ZUROKU',n=word.length;
@@ -746,7 +777,8 @@ let cfg={};try{cfg=JSON.parse(localStorage.getItem(LSC)||'{}')||{}}catch(e){cfg=
 const saveCfg=()=>{try{localStorage.setItem(LSC,JSON.stringify(cfg))}catch(e){}};
 const syncEl=$('#sync');
 syncEl.addEventListener('click',()=>$('#syncbox').scrollIntoView({behavior:'smooth',block:'start'}));
-function setSync(txt,ok){syncEl.textContent=txt;syncEl.classList.toggle('ok',!!ok)}
+const SYNC_ERR=/no se pudo|no he podido|sin permiso|caducad|no funciona|error/i;
+function setSync(txt,ok){syncEl.querySelector('.syt').textContent=txt;syncEl.title=txt;syncEl.setAttribute('aria-label','Sincronización: '+txt);syncEl.classList.toggle('ok',!!ok);const er=!ok&&SYNC_ERR.test(txt);syncEl.classList.toggle('err',er);syncEl.closest('.cover').classList.toggle('syncerr',er)}
 const hora=()=>new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
 function idle(){if(RO)return;if(!linked())setSync('Guardado en este aparato · sin sincronizar');else if(!navigator.onLine)setSync('Sin conexión · tus cambios se subirán al volver internet')}
 async function gh(path,opt){
@@ -1164,7 +1196,7 @@ document.querySelectorAll('[data-g]').forEach(i=>i.addEventListener('change',()=
   i.checked?goalSecs.add(i.dataset.g):goalSecs.delete(i.dataset.g);
   st.goal={list:SECS.map(s=>s.k).filter(k=>goalSecs.has(k)),t:Date.now()};counts();queue()}));
 // ---- Actualizaciones: compara esta versión con version.json del servidor ----
-const BUILD=17;
+const BUILD=18;
 $('#verTxt').textContent=BUILD;
 let lastCheck=0;
 async function checkUpdate(manual){
