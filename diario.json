@@ -1,0 +1,47 @@
+{
+ "v": 1,
+ "actualizado": "2026-11-26T19:00+01:00",
+ "dias": [],
+ "notas": [
+  {
+   "d": "2026-11-25",
+   "h": "17:24",
+   "quien": "Claude",
+   "tit": "GitHub falló al publicar la versión 11",
+   "t": "Al subir la versión 11, GitHub dio un error 504 al publicar la web y se quedó con la versión anterior. Lo arreglé volviendo a publicarla. Desde entonces el vigilante lo comprueba solo después de cada actualización.",
+   "aprende": "Un error 504 significa «el servidor no respondió a tiempo». No era un fallo de tu app, sino de quien la sirve (GitHub). Por eso el vigilante compara la versión guardada con la que se ve en la web, en vez de fiarse de que todo salió bien."
+  },
+  {
+   "d": "2026-11-25",
+   "h": "19:00",
+   "quien": "Claude",
+   "tit": "Cardmarket pedía iniciar sesión",
+   "t": "Los enlaces a Cardmarket llevaban un filtro de idioma, y con ese filtro Cardmarket pedía iniciar sesión («please login») a quien no tenía la sesión abierta. En la versión 14 quité el filtro y los enlaces abren directamente.",
+   "aprende": "Algunas webs solo dejan usar ciertos filtros a usuarios con sesión. Un enlace puede funcionar en tu móvil (donde ya entraste) y fallar en el de otra persona: por eso conviene probar los enlaces sin la sesión abierta."
+  },
+  {
+   "d": "2026-11-25",
+   "h": "23:53",
+   "quien": "Claude",
+   "tit": "Chrome metía tu correo en el buscador",
+   "t": "En el ordenador, Chrome rellenaba el buscador de cartas con tu correo porque lo confundía con la casilla de usuario de tu cuenta. En la versión 19 separé el buscador del formulario de la cuenta, y el buscador ya no acepta correos.",
+   "aprende": "Los navegadores guardan tus usuarios y contraseñas y los «autorrellenan» buscando casillas que parezcan de inicio de sesión. Si varias casillas están en el mismo formulario, el navegador se puede equivocar de casilla."
+  },
+  {
+   "d": "2026-11-25",
+   "h": "23:40",
+   "quien": "Claude",
+   "tit": "Las pruebas pararon un error mío antes de publicarlo",
+   "t": "Mientras preparaba la versión 19, un comando mío dejó vacío el archivo sw.js, que es el que guarda la app para usarla sin internet. Las pruebas automáticas lo detectaron antes de publicar, recuperé el archivo de la versión anterior y el error no llegó a tu app.",
+   "aprende": "Antes de publicar, la app pasa unas pruebas automáticas: abrirla, marcar cartas, usarla sin internet… Sirven justo para pillar errores antes de que lleguen a tu móvil. Además, Git guarda todas las versiones anteriores de cada archivo, así que siempre se puede volver atrás."
+  },
+  {
+   "d": "2026-11-26",
+   "h": "",
+   "quien": "Claude",
+   "tit": "Versión 23: varias colecciones",
+   "t": "Estreno del sobre de colecciones. Las colecciones del catálogo se guardan en tu cuenta en un sitio aparte («extra»), para que una versión antigua de la app (por ejemplo, la de tu hermano si no ha actualizado) no las borre. Para que Firebase acepte ese sitio nuevo hay que publicar unas reglas nuevas.",
+   "aprende": "Cuando una app cambia la forma de guardar los datos, hay que pensar en los aparatos que todavía tienen la versión vieja. Guardar lo nuevo aparte es una forma sencilla de que lo viejo y lo nuevo convivan sin pisarse. Y las «reglas» de Firebase son el portero: lo que no aparece en ellas, no entra."
+  }
+ ]
+}
