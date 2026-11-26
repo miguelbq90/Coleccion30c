@@ -5,7 +5,7 @@ on:
   push:
     branches: [maquetas]
 permissions:
-  contents: read
+  contents: write
 jobs:
   capturas:
     runs-on: ubuntu-latest
@@ -19,7 +19,11 @@ jobs:
       - run: python maquetas/hacer.py . maquetas/out
         env:
           CHROME: /usr/bin/google-chrome
-      - uses: actions/upload-artifact@v4
-        with:
-          name: maquetas
-          path: maquetas/out
+      - run: cat maquetas/out/catalogo.json
+      - name: Guardar las capturas en la rama
+        run: |
+          git config user.name "robot-maquetas"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add maquetas/out
+          git commit -m "Capturas de las maquetas" || exit 0
+          git push
