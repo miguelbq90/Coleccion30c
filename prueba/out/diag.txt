@@ -1,0 +1,90 @@
+CURL https://assets.tcgdex.net/es/me/me02.5/001/low.webp
+HTTP/2 200 
+accept-ranges: bytes
+access-control-allow-headers: DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range
+access-control-allow-methods: GET, OPTIONS
+access-control-allow-origin: *
+access-control-expose-headers: Content-Length,Content-Range
+alt-svc: h3=":443"; ma=2592000
+alt-svc: h3=":443"; ma=2592000
+cache-control: max-age=31536000
+cache-control: public, max-age=31536000, immutable
+content-type: image/webp
+date: Thu, 26 Nov 2026 19:50:16 GMT
+etag: "b7359075d6c2f8a11d73873ccddde42e"
+expires: Fri, 26 Nov 2027 19:50:16 GMT
+last-modified: Wed, 25 Nov 2026 14:16:44 GMT
+server: nginx
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+x-amz-meta-mtime: 1788931547.12
+content-length: 16924
+
+
+CURL https://assets.tcgdex.net/es/me/me02.5/150/low.webp
+HTTP/2 200 
+accept-ranges: bytes
+access-control-allow-headers: DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range
+access-control-allow-methods: GET, OPTIONS
+access-control-allow-origin: *
+access-control-expose-headers: Content-Length,Content-Range
+alt-svc: h3=":443"; ma=2592000
+alt-svc: h3=":443"; ma=2592000
+cache-control: max-age=31536000
+cache-control: public, max-age=31536000, immutable
+content-type: image/webp
+date: Thu, 26 Nov 2026 19:50:16 GMT
+etag: "6db62781f7b757c5dd740cf59cfc5bd8"
+expires: Fri, 26 Nov 2027 19:50:16 GMT
+last-modified: Wed, 25 Nov 2026 15:01:44 GMT
+server: nginx
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+x-amz-meta-mtime: 1785884905.219
+content-length: 13364
+
+
+CURL https://assets.tcgdex.net/es/me/me02.5/001/high.webp
+HTTP/2 200 
+accept-ranges: bytes
+access-control-allow-headers: DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range
+access-control-allow-methods: GET, OPTIONS
+access-control-allow-origin: *
+access-control-expose-headers: Content-Length,Content-Range
+alt-svc: h3=":443"; ma=2592000
+alt-svc: h3=":443"; ma=2592000
+cache-control: max-age=31536000
+cache-control: public, max-age=31536000, immutable
+content-type: image/webp
+date: Thu, 26 Nov 2026 19:50:17 GMT
+etag: "bf24077729fa815084817a7b1df16f8c"
+expires: Fri, 26 Nov 2027 19:50:17 GMT
+last-modified: Wed, 25 Nov 2026 14:16:44 GMT
+server: nginx
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+x-amz-meta-mtime: 1788931572.564
+content-length: 75672
+
+
+CURL https://assets.tcgdex.net/es/sv/sv08.5/001/low.webp
+HTTP/2 200 
+accept-ranges: bytes
+access-control-allow-headers: DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range
+access-control-allow-methods: GET, OPTIONS
+access-control-allow-origin: *
+access-control-expose-headers: Content-Length,Content-Range
+alt-svc: h3=":443"; ma=2592000
+alt-svc: h3=":443"; ma=2592000
+cache-control: max-age=31536000
+cache-control: public, max-age=31536000, immutable
+content-type: image/webp
+date: Thu, 26 Nov 2026 19:50:17 GMT
+etag: "668c8cf31a0a9cbfc8e0ac9de6ce26fb"
+expires: Fri, 26 Nov 2027 19:50:17 GMT
+last-modified: Wed, 25 Nov 2026 14:19:17 GMT
+server: nginx
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+x-amz-meta-mtime: 1785932526.73
+content-length: 13882
+
+
+iphone: {"cartas": 295, "imgs": 295, "visibles": 9, "cargadas": 9, "ok": 44, "src": ["https://assets.tcgdex.net/es/me/me02.5/001/low.webp", "https://assets.tcgdex.net/es/me/me02.5/002/low.webp"], "sw": true} | errores JS [] | respuestas raras ['404 https://assets.tcgdex.net/es/sv/sv08.5/logo.png text/html, image/png sw=True', '404 https://assets.tcgdex.net/es/sv/sv08.5/logo.png text/html, image/png sw=True']
+chrome: {"cartas": 295, "imgs": 295, "visibles": 9, "cargadas": 9, "ok": 51, "src": ["https://assets.tcgdex.net/es/me/me02.5/001/low.webp", "https://assets.tcgdex.net/es/me/me02.5/002/low.webp"], "sw": true} | errores JS [] | respuestas raras ['404 https://assets.tcgdex.net/es/sv/sv08.5/logo.png None sw=True']
