@@ -52,3 +52,41 @@
 .mk-fab img{width:28px;height:28px;object-fit:contain;filter:brightness(0)}
 .mk-fab em{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:#7c5cff;color:#fff;font:800 11px/20px system-ui;font-style:normal;text-align:center}
 html.mkH .tools .r1{gap:10px}
+/* ===== SOBRE de Zuroku (diseño propio) que se abre y saca las colecciones ===== */
+html.mkS .b30 .n{display:none}
+html.mkS #fan{display:none}
+.mk-pack{position:absolute;z-index:3;width:128px;height:192px;filter:drop-shadow(0 14px 22px rgba(0,0,0,.55))}
+.mk-pack svg{width:100%;height:100%;overflow:visible}
+.mk-pack .tear{transform-origin:20% 100%}
+html.mkS2 .mk-pack .tear{transform:translate(18px,-46px) rotate(-16deg)}
+html.mkS2 .mk-pack .glow{opacity:1}
+.mk-hint{position:absolute;z-index:3;padding:6px 12px;border-radius:999px;background:#ffd23f;color:#16161a;font-weight:800;font-size:13px;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+.mk-fanC{position:absolute;z-index:4;width:1px;height:1px}
+.mk-fanC .fc{position:absolute;left:-46px;top:-150px;width:92px;height:128px;border-radius:11px;overflow:hidden;background:#1d1b4a;border:2px solid rgba(255,255,255,.85);box-shadow:0 10px 22px rgba(0,0,0,.55);transform-origin:50% 230%}
+.mk-fanC .fc img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.55) saturate(1.2)}
+.mk-fanC .fc .mk-logo{position:absolute;left:6%;top:10px;width:88%;height:46px}
+.mk-fanC .fc .mk-nl{position:absolute;left:6px;right:6px;top:10px;font-size:11px}
+.mk-fanC .fc .pc{position:absolute;left:6px;right:6px;bottom:6px;display:flex;flex-direction:column;gap:4px;color:#fff;font-size:11px;font-weight:800;text-align:center}
+.mk-fanC .fc .pc .mk-bar{height:4px}
+.mk-fanC .fc.on{border-color:#ffd23f;box-shadow:0 0 0 3px rgba(255,210,63,.35),0 10px 22px rgba(0,0,0,.55)}
+.mk-todas{position:absolute;z-index:5;padding:8px 14px;border-radius:999px;background:rgba(10,8,40,.85);border:1.5px solid #ffd23f;color:#fff;font-weight:800;font-size:13px;white-space:nowrap}
+/* Lista mejorada: buscador, «Estás completando» arriba y series plegadas */
+.m4 .bus{display:flex;align-items:center;gap:8px;height:44px;padding:0 14px;margin:0 0 12px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--mute);font-size:15px}
+.m4 .sec{display:flex;align-items:center;justify-content:space-between;margin:12px 0 8px;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.m4 .fold{display:flex;align-items:center;gap:10px;height:56px;padding:0 14px;margin-bottom:8px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.04);font-weight:800}
+.m4 .fold .lg{display:flex;gap:6px;margin-left:auto}.m4 .fold .lg img{height:22px;width:54px;object-fit:contain}
+.m4 .fold .n{padding:2px 8px;border-radius:999px;background:rgba(255,255,255,.1);font-size:12px}
+
+/* Sobre abierto: momento a pantalla completa */
+.mk-open{position:fixed;inset:0;z-index:70;background:radial-gradient(70% 45% at 50% 58%,rgba(255,226,120,.28),rgba(8,8,24,.88) 70%);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.mk-open .mk-pack{left:50%;top:60%;width:150px;height:225px;margin:-60px 0 0 -75px}
+.mk-open .fc{position:absolute;width:104px;height:146px;margin-left:-52px;border-radius:12px;overflow:hidden;background:#1d1b4a;border:2px solid rgba(255,255,255,.9);box-shadow:0 12px 24px rgba(0,0,0,.6)}
+.mk-open .fc img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.5) saturate(1.2)}
+.mk-open .fc .mk-logo{position:absolute;left:6%;top:12px;width:88%;height:54px}
+.mk-open .fc .mk-nl{position:absolute;left:7px;right:7px;top:12px;font-size:12px}
+.mk-open .fc .pc{position:absolute;left:7px;right:7px;bottom:8px;display:flex;flex-direction:column;gap:4px;color:#fff;font-size:12px;font-weight:800;text-align:center}
+.mk-open .fc .pc .mk-bar{height:5px}
+.mk-open .fc.on{border-color:#ffd23f;box-shadow:0 0 0 3px rgba(255,210,63,.4),0 12px 24px rgba(0,0,0,.6)}
+.mk-open .tt{position:absolute;left:0;right:0;top:70px;text-align:center;color:#fff;font-size:22px;font-weight:800}
+.mk-open .mk-todas{left:50%;transform:translateX(-50%);top:calc(60% + 180px)}
+.mk-open .x{position:absolute;right:18px;top:18px;width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(255,255,255,.5);color:#fff;display:grid;place-items:center;font-size:18px}

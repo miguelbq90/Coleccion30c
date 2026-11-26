@@ -20,6 +20,7 @@ def falso(ctx):
     def api(route):
         u=route.request.url
         if u.endswith('/en/sets'):return route.fulfill(json=[{'id':i,'name':n} for i,n in sets])
+        if '/cards/' in u:return route.fulfill(json={'pricing':{'cardmarket':{'avg':int(hashlib.md5(u.encode()).hexdigest(),16)%100}}})
         m=re.search(r'/(en|es)/sets/([^/?]+)$',u);i=m.group(2)
         return route.fulfill(json={'id':i,'name':dict(sets)[i],'logo':f'https://assets.tcgdex.net/en/sv/{i}/logo','symbol':f'https://assets.tcgdex.net/univ/sv/{i}/symbol','serie':{'name':'Escarlata y Púrpura'},'cardCount':{'official':3},'cards':[{'localId':str(k),'image':f'https://assets.tcgdex.net/en/sv/{i}/{k}'} for k in range(1,6)]})
     def asset(route):
@@ -31,7 +32,7 @@ def falso(ctx):
     ctx.route('**images.scrydex.com/**',lambda r:r.fulfill(body=(pathlib.Path('/home/claude/v20')/'f3.jpg').read_bytes(),content_type='image/jpeg'))
 with sync_playwright() as p:
     b=p.chromium.launch(executable_path=CHROME)
-    for m in ['M1','M2','M3','H1','H2','HS']:
+    for m in ['S1','S2','L2']:
         ctx=b.new_context(viewport={'width':390,'height':844},device_scale_factor=2,service_workers='block')
         if FALSO:falso(ctx)
         ctx.route('**googleapis.com/**',lambda r:r.abort())

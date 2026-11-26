@@ -59,4 +59,37 @@ window.mk=async m=>{const C=await MKREADY;const ad='<div class="mk-add">＋ Aña
    if(m==='H2'){const t=document.getElementById('colTit');t.style.display='none';t.insertAdjacentHTML('afterend',`<div class="mk-card"><div class="tx"><small>Colección</small>${logo(c)}</div><span class="ch">Cambiar ▾</span></div>`)}
    const f=document.querySelector('.tools .r1');f.insertAdjacentHTML('afterbegin',`<span class="mk-fab">${c.sym?`<img src="${c.sym}" alt="">`:'✦'}<em>${C.length}</em></span>`)}
 };
+
+// --- Sobre de Zuroku: dibujo propio (lámina holográfica, bordes dentados, la hoja de carpeta del icono y el nombre) ---
+const PACK=`<svg viewBox="0 0 200 300" aria-hidden="true"><defs>
+<linearGradient id="pkH" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9fcf"/><stop offset=".25" stop-color="#ffe56b"/><stop offset=".5" stop-color="#7ff0b8"/><stop offset=".75" stop-color="#8fcaff"/><stop offset="1" stop-color="#c3a6ff"/></linearGradient>
+<linearGradient id="pkS" x1="0" y1="0" x2="1" y2="0"><stop offset=".35" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset=".65" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<radialGradient id="pkG" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff6a8"/><stop offset="1" stop-color="#fff6a8" stop-opacity="0"/></radialGradient></defs>
+<ellipse class="glow" cx="100" cy="40" rx="120" ry="70" fill="url(#pkG)" opacity="0"/>
+<path d="M10 52 L190 52 L190 284 l-10 8 -10 -8 -10 8 -10 -8 -10 8 -10 -8 -10 8 -10 -8 -10 8 -10 -8 -10 8 -10 -8 -10 8 -10 -8 -10 8 -10 -8 -10 8 Z" fill="url(#pkH)" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+<path d="M10 52 L190 52 L190 284 L10 284 Z" fill="url(#pkS)"/>
+<rect x="26" y="70" width="148" height="44" rx="12" fill="#1b1b45"/>
+<text x="100" y="101" text-anchor="middle" font-family="Archivo Black,Impact,sans-serif" font-size="26" fill="#ffd23f" stroke="#0d0c26" stroke-width="1">ZUROKU</text>
+<g transform="translate(62 128)"><rect width="76" height="96" rx="10" fill="#2a2a66" stroke="#fff" stroke-width="4"/>
+${[0,1,2].map(r=>[0,1,2].map(k=>`<rect x="${8+k*22}" y="${8+r*28}" width="16" height="22" rx="3" fill="${['#ff8fc8','#ffe56b','#7ff0b8','#7fc4ff','#c3a6ff','none','#ff8fc8','none','none'][r*3+k]}" stroke="${(r*3+k)%8==5||r*3+k>6?'#8a8ad6':'#fff'}" stroke-width="1.6" ${['none'].includes(['#ff8fc8','#ffe56b','#7ff0b8','#7fc4ff','#c3a6ff','none','#ff8fc8','none','none'][r*3+k])?'stroke-dasharray="3 2"':''}/>`).join('')).join('')}</g>
+<text x="100" y="256" text-anchor="middle" font-family="DM Sans,system-ui,sans-serif" font-weight="800" font-size="13" letter-spacing="3" fill="#1b1b45">MIS COLECCIONES</text>
+<g class="tear"><path d="M10 52 L10 22 l10 -8 10 8 10 -8 10 8 10 -8 10 8 10 -8 10 8 10 -8 10 8 10 -8 10 8 10 -8 10 8 10 -8 10 8 10 -8 10 8 L190 52 Z" fill="url(#pkH)" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+<path d="M16 40 H184" stroke="#1b1b45" stroke-width="2" stroke-dasharray="6 5" opacity=".6"/></g></svg>`;
+const ponPack=(abierto)=>{const st=document.querySelector('.stage');const b=document.getElementById('b30').getBoundingClientRect(),sr=st.getBoundingClientRect();
+  const cx=b.left-sr.left+b.width/2,cy=b.top-sr.top+b.height/2;
+  st.insertAdjacentHTML('beforeend',`<div class="mk-pack" style="left:${cx-75}px;top:${cy-100}px">${PACK}</div>`);
+  if(!abierto)st.insertAdjacentHTML('beforeend',`<div class="mk-hint" style="left:${cx+50}px;top:${cy+70}px">Toca para abrir ✨</div>`);
+  return {st,cx,cy}};
+const _mk=window.mk;
+window.mk=async m=>{const C=await MKREADY;
+ if(m==='S1'||m==='S2'){document.documentElement.classList.add('mkS');if(m==='S2')document.documentElement.classList.add('mkS2');
+   const {st,cx,cy}=ponPack(m==='S2');
+   if(m==='S2'){document.querySelector('.stage .mk-pack').remove();const F=[C[3],C[1],C[0],C[2],C[4]].filter(Boolean),X=[-124,-62,0,62,124],Y=[52,20,0,20,52],R=[-16,-8,0,8,16];
+     document.body.insertAdjacentHTML('beforeend',`<div class="mk-open"><div class="tt">¿Qué colección abrimos?</div><span class="x">✕</span>${F.map((c,i)=>`<div class="fc${c.cur?' on':''}" style="left:calc(50% + ${X[i]}px);top:calc(22% + ${Y[i]}px);transform:rotate(${R[i]}deg);z-index:${i===2?5:3-Math.abs(i-2)}">${c.cover?`<img class="bg" src="${c.cover}" alt="">`:''}${c.logo?logo(c):`<span class="mk-nl">${c.name}</span>`}<div class="pc"><div class="mk-bar"><i style="width:${pc(c)}%"></i></div>${pc(c)} %</div></div>`).join('')}<div class="mk-pack">${PACK}</div><div class="mk-todas">Ver las ${C.length} colecciones ›</div></div>`)}
+   return}
+ if(m==='L2'){const fav=C.slice(0,3),rest=C.slice(3);
+   const row=c=>`<div class="row${c.cur?' on':''}">${c.cover?`<img class="art" src="${c.cover}" alt="">`:''}<div class="lf">${logo(c)}<div class="st"><span>${c.have}/${c.total}</span><div class="mk-bar"><i style="width:${pc(c)}%"></i></div><span>${pc(c)} %</span></div></div><span class="pz">≈ ${c.val}</span></div>`;
+   const series=[...new Set(rest.map(c=>c.serie||'Otras'))];
+   document.body.insertAdjacentHTML('beforeend',`<div class="mk-scr"><div class="m1 m4"><h2>Mis colecciones</h2><p class="sub2">${C.length} colecciones</p><div class="bus">🔍 Buscar colección…</div><div class="sec">⭐ Estás completando</div>${fav.map(row).join('')}${series.map(s=>{const L=rest.filter(c=>(c.serie||'Otras')===s);return `<div class="sec">${s}</div><div class="fold">Ver ${L.length} colecciones <span class="lg">${L.slice(0,3).map(c=>c.logo?`<img src="${c.logo}" data-alt="${c.logo2||''}" onerror="mkErr(this)" alt="">`:'').join('')}</span> ▾</div>`}).join('')}<div class="mk-add" style="height:56px">＋ Añadir colección</div></div></div>`);return}
+ return _mk(m)};
 })();
