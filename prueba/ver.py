@@ -1,5 +1,12 @@
 # Temporal (rama «prueba»): capturas de la versión 23 en iPhone, iPad y ordenador, con fotos reales,
 # y vídeo del sobre abriéndose (fotograma a fotograma). Las capturas se guardan en prueba/out.
+from playwright.sync_api import Page
+_shot = Page.screenshot
+def _shot2(self, **k):
+    k.setdefault('timeout', 120000)
+    try: return _shot(self, **k)
+    except Exception as e: print('captura fallida', k.get('path'), str(e)[:120])
+Page.screenshot = _shot2
 import json, pathlib, shutil, subprocess, sys, time
 from playwright.sync_api import sync_playwright
 OUT = pathlib.Path('prueba/out'); shutil.rmtree(OUT, ignore_errors=True); OUT.mkdir(parents=True)
