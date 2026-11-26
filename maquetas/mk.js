@@ -2,7 +2,7 @@
 // Los números de cartas y valores son ejemplos.
 (()=>{
 const WANT=[
- {k:'30',en:n=>/30th/i.test(n),have:94,total:191,val:'240 €',cur:1,es:'Celebración 30.º Aniversario'},
+ {k:'30',en:n=>/30th|celebration/i.test(n)&&!/classic|^celebrations$/i.test(n),have:94,total:191,val:'240 €',cur:1,es:'Celebración 30.º Aniversario'},
  {k:'pe',en:n=>/^Prismatic Evolutions$/i.test(n),have:120,total:180,val:'310 €'},
  {k:'ss',en:n=>/^Surging Sparks$/i.test(n),have:60,total:252,val:'85 €'},
  {k:'151',en:n=>/^151$/.test(n),have:150,total:207,val:'420 €'},
@@ -15,6 +15,7 @@ const j=u=>fetch(u).then(r=>r.ok?r.json():null).catch(()=>null);
 window.MKLOG=[];
 window.MKREADY=(async()=>{
   const en=await j(A+'en/sets')||[];
+  MKLOG.push({sets_30:en.filter(x=>/30th|celebration/i.test(x.name)).map(x=>x.id+' · '+x.name)});
   const out=[];
   for(const w of WANT){
     const s=en.filter(x=>w.en(x.name)).pop();
@@ -23,11 +24,15 @@ window.MKREADY=(async()=>{
       const de=await j(A+'es/sets/'+s.id), dn=await j(A+'en/sets/'+s.id);
       const d=de||dn||{};
       c.id=s.id;c.name=w.es||(de&&de.name)||(dn&&dn.name)||s.name;
-      c.logo=((de&&de.logo)||(dn&&dn.logo)||'');c.logo=c.logo?c.logo+'.png':'';
+      c.logo=((de&&de.logo)||(dn&&dn.logo)||'');c.logo=c.logo?c.logo+'.png':'';c.logo2=(dn&&dn.logo)?dn.logo+'.png':'';
       c.sym=((de&&de.symbol)||(dn&&dn.symbol)||'');c.sym=c.sym?c.sym+'.png':'';
       c.serie=(de&&de.serie&&de.serie.name)||(dn&&dn.serie&&dn.serie.name)||'';
       const cards=(dn&&dn.cards)||(de&&de.cards)||[];const off=((dn||de||{}).cardCount||{}).official||cards.length;
-      const pick=cards[Math.min(off,cards.length-1)]||cards[cards.length-1];
+      // La portada: la carta más cara de las «secretas» (las que pasan del número oficial)
+      const cand=cards.filter(x=>parseInt(x.localId,10)>off).slice(0,70);
+      const pr=await Promise.all(cand.map(x=>j(A+'en/cards/'+s.id+'-'+x.localId).then(d=>{const c=d&&d.pricing&&d.pricing.cardmarket;return {x,v:c?(c.avg||c.trend||c.avg30||0):0}})));
+      pr.sort((a,b)=>b.v-a.v);
+      const pick=(pr[0]&&pr[0].v>0?pr[0].x:null)||cards[Math.min(off,cards.length-1)]||cards[cards.length-1];
       const cde=de&&de.cards&&pick&&de.cards.find(x=>x.localId===pick.localId);
       const im=(cde&&cde.image)||(pick&&pick.image)||'';c.cover=im?im+'/high.webp':'';
       MKLOG.push({buscado:w.k,id:s.id,nombre_en:s.name,nombre_es:de&&de.name,logo_es:!!(de&&de.logo),logo_en:!!(dn&&dn.logo),portada:pick&&pick.localId,serie:c.serie});
@@ -38,7 +43,8 @@ window.MKREADY=(async()=>{
   }
   window.MKC=out;return out})();
 const pc=c=>Math.round(c.have/c.total*100);
-const logo=(c,cls='')=>c.logo?`<img class="mk-logo ${cls}" src="${c.logo}" alt="">`:`<span class="mk-nl ${cls}">${c.name}</span>`;
+window.mkErr=(im)=>{const a=im.dataset.alt;if(a){im.removeAttribute('data-alt');im.src=a}else{const sp=document.createElement('span');sp.className='mk-nl';sp.textContent=im.dataset.n;im.replaceWith(sp)}};
+const logo=(c,cls='')=>c.logo?`<img class="mk-logo ${cls}" src="${c.logo}" data-alt="${c.logo2&&c.logo2!==c.logo?c.logo2:''}" data-n="${c.name}" onerror="mkErr(this)" alt="">`:`<span class="mk-nl ${cls}">${c.name}</span>`;
 window.mk=async m=>{const C=await MKREADY;const ad='<div class="mk-add">＋ Añadir colección</div>';
  const scr=h=>document.body.insertAdjacentHTML('beforeend',`<div class="mk-scr">${h}</div>`);
  const head=`<h2>Mis colecciones</h2><p class="sub2">${C.length} colecciones · toca una para entrar</p>`;
@@ -50,7 +56,7 @@ window.mk=async m=>{const C=await MKREADY;const ad='<div class="mk-add">＋ Aña
    scr(`<div class="m3">${head}<div class="car">${card(L,'l')}${card(R,'r')}${card(c,'')}</div><div class="dots">${C.map((x,k)=>`<i class="${k===i?'on':''}"></i>`).join('')}</div>${ad}</div>`)}
  if(m==='H1'||m==='H2'||m==='HS'){document.documentElement.classList.add('mkH');const c=C.find(x=>x.cur)||C[0];
    if(m==='H1')document.getElementById('colTit').insertAdjacentHTML('afterend',`<div class="mk-pill"><span class="sy">${c.sym?`<img src="${c.sym}" alt="">`:'✦'}</span>Mis colecciones <em>${C.length}</em> ▾</div>`);
-   if(m==='H2'){const t=document.getElementById('colTit');t.style.display='none';t.insertAdjacentHTML('afterend',`<div class="mk-card">${logo(c)}<div class="tx"><small>Colección</small><b>${c.name}</b></div><span class="ch">Cambiar ▾</span></div>`)}
+   if(m==='H2'){const t=document.getElementById('colTit');t.style.display='none';t.insertAdjacentHTML('afterend',`<div class="mk-card"><div class="tx"><small>Colección</small>${logo(c)}</div><span class="ch">Cambiar ▾</span></div>`)}
    const f=document.querySelector('.tools .r1');f.insertAdjacentHTML('afterbegin',`<span class="mk-fab">${c.sym?`<img src="${c.sym}" alt="">`:'✦'}<em>${C.length}</em></span>`)}
 };
 })();

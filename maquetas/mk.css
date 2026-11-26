@@ -31,8 +31,8 @@
 .m3 .car{position:relative;height:500px;margin:4px -16px 0}
 .m3 .pt{position:absolute;top:0;left:50%;width:270px;height:470px;margin-left:-135px;border-radius:24px;overflow:hidden;background:#1d1b4a;border:2px solid rgba(255,255,255,.75);box-shadow:0 18px 40px rgba(0,0,0,.55);transition:none}
 .m3 .pt img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.m3 .pt::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,8,40,.82) 0%,rgba(10,8,40,0) 34%,rgba(10,8,40,0) 52%,rgba(10,8,40,.92) 82%)}
-.m3 .pt .mk-logo{position:absolute;top:14px;left:12%;width:76%;height:82px}
+.m3 .pt::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,8,40,.94) 0%,rgba(10,8,40,.75) 26%,rgba(10,8,40,0) 48%,rgba(10,8,40,0) 58%,rgba(10,8,40,.94) 84%)}
+.m3 .pt .mk-logo{position:absolute;top:16px;left:8%;width:84%;height:104px}.m3 .pt .mk-nl{position:absolute;top:22px;left:16px;right:16px;font-size:24px}
 .m3 .pt .ft{position:absolute;left:16px;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;color:#fff}
 .m3 .pt .ft .r{display:flex;justify-content:space-between;font-weight:800;font-size:15px}
 .m3 .pt.l{transform:translateX(-235px) scale(.8) rotate(-4deg);opacity:.55}.m3 .pt.r{transform:translateX(235px) scale(.8) rotate(4deg);opacity:.55}
@@ -44,8 +44,8 @@
 .mk-pill em{font-style:normal;padding:2px 8px;border-radius:999px;background:rgba(0,0,0,.14);font-size:13px}
 /* H2 · El propio título como ficha-botón con el logo */
 .mk-card{display:flex;align-items:center;gap:12px;margin:10px 0 6px;padding:10px 12px;border-radius:18px;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,210,63,.65);box-shadow:0 0 18px rgba(255,210,63,.18);max-width:520px}
-.mk-card .mk-logo{height:46px;width:120px;flex:none}
-.mk-card .tx{flex:1;min-width:0}.mk-card .tx small{display:block;font-size:11px;letter-spacing:.22em;text-transform:uppercase;opacity:.75}.mk-card .tx b{display:block;font-size:15px;line-height:1.2}
+.mk-card .mk-logo{height:54px;width:220px;max-width:100%;object-position:left center;margin-top:4px}.mk-card .mk-nl{display:block;margin-top:6px;font-size:19px}
+.mk-card .tx{flex:1;min-width:0}.mk-card .tx small{display:block;font-size:11px;letter-spacing:.22em;text-transform:uppercase;opacity:.75}
 .mk-card .ch{flex:none;padding:7px 11px;border-radius:999px;background:#ffd23f;color:#16161a;font-weight:800;font-size:13px}
 /* Botón fijo junto al buscador */
 .mk-fab{flex:none;width:46px;height:46px;border-radius:14px;background:#ffd23f;display:grid;place-items:center;position:relative;box-shadow:0 4px 12px rgba(0,0,0,.35)}
