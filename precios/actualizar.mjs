@@ -56,6 +56,7 @@ async function main() {
   const res = await fetch(GUIA, { headers: { 'User-Agent': 'coleccion30c-precios (app personal)' } });
   if (!res.ok) throw new Error('Cardmarket respondió ' + res.status);
   const guia = await res.json();
+  try { fs.writeFileSync('/tmp/guia-cardmarket.json', JSON.stringify(guia)); } catch (e) {} // la reutiliza el robot de colecciones
   if (guia.version !== 1) console.warn('Aviso: versión de la guía de precios', guia.version);
 
   if (previo && previo.creado === guia.createdAt) {

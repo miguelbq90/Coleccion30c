@@ -1,0 +1,6 @@
+{
+  "nota": "Series del catálogo TCGdex cuyas colecciones puede añadir la app (nombres en inglés, como los da TCGdex). Las colecciones nuevas de estas series aparecen solas.",
+  "series": ["Scarlet & Violet", "Mega Evolution"],
+  "omitir": "^(svp|mep|sve|mee|30th)|p$",
+  "minimoCartas": 30
+}

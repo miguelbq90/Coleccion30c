@@ -1,0 +1,22 @@
+# Temporal: pruebas de la versión de varias colecciones (rama «prueba»). No toca la app publicada.
+name: Prueba (temporal)
+on:
+  push:
+    branches: [prueba]
+permissions:
+  contents: write
+jobs:
+  prueba:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+      - name: Robot de precios y de colecciones
+        run: node precios/actualizar.mjs && node precios/colecciones.mjs
+      - name: Guardar en la rama
+        run: |
+          git config user.name "robot-prueba"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add precios
+          git commit -m "Prueba: colecciones del catálogo" || exit 0
+          git push
