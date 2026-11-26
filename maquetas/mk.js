@@ -1,6 +1,67 @@
 // MAQUETAS: datos reales del catálogo TCGdex (logos, símbolos y una carta de portada por colección).
 // Los números de cartas y valores son ejemplos.
 (()=>{
+// Sobre de Zuroku: forma y material de un sobre de cartas real (cierres dentados, foil abombado, brillos y arrugas),
+// con contenido inventado (marca Zuroku, ilustración propia y banda «Mis colecciones»).
+function sobreSVG(abierto,n){
+  const W=220,H=340,T=30,B=310;
+  const dientes=(y,dir)=>{let p='';for(let x=10;x<=210;x+=5)p+=` L${x} ${y+((x/5)%2?dir*5:0)}`;return p};
+  const muesca='L18 4 L22 11 L26 4';
+  const sello=(y0,y1,arriba)=>arriba
+    ? `M10 ${y1} L10 9 L14 4 ${muesca} ${dientes(4,1).replace(/^ L10 4/,'')} L210 9 L210 ${y1} Z`
+    : `M10 ${y0} L210 ${y0} L210 ${y1-4} ${dientes(y1,-1).split(' L').reverse().join(' L').replace(/ L$/,'')} L10 ${y1-4} Z`;
+  const costillas=(y0,y1)=>Array.from({length:40},(_,i)=>`<line x1="${12+i*5}" y1="${y0+2}" x2="${12+i*5}" y2="${y1-2}"/>`).join('');
+  const arrugas=(y,dir)=>[[24,11,-3],[46,8,-1],[70,12,-2],[95,7,1],[121,10,1],[148,8,2],[172,12,3],[196,9,3]].map(([x,l,a])=>`<path d="M${x} ${y} q${a} ${dir*l/2} ${a*1.6} ${dir*l}" />`).join('');
+  const rasgado='M10 40 L22 37 L31 42 L44 36 L57 41 L68 37 L82 42 L95 36 L109 41 L121 37 L135 42 L148 36 L160 41 L173 37 L186 42 L198 37 L210 40';
+  const cuerpoTop=abierto?40:T;
+  const cuerpo=`M10 ${cuerpoTop} C3.5 ${cuerpoTop+80} 3.5 ${B-80} 10 ${B} L210 ${B} C216.5 ${B-80} 216.5 ${cuerpoTop+80} 210 ${cuerpoTop} Z`;
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+<linearGradient id="zfH" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb3dc"/><stop offset=".22" stop-color="#ffe98a"/><stop offset=".45" stop-color="#9ff5cf"/><stop offset=".68" stop-color="#9fd2ff"/><stop offset="1" stop-color="#cdb3ff"/></linearGradient>
+<linearGradient id="zfB" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0b0a2a" stop-opacity=".55"/><stop offset=".14" stop-color="#0b0a2a" stop-opacity="0"/><stop offset=".86" stop-color="#0b0a2a" stop-opacity="0"/><stop offset="1" stop-color="#0b0a2a" stop-opacity=".55"/></linearGradient>
+<linearGradient id="zfV" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b0a2a" stop-opacity=".35"/><stop offset=".08" stop-color="#0b0a2a" stop-opacity="0"/><stop offset=".92" stop-color="#0b0a2a" stop-opacity="0"/><stop offset="1" stop-color="#0b0a2a" stop-opacity=".35"/></linearGradient>
+<linearGradient id="zfS" x1="0" y1="0" x2="1" y2=".55"><stop offset=".28" stop-color="#fff" stop-opacity="0"/><stop offset=".4" stop-color="#fff" stop-opacity=".55"/><stop offset=".46" stop-color="#fff" stop-opacity=".1"/><stop offset=".52" stop-color="#fff" stop-opacity=".35"/><stop offset=".62" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<linearGradient id="zfP" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7f7fd"/><stop offset=".45" stop-color="#b9b8d0"/><stop offset=".7" stop-color="#e6e6f2"/><stop offset="1" stop-color="#9d9cb8"/></linearGradient>
+<linearGradient id="zfN" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26206e"/><stop offset="1" stop-color="#120f3d"/></linearGradient>
+<radialGradient id="zfR" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff8c4"/><stop offset=".55" stop-color="#ffd23f" stop-opacity=".55"/><stop offset="1" stop-color="#ffd23f" stop-opacity="0"/></radialGradient>
+<clipPath id="zfC"><path d="${cuerpo}"/></clipPath></defs>
+<g clip-path="url(#zfC)">
+ <rect x="0" y="0" width="${W}" height="${H}" fill="url(#zfN)"/>
+ <g opacity=".95">${Array.from({length:16},(_,i)=>{const a=i*22.5*Math.PI/180,a2=(i*22.5+10)*Math.PI/180;return `<path d="M110 172 L${110+260*Math.cos(a)} ${172+260*Math.sin(a)} L${110+260*Math.cos(a2)} ${172+260*Math.sin(a2)} Z" fill="${i%2?'#3a2f9a':'#2c2a7a'}"/>`}).join('')}</g>
+ <circle cx="110" cy="172" r="78" fill="url(#zfR)"/>
+ <g transform="translate(110 176)">
+  <g transform="rotate(-16) translate(-58 -54)"><rect width="62" height="86" rx="6" fill="url(#zfH)" stroke="#fff" stroke-width="3"/><rect x="7" y="8" width="48" height="34" rx="3" fill="#fff" opacity=".85"/></g>
+  <g transform="rotate(14) translate(-4 -54)"><rect width="62" height="86" rx="6" fill="url(#zfH)" stroke="#fff" stroke-width="3"/><rect x="7" y="8" width="48" height="34" rx="3" fill="#fff" opacity=".85"/></g>
+  <g transform="translate(-33 -66)"><rect width="66" height="92" rx="7" fill="#ffe24a" stroke="#fff" stroke-width="3.5"/><rect x="7" y="8" width="52" height="38" rx="4" fill="#fff"/>
+   <path d="M33 12 l5.5 11 12 1.8 -8.7 8.4 2 12 -10.8 -5.7 -10.8 5.7 2 -12 -8.7 -8.4 12 -1.8Z" fill="#ffb21c" stroke="#16161a" stroke-width="2" stroke-linejoin="round"/>
+   <rect x="8" y="54" width="50" height="5" rx="2" fill="#16161a" opacity=".55"/><rect x="8" y="64" width="38" height="5" rx="2" fill="#16161a" opacity=".4"/><rect x="8" y="74" width="44" height="5" rx="2" fill="#16161a" opacity=".4"/></g>
+ </g>
+ ${[[40,120,9],[182,108,7],[176,232,10],[44,224,6],[150,90,5]].map(([x,y,s])=>`<path d="M${x} ${y-s} Q${x} ${y} ${x+s} ${y} Q${x} ${y} ${x} ${y+s} Q${x} ${y} ${x-s} ${y} Q${x} ${y} ${x} ${y-s}Z" fill="#fff"/>`).join('')}
+ <rect x="0" y="${cuerpoTop}" width="${W}" height="${abierto?62:72}" fill="url(#zfH)"/><path d="M0 ${cuerpoTop+(abierto?62:72)} H${W}" stroke="#fff" stroke-width="2.5"/>
+ <text x="110" y="78" text-anchor="middle" font-family="AB,Archivo Black,Impact,sans-serif" font-size="36" fill="#ffd23f" stroke="#1f2a7a" stroke-width="7" paint-order="stroke" stroke-linejoin="round">ZUROKU</text>
+ <text x="110" y="78" text-anchor="middle" font-family="AB,Archivo Black,Impact,sans-serif" font-size="36" fill="none" stroke="#16161a" stroke-width="1.6">ZUROKU</text>
+ <text x="110" y="95" text-anchor="middle" font-family="DS,DM Sans,sans-serif" font-weight="800" font-size="8" letter-spacing="2.4" fill="#1f2a7a">JUEGO DE COLECCIONISTA</text>
+ <g transform="translate(0 258)"><path d="M18 6 H202 L194 21 L202 36 H18 L26 21 Z" fill="#7c5cff" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>
+  <text x="110" y="27" text-anchor="middle" font-family="AB,Archivo Black,Impact,sans-serif" font-size="15.5" fill="#fff" stroke="#2a1a7a" stroke-width="3" paint-order="stroke">MIS COLECCIONES</text></g>
+ <text x="110" y="303" text-anchor="middle" font-family="DS,DM Sans,sans-serif" font-weight="800" font-size="7.5" letter-spacing="1.6" fill="#fff" opacity=".9">EDICIÓN ZUROKU · ${n||7} COLECCIONES</text>
+ <rect x="0" y="0" width="${W}" height="${H}" fill="url(#zfB)"/>
+ <rect x="0" y="0" width="${W}" height="${H}" fill="url(#zfV)"/>
+ <rect x="0" y="0" width="${W}" height="${H}" fill="url(#zfS)"/>
+ <g fill="none" stroke-width="1.2" stroke-linecap="round">
+  <g stroke="#fff" opacity=".35">${abierto?'':arrugas(T+1,1)}${arrugas(B-1,-1)}</g>
+  <g stroke="#0b0a2a" opacity=".2" transform="translate(1.5 0)">${abierto?'':arrugas(T+1,1)}${arrugas(B-1,-1)}</g>
+ </g>
+</g>
+${abierto?`<path d="${rasgado} L210 46 L10 46 Z" fill="#e9e9f4"/><path d="${rasgado}" fill="none" stroke="#fff" stroke-width="1.5"/>`
+ :`<path d="${sello(0,T,true)}" fill="url(#zfP)" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/><g stroke="#7d7c99" stroke-width="1" opacity=".55">${costillas(4,T)}</g><path d="M10 ${T} H210" stroke="#8b8aa8" stroke-width="1.5"/>`}
+<path d="${sello(B,H-2,false)}" fill="url(#zfP)" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/><g stroke="#7d7c99" stroke-width="1" opacity=".55">${costillas(B,H-4)}</g><path d="M10 ${B} H210" stroke="#8b8aa8" stroke-width="1.5"/>
+<path d="M10 ${cuerpoTop} C3.5 ${cuerpoTop+80} 3.5 ${B-80} 10 ${B}" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="1.4"/><path d="M210 ${cuerpoTop} C216.5 ${cuerpoTop+80} 216.5 ${B-80} 210 ${B}" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="1.4"/>
+</svg>`}
+// La tira que se arranca al abrirlo
+function tiraSVG(){return `<svg viewBox="0 0 220 50" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="ztP" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7f7fd"/><stop offset=".5" stop-color="#b9b8d0"/><stop offset="1" stop-color="#e6e6f2"/></linearGradient><linearGradient id="ztH" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffb3dc"/><stop offset=".5" stop-color="#ffe98a"/><stop offset="1" stop-color="#9fd2ff"/></linearGradient></defs>
+<path d="M10 30 L210 30 L210 40 L198 37 L186 42 L173 37 L160 41 L148 36 L135 42 L121 37 L109 41 L95 36 L82 42 L68 37 L57 41 L44 36 L31 42 L22 37 L10 40 Z" fill="url(#ztH)"/>
+<path d="M10 30 L10 9 L14 4 L18 4 L22 11 L26 4 ${Array.from({length:37},(_,i)=>{const x=30+i*5;return `L${x} ${4+((x/5)%2?5:0)}`}).join(' ')} L210 9 L210 30 Z" fill="url(#ztP)" stroke="#fff" stroke-width="1.2"/>
+<g stroke="#7d7c99" stroke-width="1" opacity=".55">${Array.from({length:40},(_,i)=>`<line x1="${12+i*5}" y1="6" x2="${12+i*5}" y2="28"/>`).join('')}</g></svg>`}
+
 const WANT=[
  {k:'30',en:n=>/30th|celebration/i.test(n)&&!/classic|^celebrations$/i.test(n),have:94,total:191,val:'240 €',cur:1,es:'Celebración 30.º Aniversario'},
  {k:'pe',en:n=>/^Prismatic Evolutions$/i.test(n),have:120,total:180,val:'310 €'},
@@ -78,7 +139,7 @@ ${[0,1,2].map(r=>[0,1,2].map(k=>`<rect x="${8+k*22}" y="${8+r*28}" width="16" he
 <path d="M16 40 H184" stroke="#1b1b45" stroke-width="2" stroke-dasharray="6 5" opacity=".6"/></g></svg>`;
 const ponPack=(abierto)=>{const st=document.querySelector('.stage');const b=document.getElementById('b30').getBoundingClientRect(),sr=st.getBoundingClientRect();
   const cx=b.left-sr.left+b.width/2,cy=b.top-sr.top+b.height/2;
-  st.insertAdjacentHTML('beforeend',`<div class="mk-pack" style="left:${cx-75}px;top:${cy-100}px">${PACK}</div>`);
+  st.insertAdjacentHTML('beforeend',`<div class="mk-pack" style="left:${cx-66}px;top:${cy-104}px">${sobreSVG(false,(window.MKC||[]).length||7)}</div>`);
   if(!abierto)st.insertAdjacentHTML('beforeend',`<div class="mk-hint" style="left:${cx+50}px;top:${cy+70}px">Toca para abrir ✨</div>`);
   return {st,cx,cy}};
 const _mk=window.mk;
@@ -86,7 +147,7 @@ window.mk=async m=>{const C=await MKREADY;
  if(m==='S1'||m==='S2'){document.documentElement.classList.add('mkS');if(m==='S2')document.documentElement.classList.add('mkS2');
    const {st,cx,cy}=ponPack(m==='S2');
    if(m==='S2'){document.querySelector('.stage .mk-pack').remove();const F=[C[3],C[1],C[0],C[2],C[4]].filter(Boolean),X=[-124,-62,0,62,124],Y=[52,20,0,20,52],R=[-16,-8,0,8,16];
-     document.body.insertAdjacentHTML('beforeend',`<div class="mk-open"><div class="tt">¿Qué colección abrimos?</div><span class="x">✕</span>${F.map((c,i)=>`<div class="fc${c.cur?' on':''}" style="left:calc(50% + ${X[i]}px);top:calc(22% + ${Y[i]}px);transform:rotate(${R[i]}deg);z-index:${i===2?5:3-Math.abs(i-2)}">${c.cover?`<img class="bg" src="${c.cover}" alt="">`:''}${c.logo?logo(c):`<span class="mk-nl">${c.name}</span>`}<div class="pc"><div class="mk-bar"><i style="width:${pc(c)}%"></i></div>${pc(c)} %</div></div>`).join('')}<div class="mk-pack">${PACK}</div><div class="mk-todas">Ver las ${C.length} colecciones ›</div></div>`)}
+     document.body.insertAdjacentHTML('beforeend',`<div class="mk-open"><div class="tt">¿Qué colección abrimos?</div><span class="x">✕</span>${F.map((c,i)=>`<div class="fc${c.cur?' on':''}" style="left:calc(50% + ${X[i]}px);top:calc(22% + ${Y[i]}px);transform:rotate(${R[i]}deg);z-index:${i===2?5:3-Math.abs(i-2)}">${c.cover?`<img class="bg" src="${c.cover}" alt="">`:''}${c.logo?logo(c):`<span class="mk-nl">${c.name}</span>`}<div class="pc"><div class="mk-bar"><i style="width:${pc(c)}%"></i></div>${pc(c)} %</div></div>`).join('')}<div class="mk-pack">${sobreSVG(true,C.length)}<div class="mk-tira">${tiraSVG()}</div></div><div class="mk-todas">Ver las ${C.length} colecciones ›</div></div>`)}
    return}
  if(m==='L2'){const fav=C.slice(0,3),rest=C.slice(3);
    const row=c=>`<div class="row${c.cur?' on':''}">${c.cover?`<img class="art" src="${c.cover}" alt="">`:''}<div class="lf">${logo(c)}<div class="st"><span>${c.have}/${c.total}</span><div class="mk-bar"><i style="width:${pc(c)}%"></i></div><span>${pc(c)} %</span></div></div><span class="pz">≈ ${c.val}</span></div>`;
