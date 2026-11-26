@@ -1,7 +1,9 @@
 <!DOCTYPE html>
+<!-- Zuroku · © 2026 Miguel Hidalgo López-Maroto. Todos los derechos reservados. -->
 <html lang="es" data-tema="noche">
 <head>
 <meta charset="utf-8">
+<meta name="author" content="Miguel Hidalgo López-Maroto">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Zuroku</title>
 <meta name="theme-color" content="#1b1b45">
@@ -335,6 +337,21 @@ input[type=text]{width:100%;min-height:44px;font:16px 'DM Sans',system-ui,sans-s
 .p.sel:not(.own){border-style:solid;border-color:transparent}
 .p.sel img{filter:none;opacity:1}
 @media (prefers-reduced-motion:reduce){.p.sel{transform:none}}
+
+/* Firma: casi invisible */
+.firma{margin:14px 0 0;font-size:10.5px;letter-spacing:.03em;color:var(--mute);opacity:.32;user-select:text}
+/* Cuadro de novedades tras actualizar */
+dialog.nov{width:min(520px,92vw);max-height:84vh;overflow:auto;padding:22px 22px 18px;border:1px solid var(--line);border-radius:22px;background:var(--panel);color:var(--ink);box-shadow:0 24px 60px rgba(0,0,0,.45)}
+dialog.nov::backdrop{background:rgba(8,8,24,.62);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.novh{display:flex;align-items:center;gap:10px;margin:0 0 6px}
+.novh h2{margin:0;font-size:22px;outline:none}
+.novi{font-size:24px}
+.nov section{margin:14px 0 0}
+.nov h3{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+.nov ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.nov li{display:flex;gap:10px;align-items:flex-start;line-height:1.4}
+.nov li .e{flex:none;width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:color-mix(in srgb,var(--acc) 18%,transparent);font-size:15px}
+.nov #novOk{margin-top:18px;width:100%}
 </style>
 </head>
 <body>
@@ -525,7 +542,7 @@ input[type=text]{width:100%;min-height:44px;font:16px 'DM Sans',system-ui,sans-s
         <summary><i class="ai" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"/><path d="M19.8 4.5v4.2h-4.2"/></svg></i><span class="at"><b>Actualizaciones</b><small id="sumVer"></small></span></summary>
         <div class="ab">
           <p>Tienes la versión <b id="verTxt"></b>. La app avisa sola cuando hay una nueva.</p>
-          <button class="btn" id="checkUpd">Buscar actualizaciones</button>
+          <div class="lrow" style="margin-top:0"><button class="btn" id="checkUpd">Buscar actualizaciones</button><button class="btn" id="verNov" type="button">Ver las novedades</button></div>
           <p class="msg" id="updMsg" role="status" style="margin-top:10px"></p>
         </div>
       </details>
@@ -538,8 +555,14 @@ input[type=text]{width:100%;min-height:44px;font:16px 'DM Sans',system-ui,sans-s
       </details>
     </div>
     <p class="src">App personal y no oficial · Cartas: WikiDex y Pokellector · Imágenes: Pokémon TCG API (se guardan para verlas sin conexión) · Precios: guía pública de Cardmarket, con los números de producto de TCGdex · RI: Rara Ilustración · RIE: Rara Ilustración Especial · RF: Rara Futurista · La Colección Clásica lleva el número de la carta original.</p>
+    <p class="firma">© 2026 Miguel Hidalgo López-Maroto</p>
   </div>
 </footer>
+<dialog class="nov" id="nov" aria-labelledby="novT">
+  <div class="novh"><span class="novi" aria-hidden="true">✨</span><h2 id="novT">Novedades de Zuroku</h2></div>
+  <div id="novB"></div>
+  <button class="btn solid" id="novOk" type="button">¡Entendido!</button>
+</dialog>
 
 <div class="toast" id="toast" role="status" aria-live="polite"><span id="toastTxt"></span><button id="toastUndo">Deshacer</button></div>
 
@@ -1265,7 +1288,7 @@ document.querySelectorAll('[data-g]').forEach(i=>i.addEventListener('change',()=
   i.checked?goalSecs.add(i.dataset.g):goalSecs.delete(i.dataset.g);
   st.goal={list:SECS.map(s=>s.k).filter(k=>goalSecs.has(k)),t:Date.now()};counts();queue()}));
 // ---- Actualizaciones: compara esta versión con version.json del servidor ----
-const BUILD=21;
+const BUILD=22;
 $('#verTxt').textContent=BUILD;
 let lastCheck=0;
 async function checkUpdate(manual){
@@ -1387,6 +1410,40 @@ showSync();
 idle();
 sync();
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+// ---- Novedades: al actualizar, un cuadro explica en corto lo que cambia al usar la app ----
+// Solo se apuntan aquí los cambios que se notan al usarla (no los arreglos internos).
+// d:1 = solo para quien lleva su propia colección (no se enseña en «solo mirar» ni a los ayudantes).
+const NOV=[
+  {v:22,f:'26 nov',p:[
+    {e:'✨',t:'Cuando la app se actualice con algo nuevo, te saldrá este resumen. Puedes volver a verlo en Ajustes › Actualizaciones.'}]},
+  {v:21,f:'26 nov',p:[
+    {e:'👆',d:1,t:'En el móvil y el iPad: <b>un toque</b> elige la carta (se levanta y se ve en color) y <b>otro toque</b> la marca. Así no marcas ninguna sin querer.'}]},
+  {v:20,f:'26 nov',p:[
+    {e:'🛍️',t:'Las cartas que ya están conseguidas llevan una <b>bolsita morada con ✓</b>, arriba a la derecha.'},
+    {e:'🖱️',t:'En el ordenador, la carta se ilumina al pasar el ratón por encima.'},
+    {e:'⚙️',t:'Abajo del todo, todo está ahora en <b>Ajustes</b>: toca cada fila para abrirla.'},
+    {e:'ⓘ',d:1,t:'La «i» junto a «Tu colección vale» explica de dónde salen los precios.'}]},
+  {v:18,f:'25 nov',p:[
+    {e:'☁️',t:'La sincronización es una <b>nube pequeña arriba a la derecha</b>: verde, todo al día; naranja, solo en este aparato; rojo, hay un problema.'}]},
+  {v:17,f:'25 nov',p:[
+    {e:'🎴',t:'La app ahora se llama <b>Zuroku</b> y estrena icono. Para ver el icono nuevo en el iPhone o el iPad, borra el antiguo y vuelve a añadirla a la pantalla de inicio desde Safari.'}]},
+];
+const LSNV='c30-visto',novEl=$('#nov');
+function verNovedades(desde,todas){
+  const L=NOV.filter(n=>(todas||n.v>desde)&&n.v<=BUILD).map(n=>({...n,p:n.p.filter(x=>!(RO&&x.d))})).filter(n=>n.p.length).slice(0,todas?3:6);
+  if(!L.length)return false;
+  $('#novB').innerHTML=L.map(n=>`<section><h3>Versión ${n.v} · ${n.f}</h3><ul>${n.p.map(x=>`<li><span class="e" aria-hidden="true">${x.e}</span><span>${x.t}</span></li>`).join('')}</ul></section>`).join('');
+  try{novEl.showModal()}catch(e){novEl.setAttribute('open','')}
+  const t=$('#novT');t.setAttribute('tabindex','-1');t.focus({preventScroll:true});novEl.scrollTop=0;requestAnimationFrame(()=>{novEl.scrollTop=0});
+  return true}
+function novVisto(){try{localStorage.setItem(LSNV,String(BUILD))}catch(e){}}
+$('#novOk').addEventListener('click',()=>{novVisto();novEl.close?novEl.close():novEl.removeAttribute('open')});
+novEl.addEventListener('close',novVisto);
+$('#verNov').addEventListener('click',()=>verNovedades(0,true));
+(()=>{let v=0;try{v=+localStorage.getItem(LSNV)||0}catch(e){}
+  if(!v){let usada=false;try{usada=!!(localStorage.getItem(LS)||localStorage.getItem(LSA)||(LSVER&&localStorage.getItem(LSVER)))}catch(e){}
+    if(!usada){novVisto();return}v=16}
+  if(v<BUILD){if(!verNovedades(v))novVisto()}})();
 // Línea de resumen de cada apartado de «Ajustes»
 function updAj(){try{
   const put=(id,t)=>{const e=document.getElementById(id);if(e&&e.textContent!==t)e.textContent=t};

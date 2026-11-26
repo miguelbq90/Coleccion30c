@@ -1,7 +1,7 @@
 // Guarda la app en el aparato para que abra sin internet.
 // Si subes una versión nueva de los archivos, cambia el número de CACHE (v15 -> v16).
 // Cada copia de la app (la normal y la de /prueba/) usa su propia caché para no pisarse.
-const CACHE = 'coleccion30c-v20@' + self.registration.scope;
+const CACHE = 'coleccion30c-v21@' + self.registration.scope;
 const IMGS = 'coleccion30c-fotos-v1';
 const SHELL = ['./', './index.html', './app30c.webmanifest', './icono30c-192.png', './icono30c-512.png', './icono30c-maskable.png', './icono30c-apple.png',
   './fonts/dmsans.woff', './fonts/montserrat.woff', './fonts/poppins-bold.woff', './fonts/archivoblack.woff', './fonts/montserrat-black-italic.woff'];
