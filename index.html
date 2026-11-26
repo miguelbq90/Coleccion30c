@@ -328,6 +328,13 @@ input[type=text]{width:100%;min-height:44px;font:16px 'DM Sans',system-ui,sans-s
 }
 .p:not(.own):focus-visible img{filter:none;opacity:1}
 @media (prefers-reduced-motion:reduce){.p:hover{transform:none}}
+
+/* Carta seleccionada con un toque (móvil y iPad): se levanta y se ve en color, como al pasar el ratón */
+.p{touch-action:manipulation}
+.p.sel{transform:translateY(-6px) scale(1.03);z-index:3;box-shadow:var(--glow),0 10px 22px rgba(0,0,0,.35);transition:transform .18s ease,box-shadow .18s ease}
+.p.sel:not(.own){border-style:solid;border-color:transparent}
+.p.sel img{filter:none;opacity:1}
+@media (prefers-reduced-motion:reduce){.p.sel{transform:none}}
 </style>
 </head>
 <body>
@@ -1163,10 +1170,23 @@ ficha.addEventListener('click',e=>{
   const qb=e.target.closest('[data-fq]');if(qb){changeQty(c,+qb.dataset.fq);return}
   if(e.target.closest('[data-fone]')){toggle(c);return}
   if(e.target.closest('[data-ftk]')){toggleTransit(c);return}});
+// En pantallas táctiles: el primer toque selecciona la carta (se levanta y se ve en color)
+// y el segundo toque sobre la misma la marca. Con ratón o teclado, un clic la marca directamente.
+let tipoToque='',selId=null,selT=null;
+const LSTQ='c30-pista-toque';
+function quitarSel(){if(!selId)return;const b=grid.querySelector('.p.sel');if(b)b.classList.remove('sel');selId=null;clearTimeout(selT)}
+function seleccionar(b,c){quitarSel();selId=c.id;b.classList.add('sel');clearTimeout(selT);selT=setTimeout(quitarSel,8000);
+  let n=0;try{n=+localStorage.getItem(LSTQ)||0;localStorage.setItem(LSTQ,n+1)}catch(e){}
+  if(n<5){const v=stOf(c.id);toast(`${c.num} ${c.name}: toca otra vez para ${v===1?'quitarla de las que tienes':v===2?'marcar que ya te ha llegado':'marcar que la tienes'}`,false)}}
+grid.addEventListener('pointerdown',e=>{tipoToque=e.pointerType||''},true);
 grid.addEventListener('click',e=>{
-  const pf=e.target.closest('[data-pr],[data-qt]');if(pf){const c=BY[pf.dataset.pr||pf.dataset.qt];if(c)openFicha(c);return}
-  const k=e.target.closest('.tk');if(k){const c=BY[k.dataset.tk];if(c)toggleTransit(c);return}
-  const b=e.target.closest('.p');if(!b)return;const c=BY[b.dataset.id];if(c)toggle(c)});
+  const toque=tipoToque==='touch';tipoToque='';
+  const pf=e.target.closest('[data-pr],[data-qt]');if(pf){quitarSel();const c=BY[pf.dataset.pr||pf.dataset.qt];if(c)openFicha(c);return}
+  const k=e.target.closest('.tk');if(k){quitarSel();const c=BY[k.dataset.tk];if(c)toggleTransit(c);return}
+  const b=e.target.closest('.p');if(!b){quitarSel();return}const c=BY[b.dataset.id];if(!c)return;
+  if(toque&&!RO&&!nums()&&selId!==c.id){seleccionar(b,c);return}
+  quitarSel();toggle(c)});
+document.addEventListener('click',e=>{if(selId&&!e.target.closest('#grid'))quitarSel()});
 hitEl.addEventListener('click',e=>{
   const fi=e.target.closest('[data-fi]');if(fi){const c=BY[fi.dataset.fi];if(c)openFicha(c);return}
   const t=e.target.closest('[data-tko]');if(t){const c=BY[t.dataset.tko];if(c)toggleTransit(c);return}
@@ -1245,7 +1265,7 @@ document.querySelectorAll('[data-g]').forEach(i=>i.addEventListener('change',()=
   i.checked?goalSecs.add(i.dataset.g):goalSecs.delete(i.dataset.g);
   st.goal={list:SECS.map(s=>s.k).filter(k=>goalSecs.has(k)),t:Date.now()};counts();queue()}));
 // ---- Actualizaciones: compara esta versión con version.json del servidor ----
-const BUILD=20;
+const BUILD=21;
 $('#verTxt').textContent=BUILD;
 let lastCheck=0;
 async function checkUpdate(manual){
