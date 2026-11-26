@@ -170,8 +170,6 @@ input[type=search],input[type=password]{width:100%;min-height:44px;font:16px 'DM
 .nums .p.cl .fb b{font-size:13px}
 .empty{max-width:1240px;margin:0 auto;padding:28px 0;font-size:17px;color:var(--mute)}
 .foot{background:var(--panel);border-top:1px solid var(--line)}
-.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:28px 40px}
-.fg p,.syncbox p{margin:0 0 12px;color:var(--mute)}
 .temas{display:grid;gap:8px}
 .tema{display:flex;align-items:center;gap:12px;min-height:48px;padding:6px 12px;border-radius:12px;border:1.5px solid var(--line);background:transparent;text-align:left;font-weight:600}
 .tema[aria-pressed=true]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
@@ -180,14 +178,13 @@ input[type=search],input[type=password]{width:100%;min-height:44px;font:16px 'DM
 .ck2 input{width:22px;height:22px;accent-color:var(--acc);flex:none}
 .danger{color:#ff6b6b}
 [data-tema=holo] .danger,[data-tema=azul] .danger{color:#c62828}
-.syncbox{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:16px 40px;padding-bottom:28px;margin-bottom:28px;border-bottom:1px solid var(--line)}
 .steps{display:grid;gap:12px;align-content:start}
 .steps label{font-weight:600;display:block;margin-bottom:6px}
 a.btn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
 .src{margin:28px 0 0;font-size:14px;color:var(--mute)}
 .rob{position:relative;z-index:20;display:flex;align-items:center;justify-content:center;gap:10px 14px;flex-wrap:wrap;padding:8px max(5vw,16px);background:#4ee1ff;color:#0b1e2a;font-weight:600;text-align:center}
 .rob a{min-height:40px;display:inline-flex;align-items:center;padding:0 16px;border-radius:10px;background:#0b1e2a;color:#4ee1ff;font-weight:700;text-decoration:none}
-.ro #openLote,.ro #undo,.ro #lote,.ro .tk,.ro #syncbox,.ro #shareBox,.ro .fg>div:has(#goals),.ro .fg>div:has(#copyMine),.ro .fg>div:has(#reset){display:none!important}
+.ro #openLote,.ro #undo,.ro #lote,.ro .tk,.ro #syncbox,.ro #shareBox,.ro #apMeta,.ro #apCopia,.ro #apReset{display:none!important}
 html:not(.fb) #acOut,html:not(.fb) #acOn,html:not(.fb) #helpBox,.fb #syncOff,.fb #syncOn,.fb #shareBox{display:none!important}
 .ro #helpBox{display:none!important}
 html.ay .pw:not(:has(.p.own)) .tk{display:grid!important}
@@ -248,7 +245,6 @@ input[type=text]{width:100%;min-height:44px;font:16px 'DM Sans',system-ui,sans-s
 .fdet{margin:2px 0 12px;color:var(--mute);font-size:14px}
 .ficha .lrow{margin-top:4px}
 @media(max-width:600px){.fwrap{gap:14px}.fimg{width:31vw}.finfo h2{font-size:18px}.ficha .lrow .btn{flex:1 1 100%;justify-content:center}}
-@media(max-width:860px){.syncbox{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:600px){
 .cover.band{padding-block:20px}
 .cov{grid-template-columns:minmax(0,1fr);grid-template-areas:"ttl" "stg" "tal" "act";gap:12px;align-items:start}
@@ -296,6 +292,42 @@ input[type=text]{width:100%;min-height:44px;font:16px 'DM Sans',system-ui,sans-s
 .sync.err .syt{position:static;width:auto;height:auto;clip:auto;max-width:min(58vw,320px);overflow:hidden;text-overflow:ellipsis}
 @media(max-width:600px){.cover.band.syncerr{padding-top:64px}.sync.err .syt{max-width:calc(100vw - 90px)}}
 @media (prefers-reduced-motion:reduce){.colf,.fw{animation:none}.fw{opacity:1;transform:none}}
+
+/* Ajustes: cada apartado es una fila que se abre al tocarla (solo uno abierto a la vez) */
+.ajh{margin:0 0 14px}
+.aj{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:10px 16px;align-items:start}
+.ap{border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--ink) 3%,transparent)}
+.ap[open]{background:color-mix(in srgb,var(--ink) 6%,transparent)}
+.ap{scroll-margin-top:calc(var(--tools-h,130px) + 14px)}
+.ap>summary{list-style:none;display:flex;align-items:center;gap:14px;min-height:64px;padding:10px 16px;cursor:pointer;border-radius:16px}
+.ap>summary::-webkit-details-marker{display:none}
+.ap>summary::after{content:"";flex:none;width:9px;height:9px;margin-left:auto;border-right:2px solid var(--mute);border-bottom:2px solid var(--mute);transform:rotate(45deg) translate(-2px,-2px);transition:transform .2s}
+.ap[open]>summary::after{transform:rotate(225deg) translate(-2px,-2px)}
+.ap>summary:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.ai{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--acc) 18%,transparent);color:var(--ink)}
+.ai svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.at{display:flex;flex-direction:column;gap:3px;min-width:0}
+.at b{font-size:16px;line-height:1.2}
+.at small{font-size:13.5px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ab{padding:2px 16px 18px}
+.ab p{margin:0 0 12px;color:var(--mute)}
+.ab .steps{margin-top:4px}
+/* «i» de los precios en la cabecera */
+.kk{display:flex;align-items:center;gap:6px}
+.inf{flex:none;width:18px;height:18px;padding:0;border:1.5px solid currentColor;border-radius:50%;background:none;color:inherit;font:italic 700 11px/1 Georgia,serif;display:grid;place-items:center;opacity:.75;cursor:pointer}
+.inf:hover{opacity:1}
+/* Cartas: insignia pequeña en las que ya tienes (bolsa con ✓), arriba a la derecha como el carrito */
+.p .ck{top:5px;right:5px;bottom:auto;width:26px;height:26px;padding:4px;background:linear-gradient(135deg,#a58bff,#6a4cf0);stroke:#fff;stroke-width:2.1;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+/* Al pasar el ratón, la carta se ilumina como las que tienes */
+@media (hover:hover) and (pointer:fine){
+  .p{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+  .p img{transition:filter .18s ease,opacity .18s ease}
+  .p:hover{transform:translateY(-4px)}
+  .p:not(.own):hover{border-style:solid;border-color:transparent;box-shadow:var(--glow)}
+  .p:not(.own):hover img{filter:none;opacity:1}
+}
+.p:not(.own):focus-visible img{filter:none;opacity:1}
+@media (prefers-reduced-motion:reduce){.p:hover{transform:none}}
 </style>
 </head>
 <body>
@@ -320,9 +352,9 @@ input[type=text]{width:100%;min-height:44px;font:16px 'DM Sans',system-ui,sans-s
       <div class="bar" aria-hidden="true"><i id="barfill"></i><i id="bartr" class="tr"></i></div>
       <p class="left" id="left">Te faltan 191</p>
       <div class="din" id="din" hidden>
-        <div><span class="k" id="valeK">Tu colección vale</span><b id="vale">—</b><span class="ch" id="valeCh"></span></div>
+        <div><span class="kk"><span class="k" id="valeK">Tu colección vale</span><button type="button" class="inf" id="prInfo" aria-label="De dónde sale el precio" title="De dónde sale el precio">i</button></span><b id="vale">—</b><span class="ch" id="valeCh"></span></div>
         <div><span class="k" id="costaK">Te falta por comprar</span><b id="costa">—</b></div>
-        <p class="nt"><span id="dinNota"></span> · <button type="button" class="lk" id="prInfo">¿De dónde sale?</button></p>
+        <span id="dinNota" hidden></span>
       </div>
     </div>
     <div class="acts">
@@ -384,108 +416,121 @@ input[type=text]{width:100%;min-height:44px;font:16px 'DM Sans',system-ui,sans-s
 
 <footer class="foot band">
   <div class="wrap">
-    <div class="syncbox" id="syncbox">
-      <div>
-        <h2>Sincronizar iPhone y portátil</h2>
-        <p>Tu colección siempre se guarda en este aparato, con o sin internet. Para que el iPhone y el portátil tengan la misma, se guarda también una copia en una nota secreta de tu cuenta gratuita de GitHub.</p>
-        <p>La clave solo da permiso para esas notas («gists»): no puede tocar nada más de tu cuenta.</p>
-      </div>
-      <div class="steps" id="syncOff">
+    <h2 class="ajh">Ajustes</h2>
+    <div class="aj">
+      <details class="ap" id="syncbox" name="aj">
+        <summary><i class="ai" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.8 19.5c1.2-3.5 4-5.2 7.2-5.2s6 1.7 7.2 5.2"/></svg></i><span class="at"><b id="syncboxT">Tu cuenta</b><small id="sumCuenta"></small></span></summary>
+        <div class="ab">
+          <p id="sbIntro">Se guarda en este aparato y, si entras con tu cuenta, en todos los demás.</p>
+          <div class="steps" id="syncOff">
         <a class="btn" href="https://github.com/settings/tokens/new?scopes=gist&amp;description=Coleccion%2030C" target="_blank" rel="noopener">1. Crear la clave en GitHub</a>
         <div><label for="token">2. Pega aquí la clave</label><input id="token" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ghp_…"></div>
         <div><button class="btn solid" id="connect">3. Conectar este aparato</button></div>
         <p class="msg" id="syncMsg" role="status"></p>
       </div>
-      <form class="steps" id="acOut" hidden autocomplete="on">
+          <form class="steps" id="acOut" hidden autocomplete="on">
         <div><label for="acEmail">Correo</label><input id="acEmail" name="email" type="email" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="tucorreo@ejemplo.com"></div>
         <div><label for="acPass">Contraseña (mínimo 6 caracteres)</label><input id="acPass" name="password" type="password" autocomplete="current-password"></div>
         <div class="lrow" style="margin-top:0"><button class="btn solid" id="acIn" type="button">Entrar</button><button class="btn" id="acNew" type="button">Crear cuenta</button></div>
         <p style="margin:0"><button class="lk" id="acForgot" type="button">¿Has olvidado la contraseña?</button></p>
         <p class="msg" id="acMsg" role="status"></p>
       </form>
-      <div class="steps" id="acOn" hidden>
+          <div class="steps" id="acOn" hidden>
         <p id="acWho" style="margin:0"></p>
         <div id="acVerify" class="vnote" hidden><p style="margin:0 0 10px">Para ayudar a otra persona, confirma tu correo: abre el mensaje que te ha llegado de Firebase y pulsa el enlace. Si no lo ves, mira en «Spam».</p><div class="lrow" style="margin-top:0"><button class="btn solid" id="acCheck">Ya lo he confirmado</button><button class="btn" id="acResend">Reenviar el correo</button></div></div>
         <div><label for="acName">Tu nombre (lo verán tus ayudantes)</label><input id="acName" type="text" maxlength="30" autocomplete="given-name" placeholder="Por ejemplo: Miguel"></div>
         <div class="lrow" style="margin-top:0"><button class="btn solid" id="acSync">Sincronizar ahora</button><button class="btn" id="acLogout">Cerrar sesión en este aparato</button></div>
         <p class="msg" id="acMsg2" role="status"></p>
       </div>
-      <div class="steps" id="syncOn" hidden>
+          <div class="steps" id="syncOn" hidden>
         <p>Conectado. Se sincroniza al abrir la app, a los pocos segundos de cada cambio y en cuanto vuelve internet.</p>
         <div class="lrow" style="margin-top:0"><button class="btn solid" id="syncNow">Sincronizar ahora</button><button class="btn" id="disconnect">Desconectar este aparato</button></div>
         <p class="msg" id="syncMsg2" role="status"></p>
       </div>
-    </div>
-    <div class="fg">
-      <div id="shareBox">
-        <h2>Compartir mi colección</h2>
-        <p>Crea un enlace para que otra persona vea tu colección siempre al día: lo que te falta, lo que viene en camino y los precios. Solo puede mirar; no puede cambiar nada.</p>
-        <p class="msg" id="shareOff">Para compartir, primero conecta la sincronización (más arriba, «Sincronizar iPhone y portátil»).</p>
-        <div id="shareOn" hidden>
-          <label for="shareName" style="display:block;font-weight:600;margin-bottom:6px">Tu nombre (lo verá quien abra el enlace)</label>
-          <input id="shareName" type="text" maxlength="40" autocomplete="given-name" placeholder="Por ejemplo: Miguel">
-          <div class="lrow"><button class="btn solid" id="shareBtn">Compartir el enlace</button><button class="btn danger" id="shareStop">Dejar de compartir</button></div>
-          <p class="msg" id="shareMsg" role="status" style="margin-top:10px"></p>
         </div>
-      </div>
-      <div id="helpBox">
-        <h2>Ayudantes</h2>
-        <p>Da permiso a alguien (por ejemplo, tu hermano) para marcar «La compro yo» en las cartas que te faltan. A ti te aparecen «en camino» con su nombre. No puede cambiar nada más de tu colección.</p>
-        <p class="msg" id="helpOff">Para añadir ayudantes, primero entra con tu cuenta (más arriba).</p>
-        <div id="helpOn" hidden>
-          <ul class="hlist" id="helpList"></ul>
-          <label for="helpEmail" style="display:block;font-weight:600;margin-bottom:6px">Correo de tu ayudante</label>
-          <input id="helpEmail" type="email" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="correo@ejemplo.com">
-          <div class="lrow"><button class="btn solid" id="helpAdd">Añadir y enviar invitación</button></div>
-          <p class="msg" id="helpMsg" role="status" style="margin-top:10px"></p>
+      </details>
+      <details class="ap" id="shareBox" name="aj">
+        <summary><i class="ai" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.4"/><circle cx="17.5" cy="6" r="2.4"/><circle cx="17.5" cy="18" r="2.4"/><path d="M8.2 10.9l7.1-3.7M8.2 13.1l7.1 3.7"/></svg></i><span class="at"><b>Compartir mi colección</b><small id="sumShare">Enlace de solo mirar</small></span></summary>
+        <div class="ab">
+          <p>Un enlace para que otra persona vea tu colección al día. Solo puede mirar.</p>
+          <p class="msg" id="shareOff">Primero conecta la sincronización («Tu cuenta»).</p>
+          <div id="shareOn" hidden>
+            <label for="shareName" style="display:block;font-weight:600;margin-bottom:6px">Tu nombre (lo verá quien abra el enlace)</label>
+            <input id="shareName" type="text" maxlength="40" autocomplete="given-name" placeholder="Por ejemplo: Miguel">
+            <div class="lrow"><button class="btn solid" id="shareBtn">Compartir el enlace</button><button class="btn danger" id="shareStop">Dejar de compartir</button></div>
+            <p class="msg" id="shareMsg" role="status" style="margin-top:10px"></p>
+          </div>
         </div>
-        <div id="helpingBox" hidden>
-          <h3 style="margin:18px 0 8px">Colecciones en las que ayudas</h3>
-          <ul class="hlist" id="helpingList"></ul>
+      </details>
+      <details class="ap" id="helpBox" name="aj">
+        <summary><i class="ai" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="3.1"/><circle cx="16.8" cy="9.8" r="2.4"/><path d="M3.5 19c.9-3 3-4.5 5.5-4.5s4.6 1.5 5.5 4.5M15.3 14.6c2.3-.2 4.2 1.1 5 3.9"/></svg></i><span class="at"><b>Ayudantes</b><small id="sumAyud"></small></span></summary>
+        <div class="ab">
+          <p>Pueden marcar «La compro yo» en las que te faltan y a ti te salen «en camino» con su nombre. Nada más.</p>
+          <p class="msg" id="helpOff">Para añadir ayudantes, primero entra con tu cuenta.</p>
+          <div id="helpOn" hidden>
+            <ul class="hlist" id="helpList"></ul>
+            <label for="helpEmail" style="display:block;font-weight:600;margin-bottom:6px">Correo de tu ayudante</label>
+            <input id="helpEmail" type="email" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="correo@ejemplo.com">
+            <div class="lrow"><button class="btn solid" id="helpAdd">Añadir y enviar invitación</button></div>
+            <p class="msg" id="helpMsg" role="status" style="margin-top:10px"></p>
+          </div>
+          <div id="helpingBox" hidden>
+            <h3 style="margin:18px 0 8px">Colecciones en las que ayudas</h3>
+            <ul class="hlist" id="helpingList"></ul>
+          </div>
         </div>
-      </div>
-      <div>
-        <h2>Actualizaciones</h2>
-        <p>Tienes la versión <b id="verTxt"></b>. La app avisa sola cuando hay una nueva; también puedes comprobarlo aquí.</p>
-        <button class="btn" id="checkUpd">Buscar actualizaciones</button>
-        <p class="msg" id="updMsg" role="status" style="margin-top:10px"></p>
-      </div>
-      <div id="precios">
-        <h2>Precios</h2>
-        <p>Cada carta lleva el precio de referencia de Cardmarket (su «tendencia»). Es una media de todos los idiomas: en español puede salir algo más caro o más barato.</p>
-        <p>Para ver lo que cuesta en español, toca el carrito y, ya en Cardmarket, marca el filtro de idioma «Español».</p>
-        <p>Los precios se actualizan solos cada día y se guardan en el aparato para verlos sin conexión. ▲ sube y ▼ baja: compara la última semana con el último mes (solo en cartas de 1 € o más).</p>
-        <p id="prFecha"></p>
-        <button class="btn" id="prBtn">Actualizar precios</button>
-        <p class="msg" id="prMsg" role="status" style="margin-top:10px"></p>
-        <label class="ck2"><input type="checkbox" id="prShow" checked> Mostrar el precio en cada carta</label>
-      </div>
-      <div>
-        <h2>Estilo</h2>
-        <p>Elige cómo se ve la app en este aparato.</p>
-        <div class="temas" id="temas">
+      </details>
+      <details class="ap" id="precios" name="aj">
+        <summary><i class="ai" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16.8 6.6A6.5 6.5 0 1 0 16.8 17.4"/><path d="M4.5 10.2h8.5M4.5 13.8h8.5"/></svg></i><span class="at"><b>Precios</b><small id="sumPrecios"></small></span></summary>
+        <div class="ab">
+          <p>Precio de referencia de Cardmarket, media de todos los idiomas. Se actualiza solo cada día. ▲▼: cómo va la última semana (cartas de 1 € o más). En español puede variar: en Cardmarket, filtra por «Español».</p>
+          <p id="prFecha"></p>
+          <div class="lrow" style="margin-top:0"><button class="btn" id="prBtn">Actualizar precios</button></div>
+          <p class="msg" id="prMsg" role="status" style="margin-top:10px"></p>
+          <label class="ck2"><input type="checkbox" id="prShow" checked> Mostrar el precio en cada carta</label>
+        </div>
+      </details>
+      <details class="ap" id="apEstilo" name="aj">
+        <summary><i class="ai" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.8a8.2 8.2 0 1 0 0 16.4c1.3 0 1.8-.9 1.4-1.9-.5-1.2.2-2.4 1.6-2.4h1.8a3.4 3.4 0 0 0 3.4-3.4c0-4.8-3.7-8.7-8.2-8.7Z"/><circle cx="7.8" cy="11" r="1.1"/><circle cx="10.6" cy="7.4" r="1.1"/><circle cx="15.2" cy="8" r="1.1"/></svg></i><span class="at"><b>Estilo</b><small id="sumEstilo"></small></span></summary>
+        <div class="ab">
+          <div class="temas" id="temas">
           <button class="tema" data-t="noche" aria-pressed="true"><span class="sw" style="background:linear-gradient(135deg,#1b1b45 55%,#ffd23f 55% 75%,#4ee1ff 75%)"></span>Noche eléctrica</button>
           <button class="tema" data-t="holo" aria-pressed="false"><span class="sw" style="background:linear-gradient(115deg,#ffd3ea,#fff0b3,#c8f5df,#c2e2ff,#ddd0ff)"></span>Holo pastel</button>
           <button class="tema" data-t="azul" aria-pressed="false"><span class="sw" style="background:linear-gradient(135deg,#1f4fb5 60%,#ffcb05 60%)"></span>Azul y amarillo</button>
         </div>
-      </div>
-      <div>
-        <h2>Qué cuenta para completarla</h2>
-        <p>Desmarca lo que no quieras perseguir y el contador de arriba se ajusta.</p>
-        <div id="goals"></div>
-      </div>
-      <div>
-        <h2>Copia de seguridad</h2>
-        <p>Copia tu colección como lista de números (con las repetidas). Si algún día la pegas en «Añadir varias de golpe», vuelve tal cual.</p>
-        <button class="btn" id="copyMine">Copiar mis cartas</button>
-      </div>
-      <div>
-        <h2>Empezar de cero</h2>
-        <p>Borra todas las marcas. Puedes deshacerlo justo después.</p>
-        <button class="btn danger" id="reset">Borrar todas las marcas</button>
-      </div>
+        </div>
+      </details>
+      <details class="ap" id="apMeta" name="aj">
+        <summary><i class="ai" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.4"/><circle cx="12" cy="12" r="1.2"/></svg></i><span class="at"><b>Qué cuenta para completarla</b><small id="sumMeta"></small></span></summary>
+        <div class="ab">
+          <p>Desmarca lo que no quieras completar y el contador se ajusta.</p>
+          <div id="goals"></div>
+        </div>
+      </details>
+      <details class="ap" id="apCopia" name="aj">
+        <summary><i class="ai" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="11" height="12" rx="2"/><path d="M5 15.5V6a2 2 0 0 1 2-2h8"/></svg></i><span class="at"><b>Copia de seguridad</b><small id="sumCopia">Tus cartas como lista de números</small></span></summary>
+        <div class="ab">
+          <p>Copia tus cartas como lista de números. Para recuperarlas, pégala en «Añadir varias de golpe».</p>
+          <button class="btn" id="copyMine">Copiar mis cartas</button>
+        </div>
+      </details>
+      <details class="ap" id="apVer" name="aj">
+        <summary><i class="ai" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"/><path d="M19.8 4.5v4.2h-4.2"/></svg></i><span class="at"><b>Actualizaciones</b><small id="sumVer"></small></span></summary>
+        <div class="ab">
+          <p>Tienes la versión <b id="verTxt"></b>. La app avisa sola cuando hay una nueva.</p>
+          <button class="btn" id="checkUpd">Buscar actualizaciones</button>
+          <p class="msg" id="updMsg" role="status" style="margin-top:10px"></p>
+        </div>
+      </details>
+      <details class="ap" id="apReset" name="aj">
+        <summary><i class="ai" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 7h14M10 7V5h4v2M7 7l1 12.5h8L17 7"/></svg></i><span class="at"><b>Empezar de cero</b><small id="sumReset">Borra todas las marcas</small></span></summary>
+        <div class="ab">
+          <p>Borra todas las marcas. Puedes deshacerlo justo después.</p>
+          <button class="btn danger" id="reset">Borrar todas las marcas</button>
+        </div>
+      </details>
     </div>
-    <p class="src">Lista de cartas: WikiDex y Pokellector. Imágenes de las cartas: base de datos pública Pokémon TCG API; se guardan en el aparato al verlas para tenerlas sin conexión. Precios: guía de precios pública que Cardmarket publica cada día (números de producto de TCGdex). App personal y no oficial. RI = Rara Ilustración, RIE = Rara Ilustración Especial, RF = Rara Futurista. La Colección Clásica lleva el número de la carta original.</p>
+    <p class="src">App personal y no oficial · Cartas: WikiDex y Pokellector · Imágenes: Pokémon TCG API (se guardan para verlas sin conexión) · Precios: guía pública de Cardmarket, con los números de producto de TCGdex · RI: Rara Ilustración · RIE: Rara Ilustración Especial · RF: Rara Futurista · La Colección Clásica lleva el número de la carta original.</p>
   </div>
 </footer>
 
@@ -665,8 +710,8 @@ const prLabel=c=>{const p=prOf(c.id);return `${c.num} ${c.name}: ${p==null?'sin 
 function extras(c){const p=prOf(c.id),n=qOf(c.id)||1;
   return `<div class="cap">${p==null?'':`<button class="pr" type="button" data-pr="${esc(c.id)}" aria-label="${esc(prLabel(c))}">${eur(p,1)}${arrow(trendOf(c.id))}</button>`}<button class="qt${n>1?' x':''}" type="button" data-qt="${esc(c.id)}" aria-label="${esc(qtLabel(c))}">×${n}</button></div>`}
 function pk(c){const v=stOf(c.id),o=v===1;
-  return `<div class="pw"><button class="p${o?' own':''}${v===2?' trn':''}${c.sec==='cls'?' cl':''}" data-id="${esc(c.id)}" aria-pressed="${o}" aria-label="${esc(c.num+' '+c.name+', '+stTxt(v))}"><span class="fb"><b>${esc(c.num)}</b><i lang="es">${esc(c.name)}</i>${c.tag?`<em>${esc(c.tag)}</em>`:''}</span>${nums()?'':`<img src="${esc(src(c))}" alt="" loading="lazy" decoding="async">`}<span class="rb">${esc(rbTxt(c))}</span><span class="nb">${esc(c.num)}</span><svg class="ck" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg></button><a class="cm" href="${esc(c.cm)}" target="_blank" rel="noopener" aria-label="${esc('Ver '+c.num+' '+c.name+' en Cardmarket')}" title="Ver en Cardmarket"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.2l2.1 10.2a1.6 1.6 0 0 0 1.6 1.3h8.3a1.6 1.6 0 0 0 1.6-1.2L20.5 8H6.4"/><circle cx="9.5" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg></a><button class="tk" type="button" data-tk="${esc(c.id)}" aria-pressed="${v===2}" aria-label="${esc((v===2?'Quitar de en camino ':'Marcar en camino ')+c.num+' '+c.name)}" title="${v===2?'Quitar de en camino':'La he comprado: en camino'}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 6.5h11v9h-11z"/><path d="M13.5 9.5h4l3 3.2v2.8h-7z"/><circle cx="7" cy="17.5" r="1.9"/><circle cx="17" cy="17.5" r="1.9"/></svg></button>${extras(c)}</div>`}
-function render(){
+  return `<div class="pw"><button class="p${o?' own':''}${v===2?' trn':''}${c.sec==='cls'?' cl':''}" data-id="${esc(c.id)}" aria-pressed="${o}" aria-label="${esc(c.num+' '+c.name+', '+stTxt(v))}"><span class="fb"><b>${esc(c.num)}</b><i lang="es">${esc(c.name)}</i>${c.tag?`<em>${esc(c.tag)}</em>`:''}</span>${nums()?'':`<img src="${esc(src(c))}" alt="" loading="lazy" decoding="async">`}<span class="rb">${esc(rbTxt(c))}</span><span class="nb">${esc(c.num)}</span><svg class="ck" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8.5h12l-1 11.5H7L6 8.5Z"/><path d="M9.3 8.5V7a2.7 2.7 0 0 1 5.4 0v1.5"/><path d="M9.4 14.2l1.9 1.9 3.3-3.6"/></svg></button><a class="cm" href="${esc(c.cm)}" target="_blank" rel="noopener" aria-label="${esc('Ver '+c.num+' '+c.name+' en Cardmarket')}" title="Ver en Cardmarket"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.2l2.1 10.2a1.6 1.6 0 0 0 1.6 1.3h8.3a1.6 1.6 0 0 0 1.6-1.2L20.5 8H6.4"/><circle cx="9.5" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg></a><button class="tk" type="button" data-tk="${esc(c.id)}" aria-pressed="${v===2}" aria-label="${esc((v===2?'Quitar de en camino ':'Marcar en camino ')+c.num+' '+c.name)}" title="${v===2?'Quitar de en camino':'La he comprado: en camino'}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 6.5h11v9h-11z"/><path d="M13.5 9.5h4l3 3.2v2.8h-7z"/><circle cx="7" cy="17.5" r="1.9"/><circle cx="17" cy="17.5" r="1.9"/></svg></button>${extras(c)}</div>`}
+function render(){queueMicrotask(updAj);
   document.querySelectorAll('[data-g]').forEach(i=>i.checked=goalSecs.has(i.dataset.g));
   const f=fold(q.trim());let html='',hits=[];
   for(const s of SECS){
@@ -776,7 +821,8 @@ const GH='https://api.github.com',FILE='coleccion30c.json';
 let cfg={};try{cfg=JSON.parse(localStorage.getItem(LSC)||'{}')||{}}catch(e){cfg={}}
 const saveCfg=()=>{try{localStorage.setItem(LSC,JSON.stringify(cfg))}catch(e){}};
 const syncEl=$('#sync');
-syncEl.addEventListener('click',()=>$('#syncbox').scrollIntoView({behavior:'smooth',block:'start'}));
+function abrirAj(id,suave=true){const d=document.getElementById(id);if(!d)return;d.open=true;const t=document.querySelector('.tools');document.documentElement.style.setProperty('--tools-h',(t?t.offsetHeight:130)+'px');requestAnimationFrame(()=>d.scrollIntoView({behavior:suave?'smooth':'auto',block:'start'}))}
+syncEl.addEventListener('click',()=>abrirAj('syncbox'));
 const SYNC_ERR=/no se pudo|no he podido|sin permiso|caducad|no funciona|error/i;
 function setSync(txt,ok){syncEl.querySelector('.syt').textContent=txt;syncEl.title=txt;syncEl.setAttribute('aria-label','Sincronización: '+txt);syncEl.classList.toggle('ok',!!ok);const er=!ok&&SYNC_ERR.test(txt);syncEl.classList.toggle('err',er);syncEl.closest('.cover').classList.toggle('syncerr',er)}
 const hora=()=>new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
@@ -907,11 +953,11 @@ window.addEventListener('online',()=>sync());
 window.addEventListener('offline',idle);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')sync()});
 setInterval(()=>{if(document.visibilityState==='visible'&&navigator.onLine&&linked())sync()},FBON?60000:120000);
-function showSync(){
+function showSync(){queueMicrotask(updAj);
   $('#syncOff').hidden=!!cfg.token;$('#syncOn').hidden=!cfg.token;
   if(FBON){
     $('#acOut').hidden=!!acct;$('#acOn').hidden=!acct;
-    if(acct){$('#acWho').innerHTML=`Has entrado como <b>${esc(acct.email)}</b>. Tu colección se guarda en tu base de datos y se mantiene igual en todos tus aparatos.`;if(document.activeElement!==$('#acName'))$('#acName').value=acct.name||'';$('#acVerify').hidden=!!acct.ver||!ayudo().length}}
+    if(acct){$('#acWho').innerHTML=`Has entrado como <b>${esc(acct.email)}</b>.`;if(document.activeElement!==$('#acName'))$('#acName').value=acct.name||'';$('#acVerify').hidden=!!acct.ver||!ayudo().length}}
   if(typeof showShare==='function')showShare();
   if(typeof showHelp==='function')showHelp()}
 $('#connect').addEventListener('click',async()=>{
@@ -963,13 +1009,10 @@ $('#acLogout').addEventListener('click',()=>{acct=null;saveAcct();fbDoc={ayudant
 let nameT=null;
 $('#acName').addEventListener('input',e=>{if(!acct)return;acct.name=e.target.value.trim().slice(0,30);saveAcct();clearTimeout(nameT);nameT=setTimeout(async()=>{try{await fsSave({nombre:{stringValue:acct.name}})}catch(err){}},1200)});
 if(FBON){
-  const sb=$('#syncbox'),ps=sb.querySelectorAll('div:first-child>p');
-  sb.querySelector('h2').textContent='Tu cuenta: iPhone y portátil sincronizados';
-  if(ps[0])ps[0].textContent='Tu colección siempre se guarda en este aparato, con o sin internet. Al entrar con tu cuenta, se guarda también en tu base de datos (Firebase) y queda igual en todos tus aparatos.';
-  if(ps[1])ps[1].textContent='Cada persona entra con su propio correo y contraseña. Nadie más puede ver ni cambiar tu colección, salvo los ayudantes que tú añadas.';
+  $('#sbIntro').textContent='Entra con tu correo y tendrás la misma colección en todos tus aparatos. Nadie más puede verla, salvo los ayudantes que añadas.';
 }
 // ---- Ayudantes: tú das permiso; ellos marcan «La compro yo» desde su cuenta ----
-function showHelp(){
+function showHelp(){queueMicrotask(updAj);
   if(!FBON)return;
   $('#helpOff').hidden=!!acct;$('#helpOn').hidden=!acct;
   $('#helpList').innerHTML=fbDoc.ayudantes.map(m=>`<li><span>${esc(m)}</span><button class="btn" type="button" data-hinv="${esc(m)}">Invitar otra vez</button><button class="btn danger" type="button" data-hdel="${esc(m)}">Quitar</button></li>`).join('');
@@ -1057,7 +1100,7 @@ if(AY){
 // Vienes de una invitación y aún no habías entrado: te llevo a tu cuenta
 if(!RO&&location.hash==='#cuenta'){
   history.replaceState(null,'',location.pathname+location.search);
-  setTimeout(()=>{$('#syncbox').scrollIntoView({block:'start'});if(!acct){$('#acMsg').textContent='Entra o crea tu cuenta con el correo al que te invitaron. Después, en «Ayudantes», pulsa «Abrir».';$('#acEmail').focus({preventScroll:true})}},300);
+  setTimeout(()=>{abrirAj('syncbox',false);if(!acct){$('#acMsg').textContent='Entra o crea tu cuenta con el correo al que te invitaron. Después, en «Ayudantes», pulsa «Abrir».';$('#acEmail').focus({preventScroll:true})}},300);
 }
 
 function paint(c){
@@ -1145,7 +1188,7 @@ modeBtn.addEventListener('click',()=>{setMode(!nums());render()});
 try{if(localStorage.getItem(LSM)==='1')setMode(true)}catch(e){}
 
 const TC={noche:'#1b1b45',holo:'#f3dcef',azul:'#1f4fb5'};
-function setTema(t){if(!TC[t])t='noche';document.documentElement.setAttribute('data-tema',t);
+function setTema(t){queueMicrotask(updAj);if(!TC[t])t='noche';document.documentElement.setAttribute('data-tema',t);
   document.querySelector('meta[name=theme-color]').setAttribute('content',TC[t]);
   document.querySelectorAll('.tema').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===t));
   try{localStorage.setItem(LST,t)}catch(e){}}
@@ -1202,7 +1245,7 @@ document.querySelectorAll('[data-g]').forEach(i=>i.addEventListener('change',()=
   i.checked?goalSecs.add(i.dataset.g):goalSecs.delete(i.dataset.g);
   st.goal={list:SECS.map(s=>s.k).filter(k=>goalSecs.has(k)),t:Date.now()};counts();queue()}));
 // ---- Actualizaciones: compara esta versión con version.json del servidor ----
-const BUILD=19;
+const BUILD=20;
 $('#verTxt').textContent=BUILD;
 let lastCheck=0;
 async function checkUpdate(manual){
@@ -1313,7 +1356,7 @@ if(VER){
 }
 window.addEventListener('hashchange',()=>{if(/^#(ver|ayudar)=/.test(location.hash)||RO)location.reload()});
 $('#prBtn').addEventListener('click',()=>loadPrices(true));
-$('#prInfo').addEventListener('click',()=>$('#precios').scrollIntoView({behavior:'smooth',block:'start'}));
+$('#prInfo').addEventListener('click',()=>abrirAj('precios'));
 const prShow=$('#prShow');prShow.checked=showPr;
 prShow.addEventListener('change',()=>{showPr=prShow.checked;try{localStorage.setItem(LSPV,showPr?'1':'0')}catch(e){}grid.classList.toggle('nopr',!showPr)});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&Date.now()-prAt>3*3600e3)loadPrices(false)});
@@ -1324,7 +1367,21 @@ showSync();
 idle();
 sync();
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+// Línea de resumen de cada apartado de «Ajustes»
+function updAj(){try{
+  const put=(id,t)=>{const e=document.getElementById(id);if(e&&e.textContent!==t)e.textContent=t};
+  if(FBON)put('sumCuenta',acct?acct.email:'Entra para tenerla en todos tus aparatos');
+  else put('sumCuenta',cfg&&cfg.token?'Conectado con GitHub':'Solo en este aparato');
+  const n=(typeof fbDoc!=='undefined'&&fbDoc&&fbDoc.ayudantes||[]).length;
+  put('sumAyud',!acct?'Entra primero con tu cuenta':n?`${n} ${n>1?'ayudantes':'ayudante'}`:'Nadie todavía');
+  put('sumPrecios',typeof PR!=='undefined'&&PR?`Cardmarket · ${diaTxt(PR.creado)}`:'Aún sin descargar');
+  const tb=document.querySelector('.tema[aria-pressed="true"]');put('sumEstilo',tb?tb.textContent.trim():'');
+  put('sumMeta',`${$('#goal').textContent} cartas`);
+  put('sumVer',`Versión ${BUILD}`);
+  $('#prInfo').title=$('#dinNota').textContent||'De dónde sale el precio';
+}catch(e){}}
 }
+
 </script>
 </body>
 </html>
