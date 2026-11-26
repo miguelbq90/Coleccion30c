@@ -1,4 +1,4 @@
-# Temporal: capturas de la versión 23 en iPhone, iPad y ordenador (rama «prueba»). No toca la app publicada.
+# Temporal: diagnóstico de las fotos de TCGdex en la web publicada (rama «prueba»). No toca la app.
 name: Prueba (temporal)
 on:
   push:
@@ -8,22 +8,22 @@ permissions:
 jobs:
   prueba:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
       - run: |
-          pip install --quiet "playwright==1.*" imageio-ffmpeg
+          pip install --quiet "playwright==1.*"
           python -m playwright install --with-deps webkit chromium
-      - run: python prueba/ver.py
-      - name: Guardar las capturas en la rama
-        if: always()
+      - run: python prueba/diag.py
+        continue-on-error: true
+      - name: Guardar el resultado en la rama
         run: |
           git config user.name "robot-prueba"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add prueba/out
-          git commit -m "Capturas de la prueba" || exit 0
+          git commit -m "Diagnóstico de fotos" || exit 0
           git pull --rebase
           git push
