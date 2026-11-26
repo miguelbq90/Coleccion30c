@@ -32,10 +32,10 @@ def falso(ctx):
     ctx.route('**images.scrydex.com/**',lambda r:r.fulfill(body=(pathlib.Path('/home/claude/v20')/'f3.jpg').read_bytes(),content_type='image/jpeg'))
 with sync_playwright() as p:
     b=p.chromium.launch(executable_path=CHROME)
-    for m in ['S1','S2','L2']:
-        ctx=b.new_context(viewport={'width':390,'height':844},device_scale_factor=2,service_workers='block')
-        if FALSO:falso(ctx)
-        ctx.route('**googleapis.com/**',lambda r:r.abort())
+    ctx=b.new_context(viewport={'width':390,'height':844},device_scale_factor=2,service_workers='block')
+    if FALSO:falso(ctx)
+    ctx.route('**googleapis.com/**',lambda r:r.abort())
+    for m in ['M1','S1','S2','L2']:
         pg=ctx.new_page();errs=[];pg.on('pageerror',lambda e:errs.append(str(e)))
         pg.goto('http://localhost:8899/');pg.evaluate("localStorage.setItem('c30-visto','999');localStorage.setItem('c30-estado',JSON.stringify({v:2,cards:Object.fromEntries(['001','002','004','005','008','012','013','020','149'].map(i=>[i,{o:1,t:1}])),goal:{}}))")
         pg.reload();pg.wait_for_timeout(2500)
@@ -47,6 +47,6 @@ with sync_playwright() as p:
         pg.wait_for_timeout(2500)
         pg.screenshot(path=str(OUT/f'{m}.png'))
         if m=='M1':(OUT/'catalogo.json').write_text(json.dumps(pg.evaluate('MKLOG'),ensure_ascii=False,indent=1),encoding='utf-8')
-        print(m,'errores:',errs);ctx.close()
+        print(m,'errores:',errs);pg.close()
     b.close()
 srv.terminate()

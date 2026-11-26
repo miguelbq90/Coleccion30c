@@ -14,6 +14,7 @@ const A='https://api.tcgdex.net/v2/';
 const j=u=>fetch(u).then(r=>r.ok?r.json():null).catch(()=>null);
 window.MKLOG=[];
 window.MKREADY=(async()=>{
+  try{const c=JSON.parse(localStorage.getItem('mk-cache')||'null');if(c&&c.length){window.MKC=c;MKLOG.push({cache:true});return c}}catch(e){}
   const en=await j(A+'en/sets')||[];
   MKLOG.push({sets_30:en.filter(x=>/30th|celebration/i.test(x.name)).map(x=>x.id+' · '+x.name)});
   const out=[];
@@ -41,7 +42,7 @@ window.MKREADY=(async()=>{
     if(!c.serie&&w.cur)c.serie='Megaevolución';
     out.push(c);
   }
-  window.MKC=out;return out})();
+  window.MKC=out;try{if(out.filter(c=>c.logo).length>=4)localStorage.setItem('mk-cache',JSON.stringify(out))}catch(e){}return out})();
 const pc=c=>Math.round(c.have/c.total*100);
 window.mkErr=(im)=>{const a=im.dataset.alt;if(a){im.removeAttribute('data-alt');im.src=a}else{const sp=document.createElement('span');sp.className='mk-nl';sp.textContent=im.dataset.n;im.replaceWith(sp)}};
 const logo=(c,cls='')=>c.logo?`<img class="mk-logo ${cls}" src="${c.logo}" data-alt="${c.logo2&&c.logo2!==c.logo?c.logo2:''}" data-n="${c.name}" onerror="mkErr(this)" alt="">`:`<span class="mk-nl ${cls}">${c.name}</span>`;
