@@ -24,7 +24,7 @@ function defs(k){return `<defs>
 <linearGradient id="${k}T" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#e6ebff"/><stop offset=".55" stop-color="#9aa6dc"/><stop offset="1" stop-color="#f2f4ff"/></linearGradient>
 <clipPath id="${k}cF"><path d="${frenteForma}"/></clipPath><clipPath id="${k}cT"><path d="${tiraForma}"/></clipPath></defs>`}
 // La ilustración: la carta ampliada, con la franja de arriba (nombre) bajo el cierre y la de abajo (ataques) bajo el letrero
-const arte=(k,url)=>`<image href="${url}" x="-62" y="-10" width="344" height="480" preserveAspectRatio="xMidYMin slice"/>
+const arte=(k,url)=>`<image href="${url}" x="-62" y="-24" width="344" height="480" preserveAspectRatio="xMidYMin slice"/>
  <rect x="0" y="0" width="${W}" height="${H}" fill="url(#${k}H)" style="mix-blend-mode:soft-light" opacity=".55"/>
  <rect x="0" y="0" width="${W}" height="${H}" fill="url(#${k}B)"/><rect x="0" y="0" width="${W}" height="${H}" fill="url(#${k}V)"/>
  <rect class="pk-brillo" x="-220" y="0" width="${W*3}" height="${H}" fill="url(#${k}S)"/>`;
