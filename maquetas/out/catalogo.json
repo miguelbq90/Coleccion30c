@@ -1,12 +1,20 @@
 [
  {
+  "sets_30": [
+   "cel25cc · Celebrations Classic Collection",
+   "cel25 · Celebrations",
+   "30th · 30th Celebration",
+   "30th-c · 30th Classic Collection"
+  ]
+ },
+ {
   "buscado": "30",
-  "id": "30th-c",
-  "nombre_en": "30th Classic Collection",
-  "nombre_es": "Colección Clásica del 30.º Aniversario",
+  "id": "30th",
+  "nombre_en": "30th Celebration",
+  "nombre_es": "Celebración 30.º Aniversario",
   "logo_es": false,
   "logo_en": false,
-  "portada": "030",
+  "portada": "152",
   "serie": "Megaevolución"
  },
  {
@@ -16,7 +24,7 @@
   "nombre_es": "Evoluciones Prismáticas",
   "logo_es": true,
   "logo_en": true,
-  "portada": "132",
+  "portada": "161",
   "serie": "Escarlata y Púrpura"
  },
  {
@@ -26,7 +34,7 @@
   "nombre_es": "Chispas Fulgurantes",
   "logo_es": true,
   "logo_en": true,
-  "portada": "192",
+  "portada": "238",
   "serie": "Escarlata y Púrpura"
  },
  {
@@ -36,7 +44,7 @@
   "nombre_es": "151",
   "logo_es": true,
   "logo_en": true,
-  "portada": "166",
+  "portada": "199",
   "serie": "Escarlata y Púrpura"
  },
  {
@@ -46,7 +54,7 @@
   "nombre_es": "Llamas Obsidianas",
   "logo_es": true,
   "logo_en": true,
-  "portada": "198",
+  "portada": "223",
   "serie": "Escarlata y Púrpura"
  },
  {
@@ -56,7 +64,7 @@
   "nombre_es": "Fuerzas Temporales",
   "logo_es": true,
   "logo_en": false,
-  "portada": "163",
+  "portada": "177",
   "serie": "Escarlata y Púrpura"
  },
  {
@@ -66,7 +74,7 @@
   "nombre_es": "Destinos de Paldea",
   "logo_es": true,
   "logo_en": true,
-  "portada": "092",
+  "portada": "131",
   "serie": "Escarlata y Púrpura"
  }
 ]
