@@ -15,11 +15,11 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
-      - run: pip install "playwright==1.*" pillow
+      - run: pip install "playwright==1.*" pillow imageio-ffmpeg
       - run: python maquetas/hacer2.py . maquetas/out
         env:
           CHROME: /usr/bin/google-chrome
-          ART: '152'
+          ART: '154'
           MODOS: CAND,SH,SA
       - name: Guardar las capturas en la rama
         run: |

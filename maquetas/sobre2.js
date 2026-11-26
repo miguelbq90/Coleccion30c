@@ -16,7 +16,7 @@ const costillas=(y0,y1)=>Array.from({length:40},(_,i)=>`<line x1="${12+i*5}" y1=
 const arrugas=(y,dir)=>[[24,11,-3],[46,8,-1],[70,12,-2],[95,7,1],[121,10,1],[148,8,2],[172,12,3],[196,9,3]].map(([x,l,a])=>`<path d="M${x} ${y} q${a} ${dir*l/2} ${a*1.6} ${dir*l}"/>`).join('');
 function defs(k){return `<defs>
 <linearGradient id="${k}B" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#05041a" stop-opacity=".62"/><stop offset=".13" stop-color="#05041a" stop-opacity="0"/><stop offset=".87" stop-color="#05041a" stop-opacity="0"/><stop offset="1" stop-color="#05041a" stop-opacity=".62"/></linearGradient>
-<linearGradient id="${k}V" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05041a" stop-opacity=".45"/><stop offset=".1" stop-color="#05041a" stop-opacity="0"/><stop offset=".62" stop-color="#05041a" stop-opacity="0"/><stop offset=".78" stop-color="#05041a" stop-opacity=".78"/><stop offset="1" stop-color="#05041a" stop-opacity=".9"/></linearGradient>
+<linearGradient id="${k}V" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05041a" stop-opacity=".45"/><stop offset=".1" stop-color="#05041a" stop-opacity="0"/><stop offset=".56" stop-color="#05041a" stop-opacity="0"/><stop offset=".7" stop-color="#05041a" stop-opacity=".88"/><stop offset=".78" stop-color="#05041a" stop-opacity=".96"/><stop offset="1" stop-color="#05041a" stop-opacity=".96"/></linearGradient>
 <linearGradient id="${k}H" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9fd8"/><stop offset=".25" stop-color="#ffe98a"/><stop offset=".5" stop-color="#8ff5c9"/><stop offset=".75" stop-color="#8fcaff"/><stop offset="1" stop-color="#cdb3ff"/></linearGradient>
 <linearGradient id="${k}S" x1="0" y1="0" x2="1" y2=".55"><stop offset=".3" stop-color="#fff" stop-opacity="0"/><stop offset=".41" stop-color="#fff" stop-opacity=".5"/><stop offset=".46" stop-color="#fff" stop-opacity=".08"/><stop offset=".52" stop-color="#fff" stop-opacity=".3"/><stop offset=".62" stop-color="#fff" stop-opacity="0"/></linearGradient>
 <linearGradient id="${k}P" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7f7fd"/><stop offset=".45" stop-color="#b6b5cf"/><stop offset=".7" stop-color="#e8e8f3"/><stop offset="1" stop-color="#9796b4"/></linearGradient>
@@ -24,7 +24,7 @@ function defs(k){return `<defs>
 <linearGradient id="${k}T" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#e6ebff"/><stop offset=".55" stop-color="#9aa6dc"/><stop offset="1" stop-color="#f2f4ff"/></linearGradient>
 <clipPath id="${k}cF"><path d="${frenteForma}"/></clipPath><clipPath id="${k}cT"><path d="${tiraForma}"/></clipPath></defs>`}
 // La ilustración: la carta ampliada, con la franja de arriba (nombre) bajo el cierre y la de abajo (ataques) bajo el letrero
-const arte=(k,url)=>`<image href="${url}" x="-30" y="-14" width="280" height="391" preserveAspectRatio="xMidYMin slice"/>
+const arte=(k,url)=>`<image href="${url}" x="-62" y="-10" width="344" height="480" preserveAspectRatio="xMidYMin slice"/>
  <rect x="0" y="0" width="${W}" height="${H}" fill="url(#${k}H)" style="mix-blend-mode:soft-light" opacity=".55"/>
  <rect x="0" y="0" width="${W}" height="${H}" fill="url(#${k}B)"/><rect x="0" y="0" width="${W}" height="${H}" fill="url(#${k}V)"/>
  <rect class="pk-brillo" x="-220" y="0" width="${W*3}" height="${H}" fill="url(#${k}S)"/>`;
