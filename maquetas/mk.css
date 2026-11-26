@@ -1,0 +1,54 @@
+/* ===== MAQUETAS (no es la app): menú de colecciones y botón de colección ===== */
+.mk-scr{position:fixed;inset:0;z-index:60;overflow:hidden;background:radial-gradient(120% 55% at 50% 0%,#2c2470 0%,var(--bg) 62%);padding:20px 16px;color:var(--ink)}
+.mk-scr h2{margin:4px 0 2px;font-size:25px}.mk-scr .sub2{margin:0 0 14px;color:var(--mute);font-size:14px}
+.mk-logo{display:block;object-fit:contain;filter:drop-shadow(0 2px 0 rgba(0,0,0,.45)) drop-shadow(0 0 10px rgba(0,0,0,.35))}
+.mk-nl{font:italic 900 15px/1.05 'Tit Holo',sans-serif;text-transform:uppercase;color:#fff;text-shadow:0 2px 0 #0d0c26}
+.mk-bar{height:6px;border-radius:9px;background:rgba(255,255,255,.16);overflow:hidden}.mk-bar i{display:block;height:100%;background:linear-gradient(90deg,#7fc4ff,#ffd23f)}
+.mk-add{display:flex;align-items:center;justify-content:center;gap:8px;border:2px dashed var(--line);border-radius:18px;font-weight:800;color:var(--ink)}
+/* M1 · Banners en lista */
+.m1 .row{position:relative;display:flex;align-items:center;height:92px;margin-bottom:10px;border-radius:18px;overflow:hidden;background:#1d1b4a;border:1.5px solid rgba(255,255,255,.14)}
+.m1 .row .art{position:absolute;right:-6px;top:-30px;width:132px;transform:rotate(-9deg);opacity:.95;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.5)}
+.m1 .row::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,#1d1b4a 52%,rgba(29,27,74,.15) 78%,rgba(29,27,74,0));pointer-events:none}
+.m1 .row .lf{position:relative;z-index:1;display:flex;flex-direction:column;gap:7px;padding:0 14px;width:66%}
+.m1 .row .mk-logo{height:44px;max-width:100%;object-position:left center}
+.m1 .row .st{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700}.m1 .row .st .mk-bar{flex:1}
+.m1 .row .pz{position:absolute;z-index:1;right:10px;bottom:8px;padding:3px 8px;border-radius:999px;background:rgba(10,8,40,.78);font-size:12px;font-weight:800;color:#fff}
+.m1 .row.on{border:2px solid #ffd23f;box-shadow:0 0 0 3px rgba(255,210,63,.25)}
+.m1 .mk-add{height:62px}
+/* M2 · Fichas con el logo protagonista, por series */
+.m2 .ser{margin:10px 0 8px;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.m2 .gr{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.m2 .tl{position:relative;aspect-ratio:3/4;border-radius:16px;overflow:hidden;background:#1d1b4a;border:1.5px solid rgba(255,255,255,.16);display:flex;flex-direction:column}
+.m2 .tl .top{position:relative;flex:1;display:grid;place-items:center;overflow:hidden}
+.m2 .tl .top img.bg{position:absolute;inset:-10%;width:120%;height:120%;object-fit:cover;filter:blur(3px) brightness(.5) saturate(1.3)}
+.m2 .tl .top .mk-logo{position:relative;width:86%;height:62%}
+.m2 .tl .bt{padding:7px 8px 9px;background:rgba(10,8,40,.85);display:flex;flex-direction:column;gap:5px}
+.m2 .tl .bt b{font-size:11px;font-weight:800;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m2 .tl .bt span{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700}.m2 .tl .bt .mk-bar{flex:1;height:5px}
+.m2 .tl.on{border:2px solid #ffd23f;box-shadow:0 0 0 3px rgba(255,210,63,.25)}
+.m2 .mk-add{aspect-ratio:3/4;flex-direction:column;font-size:12px;gap:2px}.m2 .mk-add span{font-size:30px;line-height:1}
+/* M3 · Carrusel de portadas */
+.m3 .car{position:relative;height:500px;margin:4px -16px 0}
+.m3 .pt{position:absolute;top:0;left:50%;width:270px;height:470px;margin-left:-135px;border-radius:24px;overflow:hidden;background:#1d1b4a;border:2px solid rgba(255,255,255,.75);box-shadow:0 18px 40px rgba(0,0,0,.55);transition:none}
+.m3 .pt img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.m3 .pt::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,8,40,.82) 0%,rgba(10,8,40,0) 34%,rgba(10,8,40,0) 52%,rgba(10,8,40,.92) 82%)}
+.m3 .pt .mk-logo{position:absolute;top:14px;left:12%;width:76%;height:82px}
+.m3 .pt .ft{position:absolute;left:16px;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;color:#fff}
+.m3 .pt .ft .r{display:flex;justify-content:space-between;font-weight:800;font-size:15px}
+.m3 .pt.l{transform:translateX(-235px) scale(.8) rotate(-4deg);opacity:.55}.m3 .pt.r{transform:translateX(235px) scale(.8) rotate(4deg);opacity:.55}
+.m3 .dots{display:flex;justify-content:center;gap:7px;margin:2px 0 14px}.m3 .dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}.m3 .dots i.on{width:22px;border-radius:9px;background:#ffd23f}
+.m3 .mk-add{height:54px}
+/* H1 · Pastilla grande «Mis colecciones» bajo el título */
+.mk-pill{display:inline-flex;align-items:center;gap:10px;margin:6px 0 4px;padding:7px 14px 7px 7px;border-radius:999px;background:#ffd23f;color:#16161a;font-weight:800;font-size:15px;box-shadow:0 0 0 4px rgba(255,210,63,.22),0 6px 16px rgba(0,0,0,.35)}
+.mk-pill .sy{width:30px;height:30px;border-radius:50%;background:#16161a;display:grid;place-items:center}.mk-pill .sy img{width:20px;height:20px;object-fit:contain;filter:invert(1)}
+.mk-pill em{font-style:normal;padding:2px 8px;border-radius:999px;background:rgba(0,0,0,.14);font-size:13px}
+/* H2 · El propio título como ficha-botón con el logo */
+.mk-card{display:flex;align-items:center;gap:12px;margin:10px 0 6px;padding:10px 12px;border-radius:18px;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,210,63,.65);box-shadow:0 0 18px rgba(255,210,63,.18);max-width:520px}
+.mk-card .mk-logo{height:46px;width:120px;flex:none}
+.mk-card .tx{flex:1;min-width:0}.mk-card .tx small{display:block;font-size:11px;letter-spacing:.22em;text-transform:uppercase;opacity:.75}.mk-card .tx b{display:block;font-size:15px;line-height:1.2}
+.mk-card .ch{flex:none;padding:7px 11px;border-radius:999px;background:#ffd23f;color:#16161a;font-weight:800;font-size:13px}
+/* Botón fijo junto al buscador */
+.mk-fab{flex:none;width:46px;height:46px;border-radius:14px;background:#ffd23f;display:grid;place-items:center;position:relative;box-shadow:0 4px 12px rgba(0,0,0,.35)}
+.mk-fab img{width:28px;height:28px;object-fit:contain;filter:brightness(0)}
+.mk-fab em{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:#7c5cff;color:#fff;font:800 11px/20px system-ui;font-style:normal;text-align:center}
+html.mkH .tools .r1{gap:10px}

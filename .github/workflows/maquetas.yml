@@ -1,0 +1,25 @@
+# Temporal: hace capturas de las maquetas del menú de colecciones con los logos reales.
+# Solo vive en la rama «maquetas»; no toca la app.
+name: Maquetas (temporal)
+on:
+  push:
+    branches: [maquetas]
+permissions:
+  contents: read
+jobs:
+  capturas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: pip install "playwright==1.*" pillow
+      - run: python maquetas/hacer.py . maquetas/out
+        env:
+          CHROME: /usr/bin/google-chrome
+      - uses: actions/upload-artifact@v4
+        with:
+          name: maquetas
+          path: maquetas/out
