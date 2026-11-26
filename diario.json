@@ -89,7 +89,7 @@
    "h": "",
    "quien": "Claude",
    "tit": "Versión 23: varias colecciones",
-   "t": "Estreno del sobre de colecciones. Las colecciones del catálogo se guardan en tu cuenta en un sitio aparte («extra»), para que una versión antigua de la app (por ejemplo, la de tu hermano si no ha actualizado) no las borre. Para que Firebase acepte ese sitio nuevo hay que publicar unas reglas nuevas.",
+   "t": "Estreno del sobre de colecciones. Las colecciones del catálogo se guardan en tu cuenta en un sitio aparte («extra»), para que una versión antigua de la app (por ejemplo, la de tu hermano si no ha actualizado) no las borre. Para que Firebase acepte ese sitio nuevo hay que publicar unas reglas nuevas. Miguel publicó las reglas nuevas esa misma noche: desde entonces las colecciones del catálogo se guardan también en la nube.",
    "aprende": "Cuando una app cambia la forma de guardar los datos, hay que pensar en los aparatos que todavía tienen la versión vieja. Guardar lo nuevo aparte es una forma sencilla de que lo viejo y lo nuevo convivan sin pisarse. Y las «reglas» de Firebase son el portero: lo que no aparece en ellas, no entra."
   }
  ]
