@@ -129,9 +129,9 @@ async function main() {
     console.log('  ', b.id, set.nombre, '·', set.total, 'cartas ·', Object.keys(p).length, 'con precio');
   }
   if (!indice.length) throw new Error('No he podido preparar ninguna colección');
-  // Se conservan en el índice las que ya estaban (por si hoy alguna no respondió)
+  // Se conservan en el índice las que ya estaban y hoy no respondieron (solo si siguen en la lista de las que quiero)
   const viejo = leer(new URL('index.json', DIR_SETS), { colecciones: [] });
-  for (const x of viejo.colecciones || []) if (!indice.some(y => y.id === x.id) && fs.existsSync(new URL(x.id + '.json', DIR_SETS)) && !SOLO.length) indice.push(x);
+  for (const x of viejo.colecciones || []) if (!indice.some(y => y.id === x.id) && briefs.some(b => b.id === x.id) && fs.existsSync(new URL(x.id + '.json', DIR_SETS)) && !SOLO.length) indice.push(x);
   indice.sort((a, b) => (a.fecha < b.fecha ? 1 : a.fecha > b.fecha ? -1 : 0));
   fs.writeFileSync(new URL('index.json', DIR_SETS), JSON.stringify({ v: 1, creado, generado: new Date().toISOString(), colecciones: indice }) + '\n');
   console.log('Índice:', indice.length, 'colecciones · fichas consultadas hoy:', consultas);

@@ -11,7 +11,7 @@ on:
   workflow_dispatch:         # a mano, o lo lanza el robot de precios al terminar
 
 permissions:
-  contents: write   # para volver a publicar la web si GitHub falla
+  contents: write   # para volver a publicar la web si GitHub falla y para escribir el diario
   pages: write      # para pedir una nueva publicación de la web
   actions: write    # para relanzar el robot de precios
   issues: write     # para avisarte si hay un problema
@@ -32,7 +32,9 @@ jobs:
           python-version: '3.12'
 
       - name: Preparar el navegador de pruebas
-        run: pip install --quiet "playwright==1.*"
+        run: |
+          pip install --quiet "playwright==1.*"
+          python -m playwright install --with-deps webkit || echo "No se ha podido preparar el navegador de iPhone"
 
       - name: Revisar la app
         env:

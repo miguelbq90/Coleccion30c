@@ -1,4 +1,5 @@
 # Robot de precios: cada día descarga los precios de Cardmarket y actualiza precios.json.
+# Después prepara las colecciones que se pueden añadir en la app (precios/sets): cartas, fotos y precios.
 # También se puede lanzar a mano desde la pestaña «Actions» → «Actualizar precios» → «Run workflow».
 name: Actualizar precios
 
@@ -24,22 +25,27 @@ concurrency:
 jobs:
   precios:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v5
 
       - name: Descargar precios de Cardmarket
         run: node --version && node precios/actualizar.mjs
 
-      - name: Guardar precios.json
+      - name: Preparar las colecciones del catálogo
+        # Si esto falla, los precios de la 30C se guardan igual
+        continue-on-error: true
+        run: node precios/colecciones.mjs
+
+      - name: Guardar precios.json y las colecciones
         run: |
-          if [ -z "$(git status --porcelain -- precios.json)" ]; then
+          if [ -z "$(git status --porcelain -- precios.json precios/sets precios/mapa)" ]; then
             echo "Sin cambios en los precios"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add precios.json
+          git add precios.json precios/sets precios/mapa
           git commit -m "Precios de Cardmarket del $(date -u +%Y-%m-%d)"
           git pull --rebase origin main
           git push origin HEAD:main

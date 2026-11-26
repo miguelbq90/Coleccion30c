@@ -1,4 +1,4 @@
-# Temporal: pruebas de la versión de varias colecciones (rama «prueba»). No toca la app publicada.
+# Temporal: capturas de la versión 23 en iPhone, iPad y ordenador (rama «prueba»). No toca la app publicada.
 name: Prueba (temporal)
 on:
   push:
@@ -8,15 +8,22 @@ permissions:
 jobs:
   prueba:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
-      - name: Robot de precios y de colecciones
-        run: node precios/actualizar.mjs && node precios/colecciones.mjs
-      - name: Guardar en la rama
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: |
+          pip install --quiet "playwright==1.*" imageio-ffmpeg
+          python -m playwright install --with-deps webkit chromium
+      - run: python prueba/ver.py
+      - name: Guardar las capturas en la rama
+        if: always()
         run: |
           git config user.name "robot-prueba"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add precios
-          git commit -m "Prueba: colecciones del catálogo" || exit 0
+          git add prueba/out
+          git commit -m "Capturas de la prueba" || exit 0
+          git pull --rebase
           git push

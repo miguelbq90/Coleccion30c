@@ -12,11 +12,18 @@ Qué comprueba:
   4. Que las fotos de las cartas cargan (eso depende de otro servidor: solo avisa).
   5. Que Firebase (cuentas y base de datos) funciona y que la base de datos está CERRADA
      a quien no tiene permiso (si alguien pudiera leerla sin cuenta, lo avisa como peligro).
+  6. Que la app también va con el motor de Safari (el de iPhone y iPad): abre el sobre de
+     colecciones y mira que salen.
+  7. Que la lista de colecciones que se pueden añadir existe y está al día.
+
+Cada revisión se apunta en el «diario» (rama «diario» del repositorio, archivo diario.json),
+que Miguel puede leer desde la app: Ajustes › Diario del vigilante.
 
 Si algo falla, primero intenta arreglarlo solo (volver a publicar la web o relanzar el robot
 de precios). Si no lo consigue, abre un aviso («issue») en GitHub mencionando al dueño, y
 GitHub le manda un correo. Cuando todo vuelve a ir bien, comenta y cierra el aviso.
 """
+import base64
 import datetime
 import json
 import os
@@ -27,6 +34,7 @@ import sys
 import time
 import urllib.error
 import urllib.request
+from zoneinfo import ZoneInfo
 
 RAIZ = pathlib.Path(__file__).resolve().parent.parent
 REPO = os.environ.get("REPO", "miguelbq90/Coleccion30c")
@@ -46,6 +54,9 @@ TITULOS_VIEJOS = ("⚠️ La app Colección 30C necesita atención",)
 DIAS_MAX = 2
 
 bien, arreglos, problemas, avisos = [], [], [], []
+registro = []  # para el diario: (tema, tipo, texto)
+TEMAS = {"revisar_web": "web", "revisar_precios": "precios", "revisar_app": "app", "revisar_iphone": "iphone",
+         "revisar_fotos": "fotos", "revisar_firebase": "firebase", "revisar_colecciones": "colecciones"}
 
 
 def descargar(url, cabeceras=None, tiempo=30):
@@ -256,6 +267,104 @@ def revisar_firebase():
         avisos.append(f"No he podido comprobar la base de datos ({str(e)[:120]}).")
 
 
+# ---------- 6. ¿Funciona en el motor de Safari (iPhone y iPad)? ----------
+def revisar_iphone():
+    from playwright.sync_api import sync_playwright
+    with sync_playwright() as p:
+        try:
+            nav = p.webkit.launch()
+        except Exception as e:
+            avisos.append("Hoy no he podido abrir el navegador de prueba de iPhone (es un fallo del robot, no de tu app).")
+            print("WebKit:", e)
+            return
+        try:
+            ctx = nav.new_context(**p.devices["iPhone 13"])
+            pg = ctx.new_page()
+            errores = []
+            pg.on("pageerror", lambda e: errores.append(str(e)))
+            pg.goto(WEB, wait_until="load", timeout=60000)
+            pg.wait_for_function("document.querySelectorAll('.p').length>=191", timeout=30000)
+            pg.tap("#pkHead")
+            pg.wait_for_timeout(3200)
+            salen = pg.eval_on_selector_all("#cmPk .sc", "e=>e.length")
+            pg.tap("#cmX")
+            if salen >= 1 and not errores:
+                bien.append(f"En un iPhone de prueba (motor de Safari) la app abre bien y el sobre se abre con {salen} {'colecciones' if salen > 1 else 'colección'} dentro.")
+            else:
+                problemas.append(f"En el iPhone de prueba el sobre no se abre bien ({salen} colecciones)" + (f". Errores: {'; '.join(errores[:3])}" if errores else "."))
+        except Exception as e:
+            problemas.append(f"En el iPhone de prueba la app no ha cargado bien ({str(e).splitlines()[0][:200]}).")
+        finally:
+            nav.close()
+
+
+# ---------- 7. ¿Está al día la lista de colecciones que se pueden añadir? ----------
+def revisar_colecciones():
+    try:
+        j = web_json("precios/sets/index.json")
+    except Exception as e:
+        avisos.append(f"No he podido abrir la lista de colecciones para añadir ({str(e)[:120]}).")
+        return
+    lista = j.get("colecciones") or []
+    dia = datetime.date.fromisoformat((j.get("creado") or "2000-01-01")[:10])
+    dias = (HOY - dia).days
+    if len(lista) < 5:
+        problemas.append(f"La lista de colecciones para añadir solo tiene {len(lista)}.")
+        return
+    try:
+        uno = web_json(f"precios/sets/{lista[0]['id']}.json")
+        assert len(uno.get("cartas") or []) > 10
+    except Exception:
+        problemas.append(f"La colección «{lista[0].get('nombre')}» no se puede descargar bien.")
+        return
+    if dias > DIAS_MAX:
+        avisos.append(f"Los precios de las colecciones del catálogo son del {dia.isoformat()} (llevan {dias} días sin actualizarse).")
+    else:
+        bien.append(f"Hay {len(lista)} colecciones para añadir, con precios del {dia.isoformat()}.")
+
+
+# ---------- Diario: lo que ve en cada revisión, para leerlo desde la app ----------
+def guardar_diario():
+    if not TOKEN:
+        return
+    madrid = datetime.datetime.now(ZoneInfo("Europe/Madrid"))
+    padre, diario = None, {"v": 1, "dias": [], "notas": []}
+    s, ref = github("GET", f"/repos/{REPO}/git/ref/heads/diario")
+    if s == 200 and ref:
+        padre = ref["object"]["sha"]
+        s2, c = github("GET", f"/repos/{REPO}/contents/diario.json?ref=diario")
+        if s2 == 200 and c:
+            try:
+                diario = json.loads(base64.b64decode(c["content"]).decode("utf-8"))
+            except Exception as e:
+                print("Diario ilegible, empiezo uno nuevo:", e)
+    por = {"schedule": "revisión de cada 6 horas", "push": "tras una actualización de la app",
+           "workflow_dispatch": "a petición (precios nuevos o a mano)"}.get(os.environ.get("GITHUB_EVENT_NAME", ""), "revisión")
+    entrada = {"h": madrid.strftime("%H:%M"), "ok": not problemas, "por": por,
+               "it": [{"k": k, "s": t, "m": m} for k, t, m in registro], **({"url": REVISION} if REVISION else {})}
+    hoy = madrid.date().isoformat()
+    dias = [d for d in diario.get("dias", []) if d.get("d") != hoy]
+    dia = next((d for d in diario.get("dias", []) if d.get("d") == hoy), {"d": hoy, "r": []})
+    dia["r"] = (dia.get("r") or [])[-11:] + [entrada]
+    limite = (madrid.date() - datetime.timedelta(days=30)).isoformat()
+    diario["dias"] = sorted([d for d in dias if d.get("d", "") >= limite] + [dia], key=lambda d: d["d"], reverse=True)
+    diario["actualizado"] = madrid.isoformat(timespec="minutes")
+    texto = json.dumps(diario, ensure_ascii=False, indent=1) + "\n"
+    s, arbol = github("POST", f"/repos/{REPO}/git/trees", {"tree": [{"path": "diario.json", "mode": "100644", "type": "blob", "content": texto}]})
+    if s != 201:
+        print("No he podido guardar el diario (árbol):", s)
+        return
+    s, com = github("POST", f"/repos/{REPO}/git/commits", {"message": f"Diario: revisión del {hoy} a las {entrada['h']}", "tree": arbol["sha"], "parents": [padre] if padre else []})
+    if s != 201:
+        print("No he podido guardar el diario (commit):", s)
+        return
+    if padre:
+        s, _ = github("PATCH", f"/repos/{REPO}/git/refs/heads/diario", {"sha": com["sha"]})
+    else:
+        s, _ = github("POST", f"/repos/{REPO}/git/refs", {"ref": "refs/heads/diario", "sha": com["sha"]})
+    print("Diario guardado" if s in (200, 201) else f"No he podido guardar el diario (rama): {s}")
+
+
 # ---------- Aviso en GitHub ----------
 def avisar():
     s, lista = github("GET", f"/repos/{REPO}/issues?state=open&per_page=50")
@@ -289,11 +398,18 @@ def resumen():
 
 
 if __name__ == "__main__":
-    for paso in (revisar_web, revisar_precios, revisar_app, revisar_fotos, revisar_firebase):
+    for paso in (revisar_web, revisar_precios, revisar_app, revisar_iphone, revisar_fotos, revisar_firebase, revisar_colecciones):
+        antes = {t: len(l) for t, l in (("ok", bien), ("arreglo", arreglos), ("aviso", avisos), ("mal", problemas))}
         try:
             paso()
         except Exception as e:
             problemas.append(f"Fallo inesperado del vigilante en «{paso.__name__}»: {e}")
+        for t, l in (("ok", bien), ("arreglo", arreglos), ("aviso", avisos), ("mal", problemas)):
+            registro += [(TEMAS.get(paso.__name__, "otro"), t, m) for m in l[antes[t]:]]
     resumen()
     avisar()
+    try:
+        guardar_diario()
+    except Exception as e:
+        print("No he podido guardar el diario:", e)
     sys.exit(1 if problemas else 0)

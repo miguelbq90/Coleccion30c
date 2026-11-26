@@ -1,5 +1,6 @@
 rules_version = '2';
-// Reglas de seguridad de la app Colección 30C.
+// Reglas de seguridad de la app Zuroku (antes Colección 30C).
+// Versión 23: se añade «extra», donde se guardan las colecciones del catálogo (las que no son la 30C).
 // Se pegan en Firebase → Firestore Database → pestaña «Reglas» → «Publicar».
 //
 // Quién puede hacer qué:
@@ -19,8 +20,9 @@ service cloud.firestore {
       function isOwner() { return signedIn() && request.auth.uid == ownerId; }
       function isHelper(d) { return signedIn() && verified() && d.ayudantes is list && myEmail() in d.ayudantes; }
       function okCollection(d) {
-        return d.keys().hasOnly(['data', 'nombre', 'ayudantes', 'actualizado'])
+        return d.keys().hasOnly(['data', 'extra', 'nombre', 'ayudantes', 'actualizado'])
           && (!('data' in d) || (d.data is string && d.data.size() < 200000))
+          && (!('extra' in d) || (d.extra is string && d.extra.size() < 600000))
           && (!('nombre' in d) || (d.nombre is string && d.nombre.size() <= 40))
           && (!('ayudantes' in d) || (d.ayudantes is list && d.ayudantes.size() <= 10));
       }
