@@ -16,10 +16,11 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install "playwright==1.*" pillow
-      - run: python maquetas/hacer.py . maquetas/out
+      - run: python maquetas/hacer2.py . maquetas/out
         env:
           CHROME: /usr/bin/google-chrome
-      - run: cat maquetas/out/catalogo.json
+          ART: '152'
+          MODOS: CAND,SH,SA
       - name: Guardar las capturas en la rama
         run: |
           git config user.name "robot-maquetas"

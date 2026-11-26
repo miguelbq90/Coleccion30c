@@ -154,4 +154,22 @@ window.mk=async m=>{const C=await MKREADY;
    const series=[...new Set(rest.map(c=>c.serie||'Otras'))];
    document.body.insertAdjacentHTML('beforeend',`<div class="mk-scr"><div class="m1 m4"><h2>Mis colecciones</h2><p class="sub2">${C.length} colecciones</p><div class="bus">🔍 Buscar colección…</div><div class="sec">⭐ Estás completando</div>${fav.map(row).join('')}${series.map(s=>{const L=rest.filter(c=>(c.serie||'Otras')===s);return `<div class="sec">${s}</div><div class="fold">Ver ${L.length} colecciones <span class="lg">${L.slice(0,3).map(c=>c.logo?`<img src="${c.logo}" data-alt="${c.logo2||''}" onerror="mkErr(this)" alt="">`:'').join('')}</span> ▾</div>`}).join('')}<div class="mk-add" style="height:56px">＋ Añadir colección</div></div></div>`);return}
  return _mk(m)};
+
+// --- Sobre realista: candidatas, en la cabecera y la animación de abrirlo ---
+const cartaURL=id=>{const im=document.querySelector(`.p[data-id="${id}"] img`);return im?im.src.replace('/small','/large'):''};
+const _mk2=window.mk;
+window.mk=async m=>{const C=await MKREADY;const ART=window.MK_ART||'152';
+ if(m==='CAND'){const ids=['R','152','154','c4/102'];
+   document.body.insertAdjacentHTML('beforeend',`<div class="mk-cands">${ids.map(id=>`<div>${sobreHTML(cartaURL(id))}<div style="height:294px;width:190px"></div><b>${id}</b></div>`).join('')}</div>`);
+   document.querySelectorAll('.mk-cands .pk').forEach(p=>p.style.position='absolute');return}
+ if(m==='SH'){document.documentElement.classList.add('mkS');const st=document.querySelector('.stage');const b=document.getElementById('b30').getBoundingClientRect(),sr=st.getBoundingClientRect();
+   const cx=b.left-sr.left+b.width/2,cy=b.top-sr.top+b.height/2;
+   st.insertAdjacentHTML('beforeend',sobreHTML(cartaURL(ART),`style="left:${cx-62}px;top:${cy-100}px;width:124px;height:192px;z-index:3"`));
+   st.lastElementChild.classList.add('reposo');return}
+ if(m==='SA'){const F=[C[3],C[1],C[0],C[2],C[4]].filter(Boolean),X=[-128,-64,0,64,128],Y=[-196,-228,-244,-228,-196],R=[-16,-8,0,8,16];
+   document.body.insertAdjacentHTML('beforeend',`<div class="mk-open2"><div class="tt">¿Qué colección abrimos?</div><span class="x">✕</span>${sobreHTML(cartaURL(ART))}<div class="mk-todas">Ver las ${C.length} colecciones ›</div></div>`);
+   const pk=document.querySelector('.mk-open2 .pk');
+   pk.querySelector('.pk-cartas').innerHTML=F.map((c,i)=>`<div class="fc${c.cur?' on':''}" style="--i:${[2,1,0,3,4][i]};--x:${X[i]}px;--y:${Y[i]}px;--r:${R[i]}deg;z-index:${i===2?5:3-Math.abs(i-2)}">${c.cover?`<img class="bg" src="${c.cover}" alt="">`:''}${c.logo?logo(c):`<span class="mk-nl">${c.name}</span>`}<div class="pc"><div class="mk-bar"><i style="width:${pc(c)}%"></i></div>${pc(c)} %</div></div>`).join('');
+   pk.classList.add('abre');return}
+ return _mk2(m)};
 })();
